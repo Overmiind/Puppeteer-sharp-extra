@@ -5,7 +5,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth
 {
-    public class ChromeApp: IPuppeteerExtraPlugin
+    internal class ChromeApp: IPuppeteerExtraPlugin
     {
         public string GetName() => "stealth-chromeApp";
         public List<PluginRequirements> Requirements { get; set; }

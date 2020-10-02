@@ -3,7 +3,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    public class Frame: IPuppeteerExtraPlugin
+    internal class Frame: IPuppeteerExtraPlugin
     {
         public string GetName()
         {

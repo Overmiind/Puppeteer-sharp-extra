@@ -5,7 +5,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    public class PluginEvasion: IPuppeteerExtraPlugin
+    internal class PluginEvasion: IPuppeteerExtraPlugin
     {
         public string GetName()
         {

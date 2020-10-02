@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharp.Plugins.ExtraStealth
+namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    public class WebGl: IPuppeteerExtraPlugin
+    internal class WebGl : IPuppeteerExtraPlugin
     {
         public string GetName()
         {
@@ -15,18 +13,18 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth
         public void OnPageCreated(Page page)
         {
             page.EvaluateFunctionOnNewDocumentAsync(@"() => {const getParameter = WebGLRenderingContext.getParameter;
-WebGLRenderingContext.prototype.getParameter = function(parameter) {
-  // UNMASKED_VENDOR_WEBGL
-  if (parameter === 37445) {
-    return 'Intel Open Source Technology Center';
-  }
-  // UNMASKED_RENDERER_WEBGL
-  if (parameter === 37446) {
-    return 'Mesa DRI Intel(R) Ivybridge Mobile ';
-  }
-
-  return getParameter(parameter);
-};}");
+        WebGLRenderingContext.prototype.getParameter = function(parameter) {
+          // UNMASKED_VENDOR_WEBGL
+          if (parameter === 37445) {
+            return 'Intel Open Source Technology Center';
+          }
+          // UNMASKED_RENDERER_WEBGL
+          if (parameter === 37446) {
+            return 'Mesa DRI Intel(R) Ivybridge Mobile ';
+          }
+        
+          return getParameter(parameter);
+        };}");
         }
 
         public List<PluginRequirements> Requirements { get; set; }

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using PuppeteerExtraSharp.Plugins;
 using PuppeteerSharp;
 
+
 namespace PuppeteerExtraSharp
 {
     public class PuppeteerExtra
     {
-        private Browser _browser;
         private List<IPuppeteerExtraPlugin> _plugins = new List<IPuppeteerExtraPlugin>();
 
         public PuppeteerExtra Use(IPuppeteerExtraPlugin plugin)
@@ -24,26 +24,26 @@ namespace PuppeteerExtraSharp
         public async Task<Browser> LaunchAsync(LaunchOptions options)
         {
             _plugins.ForEach(e=>e.BeforeLaunch(options));
-            _browser = await Puppeteer.LaunchAsync(options);
-            _plugins.ForEach(e=>e.AfterLaunch(_browser));
+            var browser = await Puppeteer.LaunchAsync(options);
+            _plugins.ForEach(e=>e.AfterLaunch(browser));
             OnStart(new BrowserStartContext()
             {
                 StartType = StartType.Launch,
                 IsHeadless = options.Headless
-            });
-            return _browser;
+            }, browser);
+            return browser;
         }
 
         public async Task<Browser> ConnectAsync(ConnectOptions options)
         {
             _plugins.ForEach(e=>e.BeforeConnect(options));
-            _browser = await Puppeteer.ConnectAsync(options);
-            _plugins.ForEach(e=>e.AfterConnect(_browser));
+            var browser = await Puppeteer.ConnectAsync(options);
+            _plugins.ForEach(e=>e.AfterConnect(browser));
             OnStart(new BrowserStartContext()
             {
                 StartType = StartType.Connect 
-            });
-            return _browser;
+            }, browser);
+            return browser;
         }
 
         public T GetPlugin<T>() where T: IPuppeteerExtraPlugin
@@ -51,11 +51,11 @@ namespace PuppeteerExtraSharp
             return (T)_plugins.FirstOrDefault(e => e.GetType() == typeof(T));
         }
 
-        private void OnStart(BrowserStartContext context)
+        private void OnStart(BrowserStartContext context, Browser browser)
         {
             OrderPlugins();
             CheckPluginRequirements(context);
-            Register(_browser);
+            Register(browser);
         }
 
         private void ResolveDependencies(IPuppeteerExtraPlugin plugin)
@@ -87,15 +87,12 @@ namespace PuppeteerExtraSharp
                     continue;
                 foreach (var requirement in puppeteerExtraPlugin.Requirements)
                 {
-                    if (context.StartType == StartType.Launch && requirement == PluginRequirements.HeadFul &&
-                        context.IsHeadless)
+                    switch (context.StartType)
                     {
-                        throw new NotSupportedException($"Plugin - {puppeteerExtraPlugin.GetName()} is not supported in headless mode");
-                    }
-
-                    if (context.StartType == StartType.Connect && requirement == PluginRequirements.Launch)
-                    {
-                        throw new NotSupportedException($"Plugin - {puppeteerExtraPlugin.GetName()} doesn't support connect");
+                        case StartType.Launch when requirement == PluginRequirements.HeadFul && context.IsHeadless:
+                            throw new NotSupportedException($"Plugin - {puppeteerExtraPlugin.GetName()} is not supported in headless mode");
+                        case StartType.Connect when requirement == PluginRequirements.Launch:
+                            throw new NotSupportedException($"Plugin - {puppeteerExtraPlugin.GetName()} doesn't support connect");
                     }
                 }
             }

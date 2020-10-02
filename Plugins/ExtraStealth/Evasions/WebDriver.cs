@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharp.Plugins.ExtraStealth
+namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    public class WebDriver: IPuppeteerExtraPlugin
+    internal class WebDriver: IPuppeteerExtraPlugin
     {
         public string GetName()
         {

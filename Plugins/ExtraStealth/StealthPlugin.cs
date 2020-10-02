@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth
@@ -28,7 +26,8 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth
                 new UserAgent(),
                 new Vendor(),
                 new WebGl(),
-                new PluginEvasion()
+                new PluginEvasion(),
+                new StackTrace()
             };
         }
         

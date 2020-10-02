@@ -5,7 +5,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth
 {
-    public class ChromeRuntime: IPuppeteerExtraPlugin
+    internal class ChromeRuntime: IPuppeteerExtraPlugin
     {
         public string GetName()
         {

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharp.Plugins.ExtraStealth
+namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    public class Codec: IPuppeteerExtraPlugin
+    internal class Codec: IPuppeteerExtraPlugin
     {
         public string GetName()
         {

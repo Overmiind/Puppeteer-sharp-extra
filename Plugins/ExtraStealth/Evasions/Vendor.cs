@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharp.Plugins.ExtraStealth
+namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    public class Vendor : IPuppeteerExtraPlugin
+    internal class Vendor : IPuppeteerExtraPlugin
     {
         public string GetName()
         {
