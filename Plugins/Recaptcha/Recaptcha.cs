@@ -22,15 +22,15 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha
 
         public async Task Solve(Page page)
         {
-            var key = await GetKeyAsync(page);
             try
             {
+                var key = await GetKeyAsync(page);
                 var solution = await GetSolutionAsync(key, page.Url);
                 await WriteToInput(page, solution);
             }
-            catch (Exception ex)
+            catch (CaptchaException ex)
             {
-                throw new CaptchaException(page.Url, ex.Message);
+               // throw new CaptchaException(page.Url, ex.Content);
             }
 
         }

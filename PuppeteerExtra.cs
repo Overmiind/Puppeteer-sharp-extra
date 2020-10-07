@@ -26,7 +26,7 @@ namespace PuppeteerExtraSharp
             _plugins.ForEach(e=>e.BeforeLaunch(options));
             var browser = await Puppeteer.LaunchAsync(options);
             _plugins.ForEach(e=>e.AfterLaunch(browser));
-            OnStart(new BrowserStartContext()
+            await OnStart(new BrowserStartContext()
             {
                 StartType = StartType.Launch,
                 IsHeadless = options.Headless
@@ -39,7 +39,7 @@ namespace PuppeteerExtraSharp
             _plugins.ForEach(e=>e.BeforeConnect(options));
             var browser = await Puppeteer.ConnectAsync(options);
             _plugins.ForEach(e=>e.AfterConnect(browser));
-            OnStart(new BrowserStartContext()
+            await OnStart(new BrowserStartContext()
             {
                 StartType = StartType.Connect 
             }, browser);
@@ -51,11 +51,11 @@ namespace PuppeteerExtraSharp
             return (T)_plugins.FirstOrDefault(e => e.GetType() == typeof(T));
         }
 
-        private void OnStart(BrowserStartContext context, Browser browser)
+        private async Task OnStart(BrowserStartContext context, Browser browser)
         {
             OrderPlugins();
             CheckPluginRequirements(context);
-            Register(browser);
+            await Register(browser);
         }
 
         private void ResolveDependencies(IPuppeteerExtraPlugin plugin)
@@ -98,7 +98,7 @@ namespace PuppeteerExtraSharp
             }
         }
 
-        private void Register(Browser browser)
+        private async Task Register(Browser browser)
         {
             foreach (var puppeteerExtraPlugin in _plugins)
             {
@@ -115,6 +115,9 @@ namespace PuppeteerExtraSharp
                 browser.TargetDestroyed += (sender, args) => puppeteerExtraPlugin.OnTargetDestroyed(args.Target);
                 browser.Disconnected += (sender, args) => puppeteerExtraPlugin.OnDisconnected();
                 browser.Closed += (sender, args) => puppeteerExtraPlugin.OnClose();
+
+                var pages = await browser.PagesAsync();
+                puppeteerExtraPlugin.OnPageCreated(pages.First());
             }
         }
     }
