@@ -8,7 +8,7 @@ Solves visible captcha automatically with one single line of code! Can handle ca
 
 // Initialize recaptcha plugin with AntiCaptchaProvider
 var recaptchaPlugin = new RecaptchaPlugin(new AntiCaptcha("MyToken"));
-var browser = await new PuppeteerExtra().LaunchAsync(new LaunchOptions()
+var browser = await new PuppeteerExtra().Use(recaptchaPlugin).LaunchAsync(new LaunchOptions()
 {
   Headless = true
 });
@@ -22,7 +22,7 @@ await recaptchaPlugin.SolveCaptchaAsync(page);
 
 #### Providers 
 
-🤖 [AntiCaptcha](https://anti-captcha.com/mainpage) - awailable!
+🤖 [AntiCaptcha](https://anti-captcha.com/mainpage) - Available!
 
 👾 [2captcha](https://2captcha.com/ru) - Coming soon
 
