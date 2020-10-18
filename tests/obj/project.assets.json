@@ -8,6 +8,19 @@
           "build/netstandard1.0/coverlet.collector.targets": {}
         }
       },
+      "MartinCostello.Logging.XUnit/0.1.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Logging": "2.0.0",
+          "xunit.abstractions": "2.0.1"
+        },
+        "compile": {
+          "lib/netstandard2.0/MartinCostello.Logging.XUnit.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/MartinCostello.Logging.XUnit.dll": {}
+        }
+      },
       "Microsoft.AspNetCore.WebUtilities/2.0.2": {
         "type": "package",
         "dependencies": {
@@ -70,7 +83,19 @@
           "lib/netstandard1.3/Microsoft.CSharp.dll": {}
         }
       },
-      "Microsoft.Extensions.DependencyInjection.Abstractions/2.0.0": {
+      "Microsoft.Extensions.DependencyInjection/3.1.9": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.9"
+        },
+        "compile": {
+          "lib/netcoreapp3.1/Microsoft.Extensions.DependencyInjection.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/Microsoft.Extensions.DependencyInjection.dll": {}
+        }
+      },
+      "Microsoft.Extensions.DependencyInjection.Abstractions/3.1.9": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {}
@@ -1929,6 +1954,20 @@
         "coverlet.collector.nuspec"
       ]
     },
+    "MartinCostello.Logging.XUnit/0.1.0": {
+      "sha512": "iuXtfx7MNIEW6rkk98IjJHVnbYkLvssX+9SiNwhnlvUczupYgihZQYQjAkOVZKYH3EIRo2W7XjHEEmzMLDgpOQ==",
+      "type": "package",
+      "path": "martincostello.logging.xunit/0.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/MartinCostello.Logging.XUnit.dll",
+        "lib/netstandard2.0/MartinCostello.Logging.XUnit.pdb",
+        "lib/netstandard2.0/MartinCostello.Logging.XUnit.xml",
+        "martincostello.logging.xunit.0.1.0.nupkg.sha512",
+        "martincostello.logging.xunit.nuspec"
+      ]
+    },
     "Microsoft.AspNetCore.WebUtilities/2.0.2": {
       "sha512": "dvn80+p1AIQKOfJ+VrOhVMUktWRvJs7Zb+UapZGBNSyrCzTsYiXbb9C7Mzw+nGj5UevnLNFcWWc7BUlLMD2qpw==",
       "type": "package",
@@ -2061,16 +2100,37 @@
         "ref/xamarinwatchos10/_._"
       ]
     },
-    "Microsoft.Extensions.DependencyInjection.Abstractions/2.0.0": {
-      "sha512": "eUdJ0Q/GfVyUJc0Jal5L1QZLceL78pvEM9wEKcHeI24KorqMDoVX+gWsMGLulQMfOwsUaPtkpQM2pFERTzSfSg==",
+    "Microsoft.Extensions.DependencyInjection/3.1.9": {
+      "sha512": "ORqfrAACcvTInie1oGola5uky344/PiNfgayTPuZWV4WnSfIQZJQm/ZLpGshJE3h7TqwYaYElGazK/yaM2bFLA==",
       "type": "package",
-      "path": "microsoft.extensions.dependencyinjection.abstractions/2.0.0",
+      "path": "microsoft.extensions.dependencyinjection/3.1.9",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "Icon.png",
+        "lib/net461/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/net461/Microsoft.Extensions.DependencyInjection.xml",
+        "lib/netcoreapp3.1/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/netcoreapp3.1/Microsoft.Extensions.DependencyInjection.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.xml",
+        "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.xml",
+        "microsoft.extensions.dependencyinjection.3.1.9.nupkg.sha512",
+        "microsoft.extensions.dependencyinjection.nuspec"
+      ]
+    },
+    "Microsoft.Extensions.DependencyInjection.Abstractions/3.1.9": {
+      "sha512": "8PkcaPwiTPOhqshoY4+rQUbz86X6YpLDLUqXOezh7L2A3pgpBmeBBByYIffofBlvQxDdQ0zB2DkWjbZWyCxRWg==",
+      "type": "package",
+      "path": "microsoft.extensions.dependencyinjection.abstractions/3.1.9",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
         "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
         "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
-        "microsoft.extensions.dependencyinjection.abstractions.2.0.0.nupkg.sha512",
+        "microsoft.extensions.dependencyinjection.abstractions.3.1.9.nupkg.sha512",
         "microsoft.extensions.dependencyinjection.abstractions.nuspec"
       ]
     },
@@ -6333,12 +6393,14 @@
     },
     "PuppeteerExtraSharp/1.0.0": {
       "type": "project",
-      "path": "../src/PuppeteerExtraSharp.csproj",
-      "msbuildProject": "../src/PuppeteerExtraSharp.csproj"
+      "path": "../PuppeteerExtraSharp/PuppeteerExtraSharp.csproj",
+      "msbuildProject": "../PuppeteerExtraSharp/PuppeteerExtraSharp.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
+      "MartinCostello.Logging.XUnit >= 0.1.0",
+      "Microsoft.Extensions.DependencyInjection >= 3.1.9",
       "Microsoft.NET.Test.Sdk >= 16.7.1",
       "PuppeteerExtraSharp >= 1.0.0",
       "coverlet.collector >= 1.3.0",
@@ -6373,8 +6435,8 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "C:\\Users\\Oleg\\Desktop\\PuppExtra\\Puppeteer-sharp-extra\\src\\PuppeteerExtraSharp.csproj": {
-              "projectPath": "C:\\Users\\Oleg\\Desktop\\PuppExtra\\Puppeteer-sharp-extra\\src\\PuppeteerExtraSharp.csproj"
+            "C:\\Users\\Oleg\\Desktop\\PuppExtra\\Puppeteer-sharp-extra\\PuppeteerExtraSharp\\PuppeteerExtraSharp.csproj": {
+              "projectPath": "C:\\Users\\Oleg\\Desktop\\PuppExtra\\Puppeteer-sharp-extra\\PuppeteerExtraSharp\\PuppeteerExtraSharp.csproj"
             }
           }
         }
@@ -6388,6 +6450,14 @@
     "frameworks": {
       "netcoreapp3.1": {
         "dependencies": {
+          "MartinCostello.Logging.XUnit": {
+            "target": "Package",
+            "version": "[0.1.0, )"
+          },
+          "Microsoft.Extensions.DependencyInjection": {
+            "target": "Package",
+            "version": "[3.1.9, )"
+          },
           "Microsoft.NET.Test.Sdk": {
             "target": "Package",
             "version": "[16.7.1, )"

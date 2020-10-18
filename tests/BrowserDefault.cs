@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using PuppeteerExtraSharp;
 using PuppeteerExtraSharp.Plugins;
 using PuppeteerSharp;
@@ -11,11 +13,9 @@ namespace Extra.Tests
 {
     public abstract class BrowserDefault : IDisposable
     {
-        protected PuppeteerExtra PuppeteerExtra { get; set; }
         private readonly List<Browser> _launchedBrowsers = new List<Browser>();
         protected BrowserDefault()
         {
-            PuppeteerExtra = new PuppeteerExtra();
         }
 
         protected async Task<Browser> LaunchAsync(LaunchOptions options = null)
@@ -55,7 +55,7 @@ namespace Extra.Tests
             return new LaunchOptions()
             {
                 ExecutablePath = Constants.PathToChrome,
-                Headless = true
+                Headless = Constants.Headless
             };
         }
 
@@ -63,7 +63,7 @@ namespace Extra.Tests
         {
             foreach (var launchedBrowser in _launchedBrowsers)
             {
-                //  launchedBrowser.CloseAsync().Wait();
+                launchedBrowser.CloseAsync().Wait();
             }
         }
     }

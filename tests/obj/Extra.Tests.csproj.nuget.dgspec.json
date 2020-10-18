@@ -4,14 +4,14 @@
     "C:\\Users\\Oleg\\Desktop\\PuppExtra\\Puppeteer-sharp-extra\\tests\\Extra.Tests.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Oleg\\Desktop\\PuppExtra\\Puppeteer-sharp-extra\\src\\PuppeteerExtraSharp.csproj": {
+    "C:\\Users\\Oleg\\Desktop\\PuppExtra\\Puppeteer-sharp-extra\\PuppeteerExtraSharp\\PuppeteerExtraSharp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Oleg\\Desktop\\PuppExtra\\Puppeteer-sharp-extra\\src\\PuppeteerExtraSharp.csproj",
+        "projectUniqueName": "C:\\Users\\Oleg\\Desktop\\PuppExtra\\Puppeteer-sharp-extra\\PuppeteerExtraSharp\\PuppeteerExtraSharp.csproj",
         "projectName": "PuppeteerExtraSharp",
-        "projectPath": "C:\\Users\\Oleg\\Desktop\\PuppExtra\\Puppeteer-sharp-extra\\src\\PuppeteerExtraSharp.csproj",
+        "projectPath": "C:\\Users\\Oleg\\Desktop\\PuppExtra\\Puppeteer-sharp-extra\\PuppeteerExtraSharp\\PuppeteerExtraSharp.csproj",
         "packagesPath": "C:\\Users\\Oleg\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Oleg\\Desktop\\PuppExtra\\Puppeteer-sharp-extra\\src\\obj\\",
+        "outputPath": "C:\\Users\\Oleg\\Desktop\\PuppExtra\\Puppeteer-sharp-extra\\PuppeteerExtraSharp\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Oleg\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -97,8 +97,8 @@
         "frameworks": {
           "netcoreapp3.1": {
             "projectReferences": {
-              "C:\\Users\\Oleg\\Desktop\\PuppExtra\\Puppeteer-sharp-extra\\src\\PuppeteerExtraSharp.csproj": {
-                "projectPath": "C:\\Users\\Oleg\\Desktop\\PuppExtra\\Puppeteer-sharp-extra\\src\\PuppeteerExtraSharp.csproj"
+              "C:\\Users\\Oleg\\Desktop\\PuppExtra\\Puppeteer-sharp-extra\\PuppeteerExtraSharp\\PuppeteerExtraSharp.csproj": {
+                "projectPath": "C:\\Users\\Oleg\\Desktop\\PuppExtra\\Puppeteer-sharp-extra\\PuppeteerExtraSharp\\PuppeteerExtraSharp.csproj"
               }
             }
           }
@@ -112,6 +112,14 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
+            "MartinCostello.Logging.XUnit": {
+              "target": "Package",
+              "version": "[0.1.0, )"
+            },
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[3.1.9, )"
+            },
             "Microsoft.NET.Test.Sdk": {
               "target": "Package",
               "version": "[16.7.1, )"

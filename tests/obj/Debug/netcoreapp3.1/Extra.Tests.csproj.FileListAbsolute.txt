@@ -103,9 +103,11 @@ C:\Users\Oleg\Desktop\PuppExtra\Puppeteer-sharp-extra\tests\obj\Debug\netcoreapp
 C:\Users\Oleg\Desktop\PuppExtra\Puppeteer-sharp-extra\tests\obj\Debug\netcoreapp3.1\Extra.Tests.csproj.GenerateResource.cache
 C:\Users\Oleg\Desktop\PuppExtra\Puppeteer-sharp-extra\tests\obj\Debug\netcoreapp3.1\Extra.Tests.AssemblyInfoInputs.cache
 C:\Users\Oleg\Desktop\PuppExtra\Puppeteer-sharp-extra\tests\obj\Debug\netcoreapp3.1\Extra.Tests.AssemblyInfo.cs
-C:\Users\Oleg\Desktop\PuppExtra\Puppeteer-sharp-extra\tests\obj\Debug\netcoreapp3.1\Extra.Tests.csproj.CoreCompileInputs.cache
 C:\Users\Oleg\Desktop\PuppExtra\Puppeteer-sharp-extra\tests\obj\Debug\netcoreapp3.1\Extra.Tests.csproj.CopyComplete
 C:\Users\Oleg\Desktop\PuppExtra\Puppeteer-sharp-extra\tests\obj\Debug\netcoreapp3.1\Extra.Tests.dll
 C:\Users\Oleg\Desktop\PuppExtra\Puppeteer-sharp-extra\tests\obj\Debug\netcoreapp3.1\Extra.Tests.pdb
 C:\Users\Oleg\Desktop\PuppExtra\Puppeteer-sharp-extra\tests\obj\Debug\netcoreapp3.1\Extra.Tests.genruntimeconfig.cache
 C:\Users\Oleg\Desktop\PuppExtra\Puppeteer-sharp-extra\tests\bin\Debug\netcoreapp3.1\testhost.exe
+C:\Users\Oleg\Desktop\PuppExtra\Puppeteer-sharp-extra\tests\bin\Debug\netcoreapp3.1\MartinCostello.Logging.XUnit.dll
+C:\Users\Oleg\Desktop\PuppExtra\Puppeteer-sharp-extra\tests\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\Oleg\Desktop\PuppExtra\Puppeteer-sharp-extra\tests\obj\Debug\netcoreapp3.1\Extra.Tests.csproj.CoreCompileInputs.cache
