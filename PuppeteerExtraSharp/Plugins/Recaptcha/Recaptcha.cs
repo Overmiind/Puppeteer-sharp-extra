@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using PuppeteerExtraSharp.Plugins.Recaptcha.Provider;
+using PuppeteerExtraSharp.Utils;
 using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.Recaptcha
@@ -71,10 +72,16 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha
             await page.EvaluateFunctionAsync(
                   $"() => {{document.getElementById('g-recaptcha-response').innerHTML='{value}'}}");
 
-            var callback = await page.EvaluateFunctionAsync<CaptchaCfg>("() => findRecap()[0]");
-            if (callback != null && !string.IsNullOrWhiteSpace(callback.callback))
+
+            var script = ResourcesReader.ReadFile(this.GetType().Namespace + ".Scripts.FindRecaptcha.js");
+
+            try
             {
-                await page.EvaluateFunctionAsync($"() => findRecap()[0].function('{value}')");
+                await page.EvaluateFunctionAsync($"() => ({script})().function('{value}')");
+            }
+            catch
+            {
+                // ignored
             }
         }
     }

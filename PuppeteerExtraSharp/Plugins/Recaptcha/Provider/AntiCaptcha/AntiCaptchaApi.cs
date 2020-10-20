@@ -27,9 +27,9 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha.Provider.AntiCaptcha
                 }
             };
 
-         
 
-            var result = _client.PostAsync<AntiCaptchaTaskResult>("createTask",content,token);
+
+            var result = _client.PostWithJsonAsync<AntiCaptchaTaskResult>("createTask", content, token);
             return result;
         }
 
@@ -46,8 +46,10 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha.Provider.AntiCaptcha
             var request = new RestRequest("getTaskResult");
             request.AddJsonBody(content);
             request.Method = Method.POST;
-            return await _client.PendingWhileAsync<TaskResultModel>(request,
-                model => model.status == "ready" || model.errorId != 0, everySeconds: 10, triesLimit: 30, token);
+            var result = await _client.PendingWhileAsync<TaskResultModel>(request,
+                model => model.Data.status == "ready" || model.Data.errorId != 0, everySeconds: 10, triesLimit: 30, token);
+
+            return result.Data;
         }
 
     }

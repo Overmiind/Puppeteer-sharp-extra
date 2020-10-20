@@ -1,4 +1,4 @@
-﻿const findRecap = () => {
+﻿function() {
     if (typeof (___grecaptcha_cfg) !== 'undefined') {
         let cs = [];
         for (let id in ___grecaptcha_cfg.clients) {
@@ -31,7 +31,7 @@
                 return c;
             }
         });
-        return (res);
+        return (res)[0];
     } else {
         return (null);
     }
