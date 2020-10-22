@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using PuppeteerExtraSharp.Plugins.Recaptcha.Provider;
@@ -73,13 +70,13 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha
                   $"() => {{document.getElementById('g-recaptcha-response').innerHTML='{value}'}}");
 
 
-            var script = ResourcesReader.ReadFile(this.GetType().Namespace + ".Scripts.FindRecaptcha.js");
+            var script = ResourcesReader.ReadFile(this.GetType().Namespace + ".Scripts.EnterRecaptchaCallBackScript.js");
 
             try
             {
-                await page.EvaluateFunctionAsync($"() => ({script})().function('{value}')");
+                await page.EvaluateFunctionAsync($@"(value) => {{{script}}}", value);
             }
-            catch
+            catch(Exception ex)
             {
                 // ignored
             }

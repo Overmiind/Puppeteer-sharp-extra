@@ -1,30 +1,41 @@
 ﻿using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using PuppeteerExtraSharp.Plugins.Recaptcha.Provider._2Captcha.Models;
+using RestSharp;
 
 namespace PuppeteerExtraSharp.Plugins.Recaptcha.Provider._2Captcha
 {
-    public class TwoCaptcha: IRecaptchaProvider
+    public class TwoCaptcha : IRecaptchaProvider
     {
+        private readonly ProviderOptions _options;
         private readonly TwoCaptchaApi _api;
 
-        public TwoCaptcha(string key)
+        public TwoCaptcha(string key, ProviderOptions options = null)
         {
-            _api =  new TwoCaptchaApi(key);
+            _options = options ?? ProviderOptions.CreateDefaultOptions();
+            _api = new TwoCaptchaApi(key, _options);
         }
 
         public async Task<string> GetSolution(string key, string pageUrl, string proxyStr = null)
         {
-            var id = await _api.CreateTaskAsync(key, pageUrl);
+            var task = await _api.CreateTaskAsync(key, pageUrl);
+            
+            ThrowErrorIfBadStatus(task);
+            
+            await Task.Delay(_options.StartTimeoutSeconds * 1000);
 
-            await Task.Delay(20 * 1000);
+            var result = await _api.GetSolution(task.request);
 
-            var result = await _api.GetSolution(id);
+            ThrowErrorIfBadStatus(result.Data);
 
-            if(result.StatusCode != HttpStatusCode.OK)
-                throw new HttpRequestException($"Two captcha request ends with error [{result.StatusCode}] {result.StatusDescription}");
+            return result.Data.request;
+        }
 
-            return result.Data;
+        private void ThrowErrorIfBadStatus(TwoCaptchaResponse response)
+        {
+            if (response.status != 1 || string.IsNullOrEmpty(response.request))
+                throw new HttpRequestException($"Two captcha request ends with error [{response.status}] {response.request}");
         }
     }
 }

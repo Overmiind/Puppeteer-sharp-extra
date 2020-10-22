@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using PuppeteerExtraSharp.Plugins.Recaptcha.Provider.AntiCaptcha.Models;
+using PuppeteerExtraSharp.Plugins.Recaptcha.RestClient;
 using RestSharp;
 
 namespace PuppeteerExtraSharp.Plugins.Recaptcha.Provider.AntiCaptcha
@@ -8,10 +9,12 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha.Provider.AntiCaptcha
     public class AntiCaptchaApi
     {
         private readonly string _userKey;
-        private readonly RestClient _client = new RestClient("http://api.anti-captcha.com");
-        public AntiCaptchaApi(string userKey)
+        private readonly ProviderOptions _options;
+        private readonly RestClient.RestClient _client = new RestClient.RestClient("http://api.anti-captcha.com");
+        public AntiCaptchaApi(string userKey, ProviderOptions options)
         {
             _userKey = userKey;
+            _options = options;
         }
 
         public Task<AntiCaptchaTaskResult> CreateTaskAsync(string pageUrl, string key, CancellationToken token = default)
@@ -46,9 +49,16 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha.Provider.AntiCaptcha
             var request = new RestRequest("getTaskResult");
             request.AddJsonBody(content);
             request.Method = Method.POST;
-            var result = await _client.PendingWhileAsync<TaskResultModel>(request,
-                model => model.Data.status == "ready" || model.Data.errorId != 0, everySeconds: 10, triesLimit: 30, token);
+       
+            var result = await _client.CreatePollingBuilder<TaskResultModel>(request).TriesLimit(_options.PendingCount)
+                .WithTimeoutSeconds(5).ActivatePollingAsync(
+                    response =>
+                    {
+                        if (response.Data.status == "ready" || response.Data.errorId != 0)
+                            return PollingAction.Break;
 
+                        return PollingAction.ContinuePolling;
+                    });
             return result.Data;
         }
 

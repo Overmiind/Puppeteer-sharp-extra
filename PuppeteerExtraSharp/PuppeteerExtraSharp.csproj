@@ -20,7 +20,7 @@
     <None Remove="Plugins\ExtraStealth\Scripts\Vendor.js" />
     <None Remove="Plugins\ExtraStealth\Scripts\WebDriver.js" />
     <None Remove="Plugins\ExtraStealth\Scripts\WebGL.js" />
-    <None Remove="Plugins\Recaptcha\Scripts\FindRecaptcha.js" />
+    <None Remove="Plugins\Recaptcha\Scripts\EnterRecaptchaCallBackScript.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,7 +38,7 @@
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Vendor.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\WebDriver.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\WebGL.js" />
-    <EmbeddedResource Include="Plugins\Recaptcha\Scripts\FindRecaptcha.js" />
+    <EmbeddedResource Include="Plugins\Recaptcha\Scripts\EnterRecaptchaCallBackScript.js" />
   </ItemGroup>
 
   <ItemGroup>

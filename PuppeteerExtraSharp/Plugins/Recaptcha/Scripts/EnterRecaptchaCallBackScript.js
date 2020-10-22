@@ -1,4 +1,4 @@
-﻿function() {
+﻿const result = (function () {
     if (typeof (___grecaptcha_cfg) !== 'undefined') {
         let cs = [];
         for (let id in ___grecaptcha_cfg.clients) {
@@ -35,4 +35,12 @@
     } else {
         return (null);
     }
+})()
+
+if (typeof (result.function) == 'function') {
+    result.function(value)
+}
+
+else {
+    eval(result.function).call(window, value);
 }
