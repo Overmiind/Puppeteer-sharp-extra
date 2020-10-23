@@ -32,7 +32,8 @@ bld/
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
-
+Tests/Resources.resx
+Tests/Resources.Designer.cs
 # NUNIT
 *.VisualState.xml
 TestResult.xml

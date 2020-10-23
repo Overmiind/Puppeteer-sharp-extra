@@ -31,9 +31,23 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha
         {
             await page.SetBypassCSPAsync(true);
 
-            var script = ResourcesReader.ReadFile(this.GetType().Namespace + ".Scripts.FindRecaptcha.js");
-            page.DOMContentLoaded += (sender, args) => page.EvaluateExpressionAsync(script);
-            //await page.EvaluateExpressionOnNewDocumentAsync(script);
+            //var script = ResourcesReader.ReadFile(this.GetType().Namespace + ".Scripts.FindRecaptcha.js");
+            //page.DOMContentLoaded += async (sender, args) =>
+            //{
+            //    await page.EvaluateExpressionAsync(script);
+            //};
+
+            //page.FrameAttached += async (sender, args) =>
+            //{
+            //    await args.Frame.EvaluateExpressionAsync(script);
+
+            //    foreach (var frameChildFrame in args.Frame.ChildFrames)
+            //    {
+            //        await frameChildFrame.EvaluateExpressionAsync(script);
+            //    }
+            //};
+
+            ////await page.EvaluateExpressionOnNewDocumentAsync(script);
         }
 
 
