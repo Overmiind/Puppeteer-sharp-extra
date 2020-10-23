@@ -31,13 +31,13 @@ await page.ScreenshotAsync("extra.png");
 ```
 ## Plugin list
 
-🏴 [Puppeteer stealth plugin](https://github.com/Overmiind/Puppeteer-sharp-extra/tree/master/src/Plugins/ExtraStealth)
+🏴 [Puppeteer stealth plugin](https://github.com/Overmiind/Puppeteer-sharp-extra/tree/master/PuppeteerExtraSharp/Plugins/ExtraStealth)
 - Applies various evasion techniques to make detection of headless puppeteer harder.
 
-📃 [Puppeteer anonymize UA plugin](https://github.com/Overmiind/Puppeteer-sharp-extra/tree/master/src/Plugins/AnonymizeUa) 
+📃 [Puppeteer anonymize UA plugin](https://github.com/Overmiind/Puppeteer-sharp-extra/tree/master/PuppeteerExtraSharp/Plugins/AnonymizeUa) 
 - Anonymizes the user-agent on all pages.
 
-💀[Puppeteer recaptcha plugin](https://github.com/Overmiind/Puppeteer-sharp-extra/tree/master/src/Plugins/Recaptcha) 
+💀[Puppeteer recaptcha plugin](https://github.com/Overmiind/Puppeteer-sharp-extra/tree/master/PuppeteerExtraSharp/Plugins/Recaptcha) 
 - Solves recaptcha automatically 
 
 
