@@ -298,3 +298,4 @@ demos/PuppeteerSharpPdfDemo/google.pdf
 demos/PuppeteerSharpPdfDemo/.local-chromium/
 docs/
 samples/PupppeterSharpAspNetFrameworkSample/PupppeterSharpAspNetFrameworkSample/App_Data/
+/Tests/Resources.cs
