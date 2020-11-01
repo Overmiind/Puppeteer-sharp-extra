@@ -40,9 +40,11 @@ await page.ScreenshotAsync("extra.png");
 💀[Puppeteer recaptcha plugin](https://github.com/Overmiind/Puppeteer-sharp-extra/tree/master/PuppeteerExtraSharp/Plugins/Recaptcha) 
 - Solves recaptcha automatically 
 
+🔧[Puppeteer block resources plugin](https://github.com/Overmiind/Puppeteer-sharp-extra/tree/master/PuppeteerExtraSharp/Plugins/BlockResources)
+- Blocks images, documents etc.
 
 
-✋**More plugins will be soon** 
+✋**More plugins coming soon** 
 ## API
 
 #### Use(IPuppeteerExtraPlugin)
