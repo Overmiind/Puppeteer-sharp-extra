@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="StealthPluginTests\Script\fpCollect.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="StealthPluginTests\Script\fpCollect.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MartinCostello.Logging.XUnit" Version="0.1.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.9" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />

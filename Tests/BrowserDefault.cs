@@ -39,6 +39,20 @@ namespace Extra.Tests
             return browser;
         }
 
+        protected async Task<Page> LaunchAndGetPage(IPuppeteerExtraPlugin plugin = null)
+        {
+            Browser browser = null;
+            if (plugin != null)
+                browser = await LaunchWithPluginAsync(plugin);
+            else
+                browser = await LaunchAsync();
+
+            var page = (await browser.PagesAsync())[0];
+
+            return page;
+        }
+
+
         private async void DownloadChromeIfNotExists()
         {
             if (File.Exists(Constants.PathToChrome))

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using PuppeteerSharp;
-
+[assembly: InternalsVisibleTo("Extra.Tests")]
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    internal class ChromeApp: IPuppeteerExtraPlugin
+    internal class ChromeApp : IPuppeteerExtraPlugin
     {
         public string GetName() => "stealth-chromeApp";
         public List<PluginRequirements> Requirements { get; set; }
