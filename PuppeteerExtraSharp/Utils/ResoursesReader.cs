@@ -9,9 +9,9 @@ namespace PuppeteerExtraSharp.Utils
 {
     internal static class ResourcesReader
     {
-        public static string ReadFile(string path)
+        public static string ReadFile(string path, Assembly customAssemly = null)
         {
-            var assembly = Assembly.GetExecutingAssembly();
+            var assembly = customAssemly ?? Assembly.GetExecutingAssembly();
             using var stream = assembly.GetManifestResourceStream(path);
             if(stream is null)
                 throw new FileNotFoundException($"File with path {path} not found!");

@@ -9,7 +9,6 @@ namespace PuppeteerExtraSharp.Plugins
         public string GetName();
         public List<PluginRequirements> Requirements { get; set; }
         public ICollection<IPuppeteerExtraPlugin> Dependencies { get; set; }
-
         public void BeforeLaunch(LaunchOptions options) { }
         public void AfterLaunch(Browser browser) { }
         public void BeforeConnect(ConnectOptions options) { }

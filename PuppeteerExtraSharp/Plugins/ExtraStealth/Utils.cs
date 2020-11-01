@@ -7,7 +7,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth
 {
-    public static class Utils
+    internal static class Utils
     {
         private static readonly HashSet<int> PreloadedPage = new HashSet<int>();
         private static readonly object Locker = new object();
