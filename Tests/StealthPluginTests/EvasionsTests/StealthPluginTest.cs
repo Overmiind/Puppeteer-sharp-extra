@@ -3,7 +3,7 @@ using PuppeteerExtraSharp.Plugins.ExtraStealth;
 using PuppeteerSharp;
 using Xunit;
 
-namespace Extra.Tests.StealthPluginTests
+namespace Extra.Tests.StealthPluginTests.EvasionsTests
 {
     public class StealthPluginTest: BrowserDefault
     {

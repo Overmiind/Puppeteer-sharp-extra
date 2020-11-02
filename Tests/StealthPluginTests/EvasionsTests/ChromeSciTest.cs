@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
 using Xunit;
 
-namespace Extra.Tests.StealthPluginTests
+namespace Extra.Tests.StealthPluginTests.EvasionsTests
 {
     public class ChromeSciTest : BrowserDefault
     {

@@ -8,6 +8,11 @@ namespace Extra.Tests.Utils
 {
     public class FingerPrint
     {
+        /// <summary>
+        /// https://antoinevastel.com/bots/
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns></returns>
         public async Task<JObject> GetFingerPrint(Page page)
         {
             var script = ResourcesReader.ReadFile("Extra.Tests.StealthPluginTests.Script.fpCollect.js", Assembly.GetExecutingAssembly());

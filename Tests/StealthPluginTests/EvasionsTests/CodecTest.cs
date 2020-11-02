@@ -1,12 +1,10 @@
-﻿using System.Reflection;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Extra.Tests.Utils;
 using Newtonsoft.Json.Linq;
 using PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
-using PuppeteerExtraSharp.Utils;
 using Xunit;
 
-namespace Extra.Tests.StealthPluginTests
+namespace Extra.Tests.StealthPluginTests.EvasionsTests
 {
     public class CodecTest : BrowserDefault
     {

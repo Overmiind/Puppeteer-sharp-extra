@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using PuppeteerExtraSharp.Plugins.ExtraStealth;
 using PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
 using Xunit;
 
-namespace Extra.Tests.StealthPluginTests
+namespace Extra.Tests.StealthPluginTests.EvasionsTests
 {
     public class LoadTimesTest: BrowserDefault
     {
