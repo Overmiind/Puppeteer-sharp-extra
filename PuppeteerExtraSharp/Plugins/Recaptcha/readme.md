@@ -22,8 +22,8 @@ await recaptchaPlugin.SolveCaptchaAsync(page);
 
 #### Providers 
 
-🤖 [AntiCaptcha](https://anti-captcha.com/mainpage) - Available!
+🤖 [AntiCaptcha](https://anti-captcha.com/mainpage)
 
-👾 [2captcha](https://2captcha.com/ru) - Coming soon
+👾 [2captcha](https://2captcha.com/ru)
 
 You can use your own provider implements IRecaptcha provider interface who should return g-recaptcha-responce. 
