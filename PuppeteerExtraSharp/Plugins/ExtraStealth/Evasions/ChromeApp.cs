@@ -4,13 +4,12 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    internal class ChromeApp: IPuppeteerExtraPlugin
+    internal class ChromeApp : PuppeteerExtraPlugin
     {
-        public string GetName() => "stealth-chromeApp";
-        public List<PluginRequirements> Requirements { get; set; }
-        public ICollection<IPuppeteerExtraPlugin> Dependencies { get; set; }
+        public ChromeApp(): base("stealth-chromeApp")
+        { }
 
-        public Task OnPageCreated(Page page)
+        public override Task OnPageCreated(Page page)
         {
             var script = Utils.GetScript("ChromeApp.js");
             Utils.EvaluateOnNewPage(page, script);

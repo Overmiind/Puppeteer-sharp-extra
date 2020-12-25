@@ -2,24 +2,24 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.AnonymizeUa
 {
-    public class AnonymizeUaPlugin: IPuppeteerExtraPlugin
+    public class AnonymizeUaPlugin: PuppeteerExtraPlugin
     {
+        public AnonymizeUaPlugin(): base("anonymize-ua")
+        {
+        }
 
         private Func<string, string> _customAction;
         public void CustomizeUa(Func<string, string> uaAction)
         {
             _customAction = uaAction;
         }
-        public string GetName()
-        {
-            return "anonymize-ua";
-        }
 
-        public async void OnPageCreated(Page page)
+        public override async Task OnPageCreated(Page page)
         {
             var ua = await page.Browser.GetUserAgentAsync();
             ua = ua.Replace("HeadlessChrome", "Chrome");
@@ -32,8 +32,5 @@ namespace PuppeteerExtraSharp.Plugins.AnonymizeUa
 
             await page.SetUserAgentAsync(ua);
         }
-
-        public List<PluginRequirements> Requirements { get; set; }
-        public ICollection<IPuppeteerExtraPlugin> Dependencies { get; set; }
     }
 }

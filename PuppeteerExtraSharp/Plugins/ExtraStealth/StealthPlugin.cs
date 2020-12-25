@@ -3,36 +3,29 @@ using PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth
 {
-    public class StealthPlugin: IPuppeteerExtraPlugin
+    public class StealthPlugin: PuppeteerExtraPlugin
     {
-        public string GetName()
+        public StealthPlugin() : base("stealth")
         {
-            return "stealth";
-        }
-
-        public StealthPlugin()
-        {
-            Dependencies = new List<IPuppeteerExtraPlugin>()
-            {
-                new WebDriver(),
-                new ChromeApp(),
-                new ChromeSci(),
-                new ChromeRuntime(),
-                new Frame(),
-                new Codec(),
-                new Languages(),
-                new OutDimensions(),
-                new Permissions(),
-                new UserAgent(),
-                new Vendor(),
-                new WebGl(),
-                new PluginEvasion(),
-                new StackTrace()
-            };
         }
         
-
-        public List<PluginRequirements> Requirements { get; set; }
-        public ICollection<IPuppeteerExtraPlugin> Dependencies { get; set; }
+        public override ICollection<PuppeteerExtraPlugin> Dependencies { get; set; } = new List<PuppeteerExtraPlugin>()
+        {
+            new WebDriver(),
+            new ChromeApp(),
+            new ChromeSci(),
+            new ChromeRuntime(),
+            new Frame(),
+            new Codec(),
+            new Languages(),
+            new OutDimensions(),
+            new Permissions(),
+            new UserAgent(),
+            new Vendor(),
+            new WebGl(),
+            new PluginEvasion(),
+            new StackTrace(),
+            new LoadTimes()
+        };
     }
 }

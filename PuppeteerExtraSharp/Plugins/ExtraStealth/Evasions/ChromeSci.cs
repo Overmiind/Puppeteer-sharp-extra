@@ -4,17 +4,14 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    internal class ChromeSci: IPuppeteerExtraPlugin
+    internal class ChromeSci: PuppeteerExtraPlugin
     {
-        public string GetName()
+        public ChromeSci(): base("stealth_sci")
         {
-            return "stealth_sci";
+            
         }
 
-        public List<PluginRequirements> Requirements { get; set; }
-        public ICollection<IPuppeteerExtraPlugin> Dependencies { get; set; }
-
-        public Task OnPageCreated(Page page)
+        public override Task OnPageCreated(Page page)
         {
             var script = Utils.GetScript("SCI.js");
             Utils.EvaluateOnNewPage(page, script);

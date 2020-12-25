@@ -4,21 +4,18 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    internal class Codec: IPuppeteerExtraPlugin
+    internal class Codec : PuppeteerExtraPlugin
     {
-        public string GetName()
+        public Codec() : base("stealth-codec")
         {
-            return "stealth-codec";
+
         }
 
-        public Task OnPageCreated(Page page)
+        public override Task OnPageCreated(Page page)
         {
             var script = Utils.GetScript("Codec.js");
             Utils.EvaluateOnNewPage(page, script);
             return Task.CompletedTask;
         }
-
-        public List<PluginRequirements> Requirements { get; set; }
-        public ICollection<IPuppeteerExtraPlugin> Dependencies { get; set; }
     }
 }

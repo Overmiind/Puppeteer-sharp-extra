@@ -4,16 +4,14 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    internal class WebDriver: IPuppeteerExtraPlugin
+    internal class WebDriver : PuppeteerExtraPlugin
     {
-        public string GetName()
+        public WebDriver() : base("stealth-webDriver")
         {
-            return "stealth-webDriver";
-        }
-        public List<PluginRequirements> Requirements { get; set; }
-        public ICollection<IPuppeteerExtraPlugin> Dependencies { get; set; }
 
-        public async Task OnPageCreated(Page page)
+        }
+
+        public override async Task OnPageCreated(Page page)
         {
             var script = Utils.GetScript("WebDriver.js");
             await page.EvaluateFunctionOnNewDocumentAsync(script);

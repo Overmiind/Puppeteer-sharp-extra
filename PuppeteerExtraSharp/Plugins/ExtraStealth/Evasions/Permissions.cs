@@ -4,21 +4,17 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    internal class Permissions: IPuppeteerExtraPlugin
+    internal class Permissions: PuppeteerExtraPlugin
     {
-        public string GetName()
+        public Permissions() : base("stealth-permissions")
         {
-            return "stealth-permissions";
         }
-
-        public Task OnPageCreated(Page page)
+ 
+        public override Task OnPageCreated(Page page)
         {
             var script = Utils.GetScript("Permissions.js");
             Utils.EvaluateOnNewPage(page, script);
             return Task.CompletedTask;
         }
-
-        public List<PluginRequirements> Requirements { get; set; }
-        public ICollection<IPuppeteerExtraPlugin> Dependencies { get; set; }
     }
 }

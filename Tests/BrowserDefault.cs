@@ -28,7 +28,7 @@ namespace Extra.Tests
             return browser;
         }
 
-        protected async Task<Browser> LaunchWithPluginAsync(IPuppeteerExtraPlugin plugin, LaunchOptions options = null)
+        protected async Task<Browser> LaunchWithPluginAsync(PuppeteerExtraPlugin plugin, LaunchOptions options = null)
         {
             var extra = new PuppeteerExtra().Use(plugin);
             //DownloadChromeIfNotExists();
@@ -38,6 +38,20 @@ namespace Extra.Tests
             _launchedBrowsers.Add(browser);
             return browser;
         }
+
+        protected async Task<Page> LaunchAndGetPage(PuppeteerExtraPlugin plugin = null)
+        {
+            Browser browser = null;
+            if (plugin != null)
+                browser = await LaunchWithPluginAsync(plugin);
+            else
+                browser = await LaunchAsync();
+
+            var page = (await browser.PagesAsync())[0];
+
+            return page;
+        }
+
 
         private async void DownloadChromeIfNotExists()
         {

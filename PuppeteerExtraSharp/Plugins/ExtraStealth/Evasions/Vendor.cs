@@ -4,20 +4,17 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    internal class Vendor : IPuppeteerExtraPlugin
+    internal class Vendor : PuppeteerExtraPlugin
     {
-        public string GetName()
+        public Vendor() : base("stealth-vendor")
         {
-            return "stealth-vendor";
+
         }
 
-        public async Task OnPageCreated(Page page)
+        public override async Task OnPageCreated(Page page)
         {
             var script = Utils.GetScript("Vendor.js");
             await page.EvaluateFunctionOnNewDocumentAsync(script);
         }
-
-        public List<PluginRequirements> Requirements { get; set; }
-        public ICollection<IPuppeteerExtraPlugin> Dependencies { get; set; }
     }
 }

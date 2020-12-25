@@ -4,23 +4,19 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    internal class UserAgent : IPuppeteerExtraPlugin
+    internal class UserAgent : PuppeteerExtraPlugin
     {
-        public string GetName()
+        public UserAgent(): base("stealth-userAgent")
         {
-            return "stealth-userAgent";
+            
         }
 
-
-        public async Task OnPageCreated(Page page)
+        public override async Task OnPageCreated(Page page)
         {
             var ua = await page.Browser.GetUserAgentAsync();
             ua = ua.Replace("HeadlessChrome/", "Chrome/");
             await page.SetUserAgentAsync(ua);
             
         }
-
-        public List<PluginRequirements> Requirements { get; set; }
-        public ICollection<IPuppeteerExtraPlugin> Dependencies { get; set; }
     }
 }
