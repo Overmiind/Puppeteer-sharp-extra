@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.BlockResources
 {
-    public class BlockResourcesPlugin : IPuppeteerExtraPlugin
+    public class BlockResourcesPlugin : PuppeteerExtraPlugin
     {
         public readonly List<BlockRule> BlockResources = new List<BlockRule>();
-        public string GetName() => "block-resources";
 
-        public BlockResourcesPlugin(IEnumerable<ResourceType> blockResources = null)
+        public BlockResourcesPlugin(IEnumerable<ResourceType> blockResources = null): base("block-resources")
         {
             if (blockResources != null)
                 AddRule(builder => builder.BlockedResources(blockResources.ToArray()));
@@ -36,7 +34,7 @@ namespace PuppeteerExtraSharp.Plugins.BlockResources
         }
 
 
-        public async Task OnPageCreated(Page page)
+        public override async Task OnPageCreated(Page page)
         {
             await page.SetRequestInterceptionAsync(true);
             page.Request += (sender, args) => OnPageRequest(page, args);
@@ -56,12 +54,9 @@ namespace PuppeteerExtraSharp.Plugins.BlockResources
         }
 
 
-        public void BeforeLaunch(LaunchOptions options)
+        public override void BeforeLaunch(LaunchOptions options)
         {
             options.Args = options.Args.Append("--site-per-process").Append("--disable-features=IsolateOrigins").ToArray();
         }
-
-        public List<PluginRequirements> Requirements { get; set; }
-        public ICollection<IPuppeteerExtraPlugin> Dependencies { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Version>1.1.0</Version>
     <RepositoryUrl>https://github.com/Overmiind/Puppeteer-sharp-extra</RepositoryUrl>

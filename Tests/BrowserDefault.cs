@@ -28,7 +28,7 @@ namespace Extra.Tests
             return browser;
         }
 
-        protected async Task<Browser> LaunchWithPluginAsync(IPuppeteerExtraPlugin plugin, LaunchOptions options = null)
+        protected async Task<Browser> LaunchWithPluginAsync(PuppeteerExtraPlugin plugin, LaunchOptions options = null)
         {
             var extra = new PuppeteerExtra().Use(plugin);
             //DownloadChromeIfNotExists();
@@ -39,7 +39,7 @@ namespace Extra.Tests
             return browser;
         }
 
-        protected async Task<Page> LaunchAndGetPage(IPuppeteerExtraPlugin plugin = null)
+        protected async Task<Page> LaunchAndGetPage(PuppeteerExtraPlugin plugin = null)
         {
             Browser browser = null;
             if (plugin != null)

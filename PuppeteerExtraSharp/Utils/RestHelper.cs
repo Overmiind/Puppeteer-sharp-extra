@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Text;
+﻿using System.Collections.Generic;
 using RestSharp;
 
 namespace PuppeteerExtraSharp.Utils
@@ -10,9 +7,9 @@ namespace PuppeteerExtraSharp.Utils
     {
         public static IRestRequest AddQueryParameters(this IRestRequest request, Dictionary<string, string> parameters)
         {
-            foreach (var (key,value) in parameters)
+            foreach (var parameter in parameters)
             {
-                request.AddQueryParameter(key, value);
+                request.AddQueryParameter(parameter.Key, parameter.Value);
             }
 
             return request;

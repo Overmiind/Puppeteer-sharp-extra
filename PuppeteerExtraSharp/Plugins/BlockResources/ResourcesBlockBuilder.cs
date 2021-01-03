@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
-using PuppeteerSharp;
+﻿using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.BlockResources
 {

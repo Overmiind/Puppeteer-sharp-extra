@@ -4,29 +4,19 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    internal class Frame: IPuppeteerExtraPlugin
+    internal class Frame: PuppeteerExtraPlugin
     {
-        public string GetName()
-        {
-            return "stealth-iframe";
-        }
+        public Frame(): base("stealth-iframe") { }
 
-        public Frame()
-        {
-            Requirements = new List<PluginRequirements>()
-            {
-                PluginRequirements.RunLast
-            };
-        }
-
-
-        public async Task OnPageCreated(Page page)
+        public override async Task OnPageCreated(Page page)
         {
             var script = Utils.GetScript("Frame.js");
             await page.EvaluateFunctionOnNewDocumentAsync(script);
         }
 
-        public List<PluginRequirements> Requirements { get; set; }
-        public ICollection<IPuppeteerExtraPlugin> Dependencies { get; set; }
+        public override List<PluginRequirements> Requirements { get; set; } = new List<PluginRequirements>()
+        {
+            PluginRequirements.RunLast
+        };
     }
 }

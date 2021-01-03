@@ -1,8 +1,6 @@
-﻿using System.Net;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using PuppeteerExtraSharp.Plugins.Recaptcha.Provider._2Captcha.Models;
-using RestSharp;
 
 namespace PuppeteerExtraSharp.Plugins.Recaptcha.Provider._2Captcha
 {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using PuppeteerExtraSharp.Plugins;
 using PuppeteerSharp;
@@ -11,9 +10,9 @@ namespace PuppeteerExtraSharp
 {
     public class PuppeteerExtra
     {
-        private List<IPuppeteerExtraPlugin> _plugins = new List<IPuppeteerExtraPlugin>();
+        private List<PuppeteerExtraPlugin> _plugins = new List<PuppeteerExtraPlugin>();
 
-        public PuppeteerExtra Use(IPuppeteerExtraPlugin plugin)
+        public PuppeteerExtra Use(PuppeteerExtraPlugin plugin)
         {
             ResolveDependencies(plugin);
             _plugins.Add(plugin);
@@ -46,7 +45,7 @@ namespace PuppeteerExtraSharp
             return browser;
         }
 
-        public T GetPlugin<T>() where T: IPuppeteerExtraPlugin
+        public T GetPlugin<T>() where T: PuppeteerExtraPlugin
         {
             return (T)_plugins.FirstOrDefault(e => e.GetType() == typeof(T));
         }
@@ -58,7 +57,7 @@ namespace PuppeteerExtraSharp
             await Register(browser);
         }
 
-        private void ResolveDependencies(IPuppeteerExtraPlugin plugin)
+        private void ResolveDependencies(PuppeteerExtraPlugin plugin)
         {
             if (plugin.Dependencies is null || !plugin.Dependencies.Any())
                 return;
@@ -90,9 +89,9 @@ namespace PuppeteerExtraSharp
                     switch (context.StartType)
                     {
                         case StartType.Launch when requirement == PluginRequirements.HeadFul && context.IsHeadless:
-                            throw new NotSupportedException($"Plugin - {puppeteerExtraPlugin.GetName()} is not supported in headless mode");
+                            throw new NotSupportedException($"Plugin - {puppeteerExtraPlugin.Name} is not supported in headless mode");
                         case StartType.Connect when requirement == PluginRequirements.Launch:
-                            throw new NotSupportedException($"Plugin - {puppeteerExtraPlugin.GetName()} doesn't support connect");
+                            throw new NotSupportedException($"Plugin - {puppeteerExtraPlugin.Name} doesn't support connect");
                     }
                 }
             }
