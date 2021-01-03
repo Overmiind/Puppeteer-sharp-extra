@@ -25,7 +25,6 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth
             new WebGl(),
             new PluginEvasion(),
             new StackTrace(),
-            new LoadTimes()
         };
     }
 }
