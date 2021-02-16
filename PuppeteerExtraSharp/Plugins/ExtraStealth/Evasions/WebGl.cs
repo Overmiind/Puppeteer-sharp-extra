@@ -5,12 +5,28 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
     internal class WebGl : PuppeteerExtraPlugin
     {
-        public WebGl() : base("stealth-webGl") { }
+        private readonly StealthWebGLOptions _options;
+        public WebGl(StealthWebGLOptions options) : base("stealth-webGl")
+        {
+            _options = options ?? new StealthWebGLOptions("Intel Inc.", "Intel Iris OpenGL Engine");
+        }
 
         public override async Task OnPageCreated(Page page)
         {
             var script = Utils.GetScript("WebGL.js");
-            await page.EvaluateFunctionOnNewDocumentAsync(script);
+            await page.EvaluateFunctionOnNewDocumentAsync(script, _options.Vendor, _options.Renderer);
+        }
+    }
+
+    public class StealthWebGLOptions : IPuppeteerExtraPluginOptions
+    {
+        public string Vendor { get; }
+        public string Renderer { get; }
+
+        public StealthWebGLOptions(string vendor, string renderer)
+        {
+            Vendor = vendor;
+            Renderer = renderer;
         }
     }
 }

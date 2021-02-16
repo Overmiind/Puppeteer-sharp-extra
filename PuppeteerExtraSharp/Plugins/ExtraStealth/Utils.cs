@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using PuppeteerExtraSharp.Utils;
 using PuppeteerSharp;
 
@@ -9,18 +10,22 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth
     {
         private static readonly HashSet<int> PreloadedPage = new HashSet<int>();
         private static readonly object Locker = new object();
-        public static void EvaluateOnNewPage(Page page, string script)
+        public static Task EvaluateOnNewPageWithUtilsScript(Page page, string script, params object[] args)
         {
             lock (Locker)
             {
+                var tasks = new List<Task>();
+
                 if (!PreloadedPage.Contains(page.GetHashCode()))
                 {
                     var utilsScript = Utils.GetScript("Utils.js");
-                    page.EvaluateExpressionOnNewDocumentAsync(utilsScript);
                     PreloadedPage.Add(page.GetHashCode());
+                    tasks.Add(page.EvaluateExpressionOnNewDocumentAsync(utilsScript));
                 }
 
-                page.EvaluateFunctionOnNewDocumentAsync(script);
+                tasks.Add(page.EvaluateFunctionOnNewDocumentAsync(script, args));
+
+                return Task.WhenAll(tasks);
             }
         }
 

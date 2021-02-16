@@ -3,18 +3,20 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <RepositoryUrl>https://github.com/Overmiind/Puppeteer-sharp-extra</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>puppeteer-extra recaptcha browser-automation browser-extension browser puppeteer netcore netcore31 stealth-client browser-testing c#</PackageTags>
     <PackageProjectUrl>https://github.com/Overmiind/Puppeteer-sharp-extra</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <UserSecretsId>945328fb-3e7e-4518-99f8-ec578bf688b1</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Plugins\ExtraStealth\Scripts\ChromeApp.js" />
     <None Remove="Plugins\ExtraStealth\Scripts\Codec.js" />
     <None Remove="Plugins\ExtraStealth\Scripts\Frame.js" />
+    <None Remove="Plugins\ExtraStealth\Scripts\HardwareConcurrency.js" />
     <None Remove="Plugins\ExtraStealth\Scripts\Language.js" />
     <None Remove="Plugins\ExtraStealth\Scripts\LoadTimes.js" />
     <None Remove="Plugins\ExtraStealth\Scripts\Outdimensions.js" />
@@ -34,6 +36,7 @@
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\ChromeApp.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Codec.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Frame.js" />
+    <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\HardwareConcurrency.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Language.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\LoadTimes.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Outdimensions.js" />

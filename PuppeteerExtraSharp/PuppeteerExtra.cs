@@ -59,14 +59,15 @@ namespace PuppeteerExtraSharp
 
         private void ResolveDependencies(PuppeteerExtraPlugin plugin)
         {
-            if (plugin.Dependencies is null || !plugin.Dependencies.Any())
+            var dependencies = plugin.GetDependencies()?.ToList();
+            if (dependencies is null || !dependencies.Any())
                 return;
-            var dependencies = plugin.Dependencies.ToList();
+           
             foreach (var puppeteerExtraPlugin in dependencies)
             {
                 Use(puppeteerExtraPlugin);
 
-                var plugDependencies = puppeteerExtraPlugin.Dependencies?.ToList();
+                var plugDependencies = puppeteerExtraPlugin.GetDependencies()?.ToList();
 
                 if(plugDependencies != null && plugDependencies.Any())
                     plugDependencies.ForEach(ResolveDependencies);

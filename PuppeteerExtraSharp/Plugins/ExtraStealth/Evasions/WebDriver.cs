@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
@@ -11,6 +12,21 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
         {
             var script = Utils.GetScript("WebDriver.js");
             await page.EvaluateFunctionOnNewDocumentAsync(script);
+        }
+
+        public override void BeforeLaunch(LaunchOptions options)
+        {
+            var args = options.Args.ToList();
+            var idx = args.FindIndex(e => e.StartsWith("--disable-blink-features="));
+            if (idx != -1)
+            {
+                args[idx] = $"{idx}, AutomationControlled";
+                return;
+            }
+
+            args.Add("--disable-blink-features=AutomationControlled");
+
+            options.Args = args.ToArray();
         }
     }
 }
