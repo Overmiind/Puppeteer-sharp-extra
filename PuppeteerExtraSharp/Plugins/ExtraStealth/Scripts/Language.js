@@ -1,5 +1,7 @@
-() => {
-    Object.defineProperty(Object.getPrototypeOf(navigator), 'languages', {
-        get: () => ['en-US', 'en']
-    })
+(...languages) => {
+    utils.replaceGetterWithProxy(
+        Object.getPrototypeOf(navigator),
+        'languages',
+        utils.makeHandler().getterValue(Object.freeze(languages))
+    )
 }

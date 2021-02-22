@@ -10,7 +10,7 @@
  *
  */
 
-const utils = {}
+const utils = {};
 /**
  * Wraps a JS Proxy Handler and strips it's presence from error stacks, in case the traps throw.
  *
@@ -19,18 +19,18 @@ const utils = {}
  * @param {object} handler - The JS Proxy handler to wrap
  */
 utils.stripProxyFromErrors = (handler = {}) => {
-    const newHandler = {}
+    const newHandler = {};
     // We wrap each trap in the handler in a try/catch and modify the error stack if they throw
-    const traps = Object.getOwnPropertyNames(handler)
+    const traps = Object.getOwnPropertyNames(handler);
     traps.forEach(trap => {
         newHandler[trap] = function () {
             try {
                 // Forward the call to the defined proxy handler
-                return handler[trap].apply(this, arguments || [])
+                return handler[trap].apply(this, arguments || []);
             } catch (err) {
                 // Stack traces differ per browser, we only support chromium based ones currently
                 if (!err || !err.stack || !err.stack.includes(`at `)) {
-                    throw err
+                    throw err;
                 }
 
                 // When something throws within one of our traps the Proxy will show up in error stacks
@@ -44,7 +44,7 @@ utils.stripProxyFromErrors = (handler = {}) => {
                         `at Reflect.${trap} `, // e.g. Reflect.get or Reflect.apply
                         `at Object.${trap} `, // e.g. Object.get or Object.apply
                         `at Object.newHandler.<computed> [as ${trap}] ` // caused by this very wrapper :-)
-                    ]
+                    ];
                     return (
                         err.stack
                             .split('\n')
@@ -53,33 +53,33 @@ utils.stripProxyFromErrors = (handler = {}) => {
                             // Check if the line starts with one of our blacklisted strings
                             .filter(line => !blacklist.some(bl => line.trim().startsWith(bl)))
                             .join('\n')
-                    )
-                }
+                    );
+                };
 
                 const stripWithAnchor = stack => {
-                    const stackArr = stack.split('\n')
-                    const anchor = `at Object.newHandler.<computed> [as ${trap}] ` // Known first Proxy line in chromium
+                    const stackArr = stack.split('\n');
+                    const anchor = `at Object.newHandler.<computed> [as ${trap}] `; // Known first Proxy line in chromium
                     const anchorIndex = stackArr.findIndex(line =>
                         line.trim().startsWith(anchor)
-                    )
+                    );
                     if (anchorIndex === -1) {
-                        return false // 404, anchor not found
+                        return false; // 404, anchor not found
                     }
                     // Strip everything from the top until we reach the anchor line
                     // Note: We're keeping the 1st line (zero index) as it's unrelated (e.g. `TypeError`)
-                    stackArr.splice(1, anchorIndex)
-                    return stackArr.join('\n')
-                }
+                    stackArr.splice(1, anchorIndex);
+                    return stackArr.join('\n');
+                };
 
                 // Try using the anchor method, fallback to blacklist if necessary
-                err.stack = stripWithAnchor(err.stack) || stripWithBlacklist(err.stack)
+                err.stack = stripWithAnchor(err.stack) || stripWithBlacklist(err.stack);
 
-                throw err // Re-throw our now sanitized error
+                throw err; // Re-throw our now sanitized error
             }
-        }
-    })
-    return newHandler
-}
+        };
+    });
+    return newHandler;
+};
 
 /**
  * Strip error lines from stack traces until (and including) a known line the stack.
@@ -88,17 +88,17 @@ utils.stripProxyFromErrors = (handler = {}) => {
  * @param {string} anchor - The string the anchor line starts with
  */
 utils.stripErrorWithAnchor = (err, anchor) => {
-    const stackArr = err.stack.split('\n')
-    const anchorIndex = stackArr.findIndex(line => line.trim().startsWith(anchor))
+    const stackArr = err.stack.split('\n');
+    const anchorIndex = stackArr.findIndex(line => line.trim().startsWith(anchor));
     if (anchorIndex === -1) {
-        return err // 404, anchor not found
+        return err; // 404, anchor not found
     }
     // Strip everything from the top until we reach the anchor line (remove anchor line as well)
     // Note: We're keeping the 1st line (zero index) as it's unrelated (e.g. `TypeError`)
-    stackArr.splice(1, anchorIndex)
-    err.stack = stackArr.join('\n')
-    return err
-}
+    stackArr.splice(1, anchorIndex);
+    err.stack = stackArr.join('\n');
+    return err;
+};
 
 /**
  * Replace the property of an object in a stealthy way.
@@ -123,8 +123,8 @@ utils.replaceProperty = (obj, propName, descriptorOverrides = {}) => {
         ...(Object.getOwnPropertyDescriptor(obj, propName) || {}),
         // Add our overrides (e.g. value, get())
         ...descriptorOverrides
-    })
-}
+    });
+};
 
 /**
  * Preload a cache of function copies and data.
@@ -136,7 +136,7 @@ utils.replaceProperty = (obj, propName, descriptorOverrides = {}) => {
  */
 utils.preloadCache = () => {
     if (utils.cache) {
-        return
+        return;
     }
     utils.cache = {
         // Used in our proxies
@@ -146,8 +146,8 @@ utils.preloadCache = () => {
         },
         // Used in `makeNativeString`
         nativeToStringStr: Function.toString + '' // => `function toString() { [native code] }`
-    }
-}
+    };
+};
 
 /**
  * Utility function to generate a cross-browser `toString` result representing native code.
@@ -168,9 +168,9 @@ utils.preloadCache = () => {
  */
 utils.makeNativeString = (name = '') => {
     // Cache (per-window) the original native toString or use that if available
-    utils.preloadCache()
-    return utils.cache.nativeToStringStr.replace('toString', name || '')
-}
+    utils.preloadCache();
+    return utils.cache.nativeToStringStr.replace('toString', name || '');
+};
 
 /**
  * Helper function to modify the `toString()` result of the provided object.
@@ -187,35 +187,35 @@ utils.makeNativeString = (name = '') => {
  * @param {string} str - Optional string used as a return value
  */
 utils.patchToString = (obj, str = '') => {
-    utils.preloadCache()
+    utils.preloadCache();
 
     const toStringProxy = new Proxy(Function.prototype.toString, {
         apply: function (target, ctx) {
             // This fixes e.g. `HTMLMediaElement.prototype.canPlayType.toString + ""`
             if (ctx === Function.prototype.toString) {
-                return utils.makeNativeString('toString')
+                return utils.makeNativeString('toString');
             }
             // `toString` targeted at our proxied Object detected
             if (ctx === obj) {
                 // We either return the optional string verbatim or derive the most desired result automatically
-                return str || utils.makeNativeString(obj.name)
+                return str || utils.makeNativeString(obj.name);
             }
             // Check if the toString protype of the context is the same as the global prototype,
             // if not indicates that we are doing a check across different windows., e.g. the iframeWithdirect` test case
             const hasSameProto = Object.getPrototypeOf(
                 Function.prototype.toString
-            ).isPrototypeOf(ctx.toString) // eslint-disable-line no-prototype-builtins
+            ).isPrototypeOf(ctx.toString); // eslint-disable-line no-prototype-builtins
             if (!hasSameProto) {
                 // Pass the call on to the local Function.prototype.toString instead
-                return ctx.toString()
+                return ctx.toString();
             }
-            return target.call(ctx)
+            return target.call(ctx);
         }
-    })
+    });
     utils.replaceProperty(Function.prototype, 'toString', {
         value: toStringProxy
-    })
-}
+    });
+};
 
 /**
  * Make all nested functions of an object native.
@@ -223,8 +223,8 @@ utils.patchToString = (obj, str = '') => {
  * @param {object} obj
  */
 utils.patchToStringNested = (obj = {}) => {
-    return utils.execRecursively(obj, ['function'], utils.patchToString)
-}
+    return utils.execRecursively(obj, ['function'], utils.patchToString);
+};
 
 /**
  * Redirect toString requests from one object to another.
@@ -233,13 +233,13 @@ utils.patchToStringNested = (obj = {}) => {
  * @param {object} originalObj - The object which toString result we wan to return
  */
 utils.redirectToString = (proxyObj, originalObj) => {
-    utils.preloadCache()
+    utils.preloadCache();
 
     const toStringProxy = new Proxy(Function.prototype.toString, {
         apply: function (target, ctx) {
             // This fixes e.g. `HTMLMediaElement.prototype.canPlayType.toString + ""`
             if (ctx === Function.prototype.toString) {
-                return utils.makeNativeString('toString')
+                return utils.makeNativeString('toString');
             }
 
             // `toString` targeted at our proxied Object detected
@@ -247,29 +247,29 @@ utils.redirectToString = (proxyObj, originalObj) => {
                 const fallback = () =>
                     originalObj && originalObj.name
                         ? utils.makeNativeString(originalObj.name)
-                        : utils.makeNativeString(proxyObj.name)
+                        : utils.makeNativeString(proxyObj.name);
 
                 // Return the toString representation of our original object if possible
-                return originalObj + '' || fallback()
+                return originalObj + '' || fallback();
             }
 
             // Check if the toString protype of the context is the same as the global prototype,
             // if not indicates that we are doing a check across different windows., e.g. the iframeWithdirect` test case
             const hasSameProto = Object.getPrototypeOf(
                 Function.prototype.toString
-            ).isPrototypeOf(ctx.toString) // eslint-disable-line no-prototype-builtins
+            ).isPrototypeOf(ctx.toString); // eslint-disable-line no-prototype-builtins
             if (!hasSameProto) {
                 // Pass the call on to the local Function.prototype.toString instead
-                return ctx.toString()
+                return ctx.toString();
             }
 
-            return target.call(ctx)
+            return target.call(ctx);
         }
-    })
+    });
     utils.replaceProperty(Function.prototype, 'toString', {
         value: toStringProxy
-    })
-}
+    });
+};
 
 /**
  * All-in-one method to replace a property with a JS Proxy using the provided Proxy handler with traps.
@@ -285,15 +285,15 @@ utils.redirectToString = (proxyObj, originalObj) => {
  * @param {object} handler - The JS Proxy handler to use
  */
 utils.replaceWithProxy = (obj, propName, handler) => {
-    utils.preloadCache()
-    const originalObj = obj[propName]
-    const proxyObj = new Proxy(obj[propName], utils.stripProxyFromErrors(handler))
+    utils.preloadCache();
+    const originalObj = obj[propName];
+    const proxyObj = new Proxy(obj[propName], utils.stripProxyFromErrors(handler));
 
-    utils.replaceProperty(obj, propName, { value: proxyObj })
-    utils.redirectToString(proxyObj, originalObj)
+    utils.replaceProperty(obj, propName, { value: proxyObj });
+    utils.redirectToString(proxyObj, originalObj);
 
-    return true
-}
+    return true;
+};
 
 /**
  * All-in-one method to mock a non-existing property with a JS Proxy using the provided Proxy handler with traps.
@@ -309,14 +309,14 @@ utils.replaceWithProxy = (obj, propName, handler) => {
  * @param {object} handler - The JS Proxy handler to use
  */
 utils.mockWithProxy = (obj, propName, pseudoTarget, handler) => {
-    utils.preloadCache()
-    const proxyObj = new Proxy(pseudoTarget, utils.stripProxyFromErrors(handler))
+    utils.preloadCache();
+    const proxyObj = new Proxy(pseudoTarget, utils.stripProxyFromErrors(handler));
 
-    utils.replaceProperty(obj, propName, { value: proxyObj })
-    utils.patchToString(proxyObj)
+    utils.replaceProperty(obj, propName, { value: proxyObj });
+    utils.patchToString(proxyObj);
 
-    return true
-}
+    return true;
+};
 
 /**
  * All-in-one method to create a new JS Proxy with stealth tweaks.
@@ -332,12 +332,12 @@ utils.mockWithProxy = (obj, propName, pseudoTarget, handler) => {
  * @param {object} handler - The JS Proxy handler to use
  */
 utils.createProxy = (pseudoTarget, handler) => {
-    utils.preloadCache()
-    const proxyObj = new Proxy(pseudoTarget, utils.stripProxyFromErrors(handler))
-    utils.patchToString(proxyObj)
+    utils.preloadCache();
+    const proxyObj = new Proxy(pseudoTarget, utils.stripProxyFromErrors(handler));
+    utils.patchToString(proxyObj);
 
-    return proxyObj
-}
+    return proxyObj;
+};
 
 /**
  * Helper function to split a full path to an Object into the first part and property.
@@ -356,7 +356,7 @@ utils.splitObjPath = objPath => ({
         .join('.'),
     // Extract last dot entry ==> `canPlayType`
     propName: objPath.split('.').slice(-1)[0]
-})
+});
 
 /**
  * Convenience method to replace a property with a JS Proxy using the provided objPath.
@@ -370,10 +370,10 @@ utils.splitObjPath = objPath => ({
  * @param {object} handler - The JS Proxy handler to use
  */
 utils.replaceObjPathWithProxy = (objPath, handler) => {
-    const { objName, propName } = utils.splitObjPath(objPath)
-    const obj = eval(objName) // eslint-disable-line no-eval
-    return utils.replaceWithProxy(obj, propName, handler)
-}
+    const { objName, propName } = utils.splitObjPath(objPath);
+    const obj = eval(objName); // eslint-disable-line no-eval
+    return utils.replaceWithProxy(obj, propName, handler);
+};
 
 /**
  * Traverse nested properties of an object recursively and apply the given function on a whitelist of value types.
@@ -386,20 +386,20 @@ utils.execRecursively = (obj = {}, typeFilter = [], fn) => {
     function recurse(obj) {
         for (const key in obj) {
             if (obj[key] === undefined) {
-                continue
+                continue;
             }
             if (obj[key] && typeof obj[key] === 'object') {
-                recurse(obj[key])
+                recurse(obj[key]);
             } else {
                 if (obj[key] && typeFilter.includes(typeof obj[key])) {
-                    fn.call(this, obj[key])
+                    fn.call(this, obj[key]);
                 }
             }
         }
     }
-    recurse(obj)
-    return obj
-}
+    recurse(obj);
+    return obj;
+};
 
 /**
  * Everything we run through e.g. `page.evaluate` runs in the browser context, not the NodeJS one.
@@ -419,16 +419,16 @@ utils.stringifyFns = (fnObj = { hello: () => 'world' }) => {
     // https://github.com/feross/fromentries
     function fromEntries(iterable) {
         return [...iterable].reduce((obj, [key, val]) => {
-            obj[key] = val
-            return obj
-        }, {})
+            obj[key] = val;
+            return obj;
+        }, {});
     }
     return (Object.fromEntries || fromEntries)(
         Object.entries(fnObj)
             .filter(([key, value]) => typeof value === 'function')
             .map(([key, value]) => [key, value.toString()]) // eslint-disable-line no-eval
-    )
-}
+    );
+};
 
 /**
  * Utility function to reverse the process of `utils.stringifyFns`.
@@ -441,17 +441,52 @@ utils.materializeFns = (fnStrObj = { hello: "() => 'world'" }) => {
         Object.entries(fnStrObj).map(([key, value]) => {
             if (value.startsWith('function')) {
                 // some trickery is needed to make oldschool functions work :-)
-                return [key, eval(`() => ${value}`)()] // eslint-disable-line no-eval
+                return [key, eval(`() => ${value}`)()]; // eslint-disable-line no-eval
             } else {
                 // arrow functions just work
-                return [key, eval(value)] // eslint-disable-line no-eval
+                return [key, eval(value)]; // eslint-disable-line no-eval
             }
         })
-    )
-}
+    );
+};
 
+/**
+ * All-in-one method to replace a getter with a JS Proxy using the provided Proxy handler with traps.
+ *
+ * @example
+ * replaceGetterWithProxy(Object.getPrototypeOf(navigator), 'vendor', proxyHandler)
+ *
+ * @param {object} obj - The object which has the property to replace
+ * @param {string} propName - The name of the property to replace
+ * @param {object} handler - The JS Proxy handler to use
+ */
+utils.replaceGetterWithProxy = (obj, propName, handler) => {
+    const fn = Object.getOwnPropertyDescriptor(obj, propName).get;
+    const fnStr = fn.toString(); // special getter function string
+    const proxyObj = new Proxy(fn, utils.stripProxyFromErrors(handler));
 
-console.warn('testtt');
+    utils.replaceProperty(obj, propName, { get: proxyObj });
+    utils.patchToString(proxyObj, fnStr);
+
+    return true;
+};
+
+// Proxy handler templates for re-usability
+utils.makeHandler = () => ({
+    // Used by simple `navigator` getter evasions
+    getterValue: value => ({
+        apply(target, ctx, args) {
+            // Let's fetch the value first, to trigger and escalate potential errors
+            // Illegal invocations like `navigator.__proto__.vendor` will throw here
+            const ret = utils.cache.Reflect.apply(...arguments);
+            if (args && args.length === 0) {
+                return value;
+            }
+            return ret;
+        }
+    })
+});
+
 if (!window.chrome) {
     // Use the exact property descriptor found in headful Chrome
     // fetch it via `Object.getOwnPropertyDescriptor(window, 'chrome')`
@@ -460,7 +495,7 @@ if (!window.chrome) {
         enumerable: true,
         configurable: false, // note!
         value: {} // We'll extend that later
-    })
+    });
 }
 
 // That means we're running headful and don't need to mock anything
@@ -469,13 +504,13 @@ if ('app' in window.chrome) {
 
 const makeError = {
     ErrorInInvocation: fn => {
-        const err = new TypeError(`Error in invocation of app.${fn}()`)
+        const err = new TypeError(`Error in invocation of app.${fn}()`);
         return utils.stripErrorWithAnchor(
             err,
             `at ${fn} (eval at <anonymous>`
-        )
+        );
     }
-}
+};
 
 // There's a some static data in that property which doesn't seem to change,
 // we should periodically check for updates: `JSON.stringify(window.app, null, 2)`
@@ -495,32 +530,32 @@ const STATIC_DATA = JSON.parse(
   }
 }
         `.trim()
-)
+);
 
 window.chrome.app = {
     ...STATIC_DATA,
 
     get isInstalled() {
-        return false
+        return false;
     },
 
     getDetails: function getDetails() {
         if (arguments.length) {
-            throw makeError.ErrorInInvocation(`getDetails`)
+            throw makeError.ErrorInInvocation(`getDetails`);
         }
-        return null
+        return null;
     },
     getIsInstalled: function getDetails() {
         if (arguments.length) {
-            throw makeError.ErrorInInvocation(`getIsInstalled`)
+            throw makeError.ErrorInInvocation(`getIsInstalled`);
         }
-        return false
+        return false;
     },
     runningState: function getDetails() {
         if (arguments.length) {
-            throw makeError.ErrorInInvocation(`runningState`)
+            throw makeError.ErrorInInvocation(`runningState`);
         }
-        return 'cannot_run'
+        return 'cannot_run';
     }
-}
-utils.patchToStringNested(window.chrome.app)
+};
+utils.patchToStringNested(window.chrome.app);

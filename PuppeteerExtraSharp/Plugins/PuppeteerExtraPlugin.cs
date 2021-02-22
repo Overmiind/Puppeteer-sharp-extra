@@ -11,15 +11,15 @@ namespace PuppeteerExtraSharp.Plugins
             Name = pluginName;
         }
 
-        public string Name { get; private set; }
-
-        private void SetName(string name)
-        {
-            Name = name;
-        }
+        public string Name { get; }
 
         public virtual List<PluginRequirements> Requirements { get; set; }
-        public virtual ICollection<PuppeteerExtraPlugin> Dependencies { get; set; }
+
+        public virtual ICollection<PuppeteerExtraPlugin> GetDependencies()
+        {
+            return null;
+        }
+
         public virtual void BeforeLaunch(LaunchOptions options) { }
         public virtual void AfterLaunch(Browser browser) { }
         public virtual void BeforeConnect(ConnectOptions options) { }
