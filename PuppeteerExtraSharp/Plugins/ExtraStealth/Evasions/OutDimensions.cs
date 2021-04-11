@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
@@ -11,11 +12,6 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
         {
             var script = Utils.GetScript("Outdimensions.js");
             await page.EvaluateFunctionOnNewDocumentAsync(script);
-        }
-
-        public override void BeforeLaunch(LaunchOptions options)
-        {
-            options.DefaultViewport = null;
         }
     }
 }

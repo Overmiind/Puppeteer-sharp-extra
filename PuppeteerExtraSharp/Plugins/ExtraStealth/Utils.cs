@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using PuppeteerExtraSharp.Utils;
 using PuppeteerSharp;
@@ -8,25 +9,25 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth
 {
     internal static class Utils
     {
-        private static readonly HashSet<int> PreloadedPage = new HashSet<int>();
-        private static readonly object Locker = new object();
-        public static Task EvaluateOnNewPageWithUtilsScript(Page page, string script, params object[] args)
+        private static readonly HashSet<int> PreloadedPage = new();
+        private static readonly SemaphoreSlim Semaphore = new(1, 1);
+        private static readonly string Script;
+
+        static Utils()
         {
-            lock (Locker)
+            Script = GetScript("Utils.js");
+        }
+        
+        public static async Task EvaluateOnNewPageWithUtilsScript(Page page, string script, params object[] args)
+        {
+            await Semaphore.WaitAsync();
+            if (!PreloadedPage.Contains(page.GetHashCode()))
             {
-                var tasks = new List<Task>();
-
-                if (!PreloadedPage.Contains(page.GetHashCode()))
-                {
-                    var utilsScript = Utils.GetScript("Utils.js");
-                    PreloadedPage.Add(page.GetHashCode());
-                    tasks.Add(page.EvaluateExpressionOnNewDocumentAsync(utilsScript));
-                }
-
-                tasks.Add(page.EvaluateFunctionOnNewDocumentAsync(script, args));
-
-                return Task.WhenAll(tasks);
+                PreloadedPage.Add(page.GetHashCode());
+                await page.EvaluateExpressionOnNewDocumentAsync(Script);
             }
+            Semaphore.Release();
+            await page.EvaluateFunctionOnNewDocumentAsync(script, args);
         }
 
 

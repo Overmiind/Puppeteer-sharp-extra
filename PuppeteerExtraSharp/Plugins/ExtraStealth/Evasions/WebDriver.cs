@@ -20,7 +20,8 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
             var idx = args.FindIndex(e => e.StartsWith("--disable-blink-features="));
             if (idx != -1)
             {
-                args[idx] = $"{idx}, AutomationControlled";
+                var arg = args[idx];
+                args[idx] = $"{arg}, AutomationControlled";
                 return;
             }
 

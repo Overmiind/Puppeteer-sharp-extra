@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
+using PuppeteerSharp;
+using Frame = PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions.Frame;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth
 {
@@ -29,8 +31,11 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth
             new WebGl(GetOptionByType<StealthWebGLOptions>()),
             new PluginEvasion(),
             new StackTrace(),
-            new HardwareConcurrency(GetOptionByType<StealthHardwareConcurrencyOptions>())
+            new HardwareConcurrency(GetOptionByType<StealthHardwareConcurrencyOptions>()),
+            //new ContentWindow(),
+            new SourceUrl()
         };
+        
 
         private T GetOptionByType<T>() where T : IPuppeteerExtraPluginOptions
         {

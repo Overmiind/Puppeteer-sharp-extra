@@ -8,6 +8,9 @@
 
   <ItemGroup>
     <None Remove="StealthPluginTests\Script\fpCollect.js" />
+    <None Update="StealthPluginTests\EvasionsTests\SourceUrl\fixtures\Test.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
