@@ -17,7 +17,7 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth
         {
             Script = GetScript("Utils.js");
         }
-        
+
         public static async Task EvaluateOnNewPageWithUtilsScript(Page page, string script, params object[] args)
         {
             await Semaphore.WaitAsync();
@@ -28,6 +28,7 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth
             }
             Semaphore.Release();
             await page.EvaluateFunctionOnNewDocumentAsync(script, args);
+         
         }
 
 

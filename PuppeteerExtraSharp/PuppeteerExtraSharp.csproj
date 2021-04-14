@@ -35,7 +35,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\ChromeApp.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Codec.js" />
-    <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Frame.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\HardwareConcurrency.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Language.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\LoadTimes.js" />

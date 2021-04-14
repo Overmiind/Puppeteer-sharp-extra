@@ -26,7 +26,6 @@ utils.stripProxyFromErrors = (handler = {}) => {
     const newHandler = {}
     // We wrap each trap in the handler in a try/catch and modify the error stack if they throw
     const traps = Object.getOwnPropertyNames(handler)
-    console.log(traps);
     traps.forEach(trap => {
         newHandler[trap] = function () {
             try {
@@ -498,3 +497,5 @@ utils.makeHandler = () => ({
         }
     })
 })
+
+utils.preloadCache();
