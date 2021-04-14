@@ -16,10 +16,9 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth
         public override ICollection<PuppeteerExtraPlugin> GetDependencies() => new List<PuppeteerExtraPlugin>()
         {
             new WebDriver(),
-            new ChromeApp(),
+            // new ChromeApp(),
             new ChromeSci(),
             new ChromeRuntime(),
-            new Frame(),
             new Codec(),
             new Languages(GetOptionByType<StealthLanguagesOptions>()),
             new OutDimensions(),
@@ -29,8 +28,11 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth
             new WebGl(GetOptionByType<StealthWebGLOptions>()),
             new PluginEvasion(),
             new StackTrace(),
-            new HardwareConcurrency(GetOptionByType<StealthHardwareConcurrencyOptions>())
+            new HardwareConcurrency(GetOptionByType<StealthHardwareConcurrencyOptions>()),
+            new ContentWindow(),
+            new SourceUrl()
         };
+
 
         private T GetOptionByType<T>() where T : IPuppeteerExtraPluginOptions
         {

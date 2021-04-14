@@ -7,7 +7,7 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
     internal class Vendor : PuppeteerExtraPlugin
     {
         private readonly StealthVendorSettings _settings;
-        public Vendor(StealthVendorSettings settings) : base("stealth-vendor")
+        public Vendor(StealthVendorSettings settings = null) : base("stealth-vendor")
         {
             _settings = settings ?? new StealthVendorSettings("Google Inc.");
         }

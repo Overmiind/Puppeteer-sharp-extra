@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
     <RepositoryUrl>https://github.com/Overmiind/Puppeteer-sharp-extra</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>puppeteer-extra recaptcha browser-automation browser-extension browser puppeteer netcore netcore31 stealth-client browser-testing c#</PackageTags>
@@ -35,7 +35,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\ChromeApp.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Codec.js" />
-    <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Frame.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\HardwareConcurrency.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Language.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\LoadTimes.js" />
@@ -49,11 +48,12 @@
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Vendor.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\WebDriver.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\WebGL.js" />
+    <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\ContentWindow.js" />
     <EmbeddedResource Include="Plugins\Recaptcha\Scripts\EnterRecaptchaCallBackScript.js" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="PuppeteerSharp" Version="2.0.4" />
+    <PackageReference Include="PuppeteerSharp" Version="3.0.0" />
     <PackageReference Include="RestSharp" Version="106.11.5" />
   </ItemGroup>
 

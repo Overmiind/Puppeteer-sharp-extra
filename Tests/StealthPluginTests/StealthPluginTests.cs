@@ -16,8 +16,8 @@ namespace Extra.Tests.StealthPluginTests
             var page = await LaunchAndGetPage(plugin);
             await page.GoToAsync("https://google.com");
 
-            var webdriver = await page.EvaluateExpressionAsync("navigator.webdriver");
-            Assert.Null(webdriver);
+            var webdriver = await page.EvaluateExpressionAsync<bool>("navigator.webdriver");
+            Assert.False(webdriver);
 
             var headlessUserAgent = await page.EvaluateExpressionAsync<string>("window.navigator.userAgent");
             Assert.DoesNotContain("Headless", headlessUserAgent);
@@ -25,7 +25,7 @@ namespace Extra.Tests.StealthPluginTests
             var webDriverOverriden =
                 await page.EvaluateExpressionAsync<bool>(
                     "Object.getOwnPropertyDescriptor(navigator.__proto__, 'webdriver') !== undefined");
-            Assert.False(webDriverOverriden);
+            Assert.True(webDriverOverriden);
 
             var plugins = await page.EvaluateExpressionAsync<int>("navigator.plugins.length");
             Assert.NotEqual(0, plugins);
