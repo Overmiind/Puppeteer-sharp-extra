@@ -9,26 +9,12 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth
 {
     internal static class Utils
     {
-        private static readonly HashSet<int> PreloadedPage = new();
-        private static readonly SemaphoreSlim Semaphore = new(1, 1);
-        private static readonly string Script;
-
-        static Utils()
+        public static Task EvaluateOnNewPage(Page page, string script, params object[] args)
         {
-            Script = GetScript("Utils.js");
-        }
-
-        public static async Task EvaluateOnNewPageWithUtilsScript(Page page, string script, params object[] args)
-        {
-            await Semaphore.WaitAsync();
-            if (!PreloadedPage.Contains(page.GetHashCode()))
-            {
-                PreloadedPage.Add(page.GetHashCode());
-                await page.EvaluateExpressionOnNewDocumentAsync(Script);
-            }
-            Semaphore.Release();
-            await page.EvaluateFunctionOnNewDocumentAsync(script, args);
-         
+            if (!page.IsClosed)
+                return page.EvaluateFunctionOnNewDocumentAsync(script, args);
+            
+            return Task.CompletedTask;
         }
 
 

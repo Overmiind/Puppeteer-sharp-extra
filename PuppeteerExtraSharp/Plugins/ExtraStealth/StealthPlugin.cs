@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
+using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth
 {
@@ -33,6 +35,11 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth
             new SourceUrl()
         };
 
+        public override async Task OnPageCreated(Page page)
+        {
+            var utilsScript = Utils.GetScript("Utils.js");
+            await page.EvaluateExpressionOnNewDocumentAsync(utilsScript);
+        }
 
         private T GetOptionByType<T>() where T : IPuppeteerExtraPluginOptions
         {
