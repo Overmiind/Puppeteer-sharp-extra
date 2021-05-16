@@ -12,7 +12,7 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
         public override async Task OnPageCreated(Page page)
         {
             var scipt = Utils.GetScript("Plugin.js");
-            await Utils.EvaluateOnNewPageWithUtilsScript(page, scipt);
+            await Utils.EvaluateOnNewPage(page, scipt);
         }
     }
 }

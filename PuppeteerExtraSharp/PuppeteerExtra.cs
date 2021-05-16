@@ -14,8 +14,8 @@ namespace PuppeteerExtraSharp
 
         public PuppeteerExtra Use(PuppeteerExtraPlugin plugin)
         {
-            ResolveDependencies(plugin);
             _plugins.Add(plugin);
+            ResolveDependencies(plugin);
             plugin.OnPluginRegistered();
             return this;
         }

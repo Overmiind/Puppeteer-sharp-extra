@@ -16,7 +16,7 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
         public override Task OnPageCreated(Page page)
         {
             var script = Utils.GetScript("ContentWindow.js");
-            return Utils.EvaluateOnNewPageWithUtilsScript(page, script);
+            return Utils.EvaluateOnNewPage(page, script);
         }
     }
 }
