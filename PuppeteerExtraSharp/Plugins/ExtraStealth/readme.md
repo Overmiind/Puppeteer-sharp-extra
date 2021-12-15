@@ -48,3 +48,13 @@ var webGLVendor = "Intel Inc."; // your custom webGL vendor
 var render = "Intel Iris OpenGL Engine"; // your custom webGL renderer
 var languagesSettings = new StealthWebGLOptions(webGLVendor, render);
 ```
+
+# Removing evasions:
+You can remove an evasion from the plugin by using the RemoveEvasionByType
+```c#
+var extra = new PuppeteerExtra();
+// initialize stealth plugin
+var stealth = new StealthPlugin();
+stealthPlugin.RemoveEvasionByType<ContentWindow>();
+var browser = await extra.Use(stealth).LaunchAsync(new LaunchOptions());
+```
