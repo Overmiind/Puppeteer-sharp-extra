@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using PuppeteerExtraSharp.Plugins.ExtraStealth;
+using PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
 using Xunit;
 
 namespace Extra.Tests.StealthPluginTests
@@ -13,6 +14,8 @@ namespace Extra.Tests.StealthPluginTests
         public async Task ShouldBeNotDetected()
         {
             var plugin = new StealthPlugin();
+            plugin.RemoveEvasionByType<PluginEvasion>();
+            plugin.RemoveEvasionByType<ContentWindow>();
             var page = await LaunchAndGetPage(plugin);
             await page.GoToAsync("https://google.com");
 

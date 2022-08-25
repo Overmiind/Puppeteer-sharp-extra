@@ -28,7 +28,7 @@ namespace Extra.Tests.Recaptcha.TwoCaptcha
             await button.ClickAsync();
             await page.WaitForNavigationAsync();
             var successElement = await page.QuerySelectorAsync("div[class='recaptcha-success']");
-           
+
             Assert.NotNull(successElement);
         }
 
