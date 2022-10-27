@@ -20,7 +20,7 @@ namespace PuppeteerExtraSharp
             return this;
         }
 
-        public async Task<Browser> LaunchAsync(LaunchOptions options)
+        public async Task<IBrowser> LaunchAsync(LaunchOptions options)
         {
             _plugins.ForEach(e => e.BeforeLaunch(options));
             var browser = await Puppeteer.LaunchAsync(options);
@@ -33,7 +33,7 @@ namespace PuppeteerExtraSharp
             return browser;
         }
 
-        public async Task<Browser> ConnectAsync(ConnectOptions options)
+        public async Task<IBrowser> ConnectAsync(ConnectOptions options)
         {
             _plugins.ForEach(e => e.BeforeConnect(options));
             var browser = await Puppeteer.ConnectAsync(options);
@@ -50,7 +50,7 @@ namespace PuppeteerExtraSharp
             return (T) _plugins.FirstOrDefault(e => e.GetType() == typeof(T));
         }
 
-        private async Task OnStart(BrowserStartContext context, Browser browser)
+        private async Task OnStart(BrowserStartContext context, IBrowser browser)
         {
             OrderPlugins();
             CheckPluginRequirements(context);
@@ -100,7 +100,7 @@ namespace PuppeteerExtraSharp
             }
         }
 
-        private async Task Register(Browser browser)
+        private async Task Register(IBrowser browser)
         {
             var pages = await browser.PagesAsync();
 
