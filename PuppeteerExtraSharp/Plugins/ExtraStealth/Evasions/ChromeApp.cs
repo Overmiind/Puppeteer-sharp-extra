@@ -8,7 +8,7 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
     {
         public ChromeApp(): base("stealth-chromeApp") { }
 
-        public override Task OnPageCreated(Page page)
+        public override Task OnPageCreated(IPage page)
         {
             var script = Utils.GetScript("ChromeApp.js");
             return Utils.EvaluateOnNewPage(page, script);

@@ -19,7 +19,7 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
             this._isHeadless = options.Headless;
         }
 
-        public override async Task OnPageCreated(Page page)
+        public override async Task OnPageCreated(IPage page)
         {
             var ua = await page.Browser.GetUserAgentAsync();
             ua = ua.Replace("HeadlessChrome/", "Chrome/");
@@ -51,15 +51,8 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
                     Mobile = isMobile
                 }
             };
-            //
-            // if (this._isHeadless)
-            // {
-            //     var dynamicObject = overrideObject as dynamic;
-            //     dynamicObject.AcceptLanguage = "en-US, en";
-            //     overrideObject = dynamicObject;
-            // }
 
-            await page.Client.SendAsync("Network.setUserAgentOverride", overrideObject);
+            await page.Client.SendAsync("Network.setUserAgentOverride", overrideObject,true);
         }
 
         private string GetPlatform(string ua)

@@ -18,7 +18,7 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha
             _options = options;
         }
 
-        public async Task<RecaptchaResult> Solve(Page page)
+        public async Task<RecaptchaResult> Solve(IPage page)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha
 
         }
 
-        public async Task<string> GetKeyAsync(Page page)
+        public async Task<string> GetKeyAsync(IPage page)
         {
             var element =
                 await page.QuerySelectorAsync("iframe[src^='https://www.google.com/recaptcha/api2/anchor'][name^=\"a-\"]");
@@ -64,7 +64,7 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha
             return await _provider.GetSolution(key, urlPage);
         }
 
-        public async Task WriteToInput(Page page, string value)
+        public async Task WriteToInput(IPage page, string value)
         {
             await page.EvaluateFunctionAsync(
                   $"() => {{document.getElementById('g-recaptcha-response').innerHTML='{value}'}}");

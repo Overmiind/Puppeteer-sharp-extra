@@ -10,7 +10,7 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
         {
         }
 
-        public override async Task OnPageCreated(Page page)
+        public override async Task OnPageCreated(IPage page)
         {
             var mainWordProperty =
                 page.MainFrame.GetType().GetProperty("MainWorld", BindingFlags.NonPublic

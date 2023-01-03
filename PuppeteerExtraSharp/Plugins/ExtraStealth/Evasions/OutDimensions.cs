@@ -8,7 +8,7 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
     {
         public OutDimensions() : base("stealth-dimensions") { }
 
-        public override async Task OnPageCreated(Page page)
+        public override async Task OnPageCreated(IPage page)
         {
             var script = Utils.GetScript("Outdimensions.js");
             await page.EvaluateFunctionOnNewDocumentAsync(script);

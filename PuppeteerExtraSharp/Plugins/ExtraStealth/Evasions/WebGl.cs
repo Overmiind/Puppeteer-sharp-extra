@@ -11,7 +11,7 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
             _options = options ?? new StealthWebGLOptions("Intel Inc.", "Intel Iris OpenGL Engine");
         }
 
-        public override async Task OnPageCreated(Page page)
+        public override async Task OnPageCreated(IPage page)
         {
             var script = Utils.GetScript("WebGL.js");
             await page.EvaluateFunctionOnNewDocumentAsync(script, _options.Vendor, _options.Renderer);

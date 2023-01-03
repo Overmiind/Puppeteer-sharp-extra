@@ -8,7 +8,7 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
     {
         public WebDriver() : base("stealth-webDriver") { }
 
-        public override async Task OnPageCreated(Page page)
+        public override async Task OnPageCreated(IPage page)
         {
             var script = Utils.GetScript("WebDriver.js");
             await page.EvaluateFunctionOnNewDocumentAsync(script);

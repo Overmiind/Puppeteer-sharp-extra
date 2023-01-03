@@ -7,7 +7,7 @@ namespace PuppeteerExtraSharp.Plugins.BlockResources
     public class BlockRule
     {
         public string SitePattern;
-        public Page Page;
+        public IPage Page;
         public HashSet<ResourceType> ResourceType = new HashSet<ResourceType>();
 
         internal BlockRule()
@@ -15,7 +15,7 @@ namespace PuppeteerExtraSharp.Plugins.BlockResources
 
         }
 
-        public bool IsRequestBlocked(Page fromPage, Request request)
+        public bool IsRequestBlocked(IPage fromPage, IRequest request)
         {
             if (!IsResourcesBlocked(request.ResourceType))
                 return false;
@@ -24,7 +24,7 @@ namespace PuppeteerExtraSharp.Plugins.BlockResources
         }
 
 
-        public bool IsPageBlocked(Page page)
+        public bool IsPageBlocked(IPage page)
         {
             return Page != null && page.Equals(Page);
         }

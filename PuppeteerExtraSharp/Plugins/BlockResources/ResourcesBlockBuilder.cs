@@ -16,7 +16,7 @@ namespace PuppeteerExtraSharp.Plugins.BlockResources
             return this;
         }
 
-        public ResourcesBlockBuilder OnlyForPage(Page page)
+        public ResourcesBlockBuilder OnlyForPage(IPage page)
         {
             Rule.Page = page;
             return this;
