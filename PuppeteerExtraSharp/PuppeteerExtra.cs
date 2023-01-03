@@ -40,7 +40,7 @@ namespace PuppeteerExtraSharp
             _plugins.ForEach(e => e.AfterConnect(browser));
             await OnStart(new BrowserStartContext()
             {
-                StartType = StartType.Connect
+                StartType = StartType.Connect,
             }, browser);
             return browser;
         }

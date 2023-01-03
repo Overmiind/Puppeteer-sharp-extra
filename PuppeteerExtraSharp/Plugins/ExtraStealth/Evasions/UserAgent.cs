@@ -51,15 +51,8 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
                     Mobile = isMobile
                 }
             };
-            //
-            // if (this._isHeadless)
-            // {
-            //     var dynamicObject = overrideObject as dynamic;
-            //     dynamicObject.AcceptLanguage = "en-US, en";
-            //     overrideObject = dynamicObject;
-            // }
 
-            await page.Client.SendAsync("Network.setUserAgentOverride", overrideObject);
+            await page.Client.SendAsync("Network.setUserAgentOverride", overrideObject,true);
         }
 
         private string GetPlatform(string ua)
