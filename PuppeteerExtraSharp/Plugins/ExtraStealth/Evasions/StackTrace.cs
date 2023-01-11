@@ -10,7 +10,7 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
         public override async Task OnPageCreated(IPage page)
         {
             var script = Utils.GetScript("Stacktrace.js");
-            await page.EvaluateFunctionOnNewDocumentAsync(script);
+            await Utils.EvaluateOnNewPage(page, script);
         }
     }
 }

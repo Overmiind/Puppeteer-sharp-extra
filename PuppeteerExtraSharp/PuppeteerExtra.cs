@@ -110,7 +110,18 @@ namespace PuppeteerExtraSharp
                 if (args.Target.Type == TargetType.Page)
                 {
                     var page = await args.Target.PageAsync();
-                    _plugins.ForEach(async e => await e.OnPageCreated(page));
+                    try
+                    {
+                        foreach (var puppeteerExtraPlugin in _plugins)
+                        {
+                            await puppeteerExtraPlugin.OnPageCreated(page);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+
+                    }
                 }
             };
 

@@ -14,7 +14,8 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
         public override async Task OnPageCreated(IPage page)
         {
             var script = Utils.GetScript("WebGL.js");
-            await page.EvaluateFunctionOnNewDocumentAsync(script, _options.Vendor, _options.Renderer);
+
+            await Utils.EvaluateOnNewPage(page, script, _options.Vendor, _options.Renderer);
         }
     }
 
