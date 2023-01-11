@@ -11,7 +11,7 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
         public override async Task OnPageCreated(IPage page)
         {
             var script = Utils.GetScript("WebDriver.js");
-            await page.EvaluateFunctionOnNewDocumentAsync(script);
+            await Utils.EvaluateOnNewPage(page,script);
         }
 
         public override void BeforeLaunch(LaunchOptions options)

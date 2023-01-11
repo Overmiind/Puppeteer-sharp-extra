@@ -52,7 +52,8 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
                 }
             };
 
-            await page.Client.SendAsync("Network.setUserAgentOverride", overrideObject,true);
+            if(!page.IsClosed)
+                await page.Client.SendAsync("Network.setUserAgentOverride", overrideObject,true);
         }
 
         private string GetPlatform(string ua)
