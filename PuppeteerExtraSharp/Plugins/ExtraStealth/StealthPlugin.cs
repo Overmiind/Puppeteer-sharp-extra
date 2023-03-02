@@ -42,7 +42,7 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth
 
         public override ICollection<PuppeteerExtraPlugin> GetDependencies() => _standardEvasions;
 
-        public override async Task OnPageCreated(Page page)
+        public override async Task OnPageCreated(IPage page)
         {
             var utilsScript = Utils.GetScript("Utils.js");
             await page.EvaluateExpressionOnNewDocumentAsync(utilsScript);

@@ -19,7 +19,7 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
             this._isHeadless = options.Headless;
         }
 
-        public override async Task OnPageCreated(Page page)
+        public override async Task OnPageCreated(IPage page)
         {
             var ua = await page.Browser.GetUserAgentAsync();
             ua = ua.Replace("HeadlessChrome/", "Chrome/");

@@ -13,12 +13,12 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha
             _recaptcha = new Recaptcha(provider, opt ?? new CaptchaOptions());
         }
 
-        public async Task<RecaptchaResult> SolveCaptchaAsync(Page page)
+        public async Task<RecaptchaResult> SolveCaptchaAsync(IPage page)
         {
             return await _recaptcha.Solve(page);
         }
 
-        public override async Task OnPageCreated(Page page)
+        public override async Task OnPageCreated(IPage page)
         {
             await page.SetBypassCSPAsync(true);
         }
