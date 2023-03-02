@@ -3,7 +3,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    internal class ChromeSci: PuppeteerExtraPlugin
+    public class ChromeSci: PuppeteerExtraPlugin
     {
         public ChromeSci(): base("stealth_sci") { }
 

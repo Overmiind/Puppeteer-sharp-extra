@@ -3,7 +3,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    internal class HardwareConcurrency : PuppeteerExtraPlugin
+    public class HardwareConcurrency : PuppeteerExtraPlugin
     {
         public StealthHardwareConcurrencyOptions Options { get; }
 

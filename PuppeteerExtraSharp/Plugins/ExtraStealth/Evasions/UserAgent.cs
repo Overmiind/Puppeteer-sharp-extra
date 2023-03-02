@@ -6,7 +6,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    internal class UserAgent : PuppeteerExtraPlugin
+    public class UserAgent : PuppeteerExtraPlugin
     {
         private bool _isHeadless = false;
 

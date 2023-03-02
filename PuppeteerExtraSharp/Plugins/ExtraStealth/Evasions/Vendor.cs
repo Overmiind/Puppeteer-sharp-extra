@@ -4,7 +4,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    internal class Vendor : PuppeteerExtraPlugin
+    public class Vendor : PuppeteerExtraPlugin
     {
         private readonly StealthVendorSettings _settings;
         public Vendor(StealthVendorSettings settings = null) : base("stealth-vendor")

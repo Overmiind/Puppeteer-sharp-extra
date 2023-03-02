@@ -4,7 +4,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    internal class OutDimensions : PuppeteerExtraPlugin
+    public class OutDimensions : PuppeteerExtraPlugin
     {
         public OutDimensions() : base("stealth-dimensions") { }
 

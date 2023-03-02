@@ -4,7 +4,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    internal class Languages : PuppeteerExtraPlugin
+    public class Languages : PuppeteerExtraPlugin
     {
         public StealthLanguagesOptions Options { get; }
 

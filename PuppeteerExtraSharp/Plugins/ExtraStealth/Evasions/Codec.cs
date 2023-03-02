@@ -3,7 +3,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    internal class Codec : PuppeteerExtraPlugin
+    public class Codec : PuppeteerExtraPlugin
     {
         public Codec() : base("stealth-codec") { }
 

@@ -3,7 +3,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    internal class ChromeRuntime: PuppeteerExtraPlugin
+    public class ChromeRuntime: PuppeteerExtraPlugin
     {
         public ChromeRuntime(): base("stealth-runtime") { }
         

@@ -4,7 +4,7 @@ using PuppeteerSharp;
 [assembly: InternalsVisibleTo("Extra.Tests")]
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    internal class ChromeApp : PuppeteerExtraPlugin
+    public class ChromeApp : PuppeteerExtraPlugin
     {
         public ChromeApp(): base("stealth-chromeApp") { }
 

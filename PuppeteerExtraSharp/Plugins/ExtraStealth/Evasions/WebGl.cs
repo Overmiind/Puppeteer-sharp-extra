@@ -3,7 +3,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    internal class WebGl : PuppeteerExtraPlugin
+    public class WebGl : PuppeteerExtraPlugin
     {
         private readonly StealthWebGLOptions _options;
         public WebGl(StealthWebGLOptions options) : base("stealth-webGl")

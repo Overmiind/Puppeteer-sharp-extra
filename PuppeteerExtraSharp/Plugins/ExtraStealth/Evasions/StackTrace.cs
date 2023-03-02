@@ -3,7 +3,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    internal class StackTrace : PuppeteerExtraPlugin
+    public class StackTrace : PuppeteerExtraPlugin
     {
         public StackTrace() : base("stealth-stackTrace") { }
 

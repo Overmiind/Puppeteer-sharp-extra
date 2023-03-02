@@ -3,7 +3,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    internal class Permissions: PuppeteerExtraPlugin
+    public class Permissions: PuppeteerExtraPlugin
     {
         public Permissions() : base("stealth-permissions") { }
  
