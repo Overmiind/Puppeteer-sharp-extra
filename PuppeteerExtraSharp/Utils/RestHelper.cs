@@ -5,7 +5,7 @@ namespace PuppeteerExtraSharp.Utils
 {
     public static class RestHelper
     {
-        public static IRestRequest AddQueryParameters(this IRestRequest request, Dictionary<string, string> parameters)
+        public static RestRequest AddQueryParameters(this RestRequest request, Dictionary<string, string> parameters)
         {
             foreach (var parameter in parameters)
             {

@@ -13,7 +13,7 @@ namespace Extra.Tests.Utils
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
-        public async Task<JObject> GetFingerPrint(Page page)
+        public async Task<JObject> GetFingerPrint(IPage page)
         {
             var script = ResourcesReader.ReadFile("Extra.Tests.StealthPluginTests.Script.fpCollect.js", Assembly.GetExecutingAssembly());
             await page.EvaluateExpressionAsync(script);

@@ -3,7 +3,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    internal class HardwareConcurrency : PuppeteerExtraPlugin
+    public class HardwareConcurrency : PuppeteerExtraPlugin
     {
         public StealthHardwareConcurrencyOptions Options { get; }
 
@@ -12,7 +12,7 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
             Options = options ?? new StealthHardwareConcurrencyOptions(4);
         }
 
-        public override Task OnPageCreated(Page page)
+        public override Task OnPageCreated(IPage page)
         {
             var script = Utils.GetScript("HardwareConcurrency.js");
             return Utils.EvaluateOnNewPage(page, script, Options.Concurrency);

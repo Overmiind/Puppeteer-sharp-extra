@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Extra.Tests.Properties;
 using PuppeteerExtraSharp.Plugins.Recaptcha;
 using PuppeteerExtraSharp.Plugins.Recaptcha.Provider;
 using PuppeteerSharp;

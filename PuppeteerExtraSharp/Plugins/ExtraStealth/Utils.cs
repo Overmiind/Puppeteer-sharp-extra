@@ -9,7 +9,7 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth
 {
     internal static class Utils
     {
-        public static Task EvaluateOnNewPage(Page page, string script, params object[] args)
+        public static Task EvaluateOnNewPage(IPage page, string script, params object[] args)
         {
             if (!page.IsClosed)
                 return page.EvaluateFunctionOnNewDocumentAsync(script, args);
