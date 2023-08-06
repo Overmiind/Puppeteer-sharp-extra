@@ -21,7 +21,7 @@ public class CapSolverApi
     {
         var request = new CapSolverRequest()
         {
-            clientKey = key,
+            clientKey = _userKey,
             task = new CapSolverTaskRequest()
             {
                 type = "ReCaptchaV2TaskProxyless",
