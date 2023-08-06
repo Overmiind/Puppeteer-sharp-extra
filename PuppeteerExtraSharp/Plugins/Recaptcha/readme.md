@@ -26,4 +26,6 @@ await recaptchaPlugin.SolveCaptchaAsync(page);
 
 👾 [2captcha](https://2captcha.com/ru)
 
+👽 [CapSolver](https://www.capsolver.com/)
+
 You can use your own provider implements IRecaptcha provider interface who should return g-recaptcha-responce. 
