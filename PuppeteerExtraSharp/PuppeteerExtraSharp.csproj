@@ -53,7 +53,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="PuppeteerSharp" Version="9.0.2" />
+    <PackageReference Include="PuppeteerSharp" Version="15.1.0" />
     <PackageReference Include="RestSharp" Version="108.0.3" />
   </ItemGroup>
 
