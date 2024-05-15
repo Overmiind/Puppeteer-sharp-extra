@@ -37,10 +37,10 @@
     }
 })()
 
-if (typeof (result.function) == 'function') {
-    result.function(value)
-}
-
-else {
-    eval(result.function).call(window, value);
-}
+// if (typeof (result.function) == 'function') {
+//     result.function(value)
+// }
+//
+// else {
+//     eval(result.function).call(window, value);
+// }
