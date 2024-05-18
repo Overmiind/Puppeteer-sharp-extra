@@ -1,6 +1,6 @@
-# PuppeteerExtraSharp
+# TakasakiStudio.PuppeteerExtraSharp
 
-[![NuGet Badge](https://buildstats.info/nuget/PuppeteerExtraSharp)](https://www.nuget.org/packages/PuppeteerExtraSharp)
+[![NuGet Badge](https://buildstats.info/nuget/TakasakiStudio.PuppeteerExtraSharp)](https://www.nuget.org/packages/TakasakiStudio.PuppeteerExtraSharp)
 
 Puppeteer extra sharp is a .NET port of the [Node.js library](https://github.com/berstend/puppeteer-extra/tree/master/packages/puppeteer-extra)
 ## Quickstart
@@ -31,16 +31,16 @@ await page.ScreenshotAsync("extra.png");
 ```
 ## Plugin list
 
-🏴 [Puppeteer stealth plugin](https://github.com/Overmiind/Puppeteer-sharp-extra/tree/master/PuppeteerExtraSharp/Plugins/ExtraStealth)
+🏴 [Puppeteer stealth plugin](https://github.com/Takasaki-Studio/Puppeteer-sharp-extra/tree/master/PuppeteerExtraSharp/Plugins/ExtraStealth)
 - Applies various evasion techniques to make detection of headless puppeteer harder.
 
-📃 [Puppeteer anonymize UA plugin](https://github.com/Overmiind/Puppeteer-sharp-extra/tree/master/PuppeteerExtraSharp/Plugins/AnonymizeUa) 
+📃 [Puppeteer anonymize UA plugin](https://github.com/Takasaki-Studio/Puppeteer-sharp-extra/tree/master/PuppeteerExtraSharp/Plugins/AnonymizeUa) 
 - Anonymizes the user-agent on all pages.
 
-💀[Puppeteer recaptcha plugin](https://github.com/Overmiind/Puppeteer-sharp-extra/tree/master/PuppeteerExtraSharp/Plugins/Recaptcha) 
+💀[Puppeteer recaptcha plugin](https://github.com/Takasaki-Studio/Puppeteer-sharp-extra/tree/master/PuppeteerExtraSharp/Plugins/Recaptcha) 
 - Solves recaptcha automatically 
 
-🔧[Puppeteer block resources plugin](https://github.com/Overmiind/Puppeteer-sharp-extra/tree/master/PuppeteerExtraSharp/Plugins/BlockResources)
+🔧[Puppeteer block resources plugin](https://github.com/Takasaki-Studio/Puppeteer-sharp-extra/tree/master/PuppeteerExtraSharp/Plugins/BlockResources)
 - Blocks images, documents etc.
 
 

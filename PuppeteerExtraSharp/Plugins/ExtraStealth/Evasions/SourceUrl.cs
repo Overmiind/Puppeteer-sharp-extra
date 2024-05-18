@@ -10,7 +10,7 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
         {
         }
 
-        public override async Task OnPageCreated(IPage page)
+        public override Task OnPageCreated(IPage page)
         {
             var mainWordProperty =
                 page.MainFrame.GetType().GetProperty("MainWorld", BindingFlags.NonPublic
@@ -31,6 +31,8 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
                     suffixField?.SetValue(execution, "//# sourceURL=''");
                 }
             };
+            
+            return Task.CompletedTask;
         }
     }
 }
