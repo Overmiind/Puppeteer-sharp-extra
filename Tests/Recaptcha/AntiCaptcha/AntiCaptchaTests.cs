@@ -47,7 +47,7 @@ namespace Extra.Tests.Recaptcha.AntiCaptcha
             var button = await page.QuerySelectorAsync("input[type='submit']");
             await button.ClickAsync();
 
-            await page.WaitForTimeoutAsync(1000);
+            await Task.Delay(1000);
             await CheckSuccessVerify(page);
         }
 
@@ -62,7 +62,7 @@ namespace Extra.Tests.Recaptcha.AntiCaptcha
 
             Assert.Null(result.Exception);
 
-            await page.WaitForTimeoutAsync(1000);
+            await Task.Delay(1000);
             await CheckSuccessVerify(page);
         }
 
