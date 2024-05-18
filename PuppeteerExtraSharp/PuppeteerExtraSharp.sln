@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PuppeteerExtraSharp", "PuppeteerExtraSharp.csproj", "{B2221B32-DFAE-4F87-B0EC-EE4922B81F64}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Extra.Tests", "..\tests\Extra.Tests.csproj", "{FB432A25-A844-4C78-9194-E46D806B46E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Extra.Tests", "..\Tests\Extra.Tests.csproj", "{FB432A25-A844-4C78-9194-E46D806B46E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

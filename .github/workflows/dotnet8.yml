@@ -1,0 +1,50 @@
+name: .NET 8
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+defaults:
+  run:
+    working-directory: ./PuppeteerExtraSharp
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        platform: [ ubuntu-latest, macos-latest, windows-latest ]
+        version: [ 8.x ]
+    runs-on: ${{ matrix.platform }}
+    
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ matrix.version }}
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+
+  publish_nuget:
+    needs: [ build ]
+    environment: 'Production Nuget'
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'master' && github.event_name == 'push'
+    
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore -c Release
+      - name: Publish TakasakiStudio.PuppeteerExtraSharp to Nuget
+        run: dotnet nuget push "./PuppeteerExtraSharp/bin/Release/*.nupkg" --api-key ${{ secrets.SECRET }} --source "nuget.org"
