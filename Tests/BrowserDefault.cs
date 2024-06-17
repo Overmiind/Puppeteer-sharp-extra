@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using PuppeteerExtraSharp;
 using PuppeteerExtraSharp.Plugins;
 using PuppeteerSharp;
@@ -53,18 +50,17 @@ namespace Extra.Tests
         }
 
 
-        private async void DownloadChromeIfNotExists()
+        private static async void DownloadChromeIfNotExists()
         {
-            if (File.Exists(Constants.PathToChrome))
-                return;
+            if (File.Exists(Constants.PathToChrome)) return;
 
             await new BrowserFetcher(new BrowserFetcherOptions()
             {
                 Path = Constants.PathToChrome
-            }).DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
+            }).DownloadAsync(BrowserTag.Latest);
         }
 
-        protected LaunchOptions CreateDefaultOptions()
+        protected static LaunchOptions CreateDefaultOptions()
         {
             return new LaunchOptions()
             {
