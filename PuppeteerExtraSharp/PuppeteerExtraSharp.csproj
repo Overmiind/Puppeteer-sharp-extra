@@ -11,8 +11,10 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <UserSecretsId>945328fb-3e7e-4518-99f8-ec578bf688b1</UserSecretsId>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Title>PuppeteerExtraSharp</Title>
+    <Title>PuppeteerExtraSharpJune</Title>
     <Authors>VaKKuum</Authors>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageId>PuppeteerExtraSharpJune</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -53,6 +55,13 @@
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\WebGL.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\ContentWindow.js" />
     <EmbeddedResource Include="Plugins\Recaptcha\Scripts\EnterRecaptchaCallBackScript.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
