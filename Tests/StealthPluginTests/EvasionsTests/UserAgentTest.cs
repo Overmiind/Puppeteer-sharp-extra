@@ -15,7 +15,7 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
             await page.GoToAsync("https://google.com");
             var userAgent = await page.Browser.GetUserAgentAsync();
 
-            var finger = await new FingerPrint().GetFingerPrint(page);
+            var finger = await FingerPrint.GetFingerPrint(page);
             Assert.DoesNotContain("HeadlessChrome", finger.Value<string>("userAgent"));
         }
     }

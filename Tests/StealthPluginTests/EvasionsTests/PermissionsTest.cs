@@ -14,7 +14,7 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
             var page = await LaunchAndGetPage(plugin);
             await page.GoToAsync("http://info.cern.ch/");
 
-            var finger = await new FingerPrint().GetFingerPrint(page);
+            var finger = await FingerPrint.GetFingerPrint(page);
 
             Assert.Equal("denied", finger["permissions"]["state"]);
             Assert.Equal("denied", finger["permissions"]["permission"]);

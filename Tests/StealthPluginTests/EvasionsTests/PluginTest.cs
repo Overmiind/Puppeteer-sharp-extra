@@ -15,7 +15,7 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
             var page = await LaunchAndGetPage(plugin);
             await page.GoToAsync("https://google.com");
 
-            var finger = await new FingerPrint().GetFingerPrint(page);
+            var finger = await FingerPrint.GetFingerPrint(page);
 
             Assert.Equal(3, finger["plugins"].Count());
             Assert.Equal(4, finger["mimeTypes"].Count());

@@ -8,17 +8,12 @@ using Task = System.Threading.Tasks.Task;
 namespace Extra.Tests.Recaptcha.AntiCaptcha
 {
     [Collection("Captcha")]
-    public class AntiCaptchaTests : BrowserDefault
+    public class AntiCaptchaTests(ITestOutputHelper _logger) : BrowserDefault
     {
-        private readonly ITestOutputHelper _logger;
-
-        public AntiCaptchaTests(ITestOutputHelper _logger)
-        {
-            this._logger = _logger;
-        }
+        private readonly ITestOutputHelper _logger = _logger;
 
         [Fact]
-        public async void ShouldThrowCaptchaExceptionWhenCaptchaNotFound()
+        public async Task ShouldThrowCaptchaExceptionWhenCaptchaNotFound()
         {
             var plugin = new RecaptchaPlugin(new PuppeteerExtraSharp.Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(Resources.AntiCaptchaKey));
 
@@ -52,7 +47,7 @@ namespace Extra.Tests.Recaptcha.AntiCaptcha
         }
 
         [Fact]
-        public async void ShouldSolveCaptchaWithCallback()
+        public async Task ShouldSolveCaptchaWithCallback()
         {
             var plugin = new RecaptchaPlugin(new PuppeteerExtraSharp.Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(Resources.AntiCaptchaKey));
             var browser = await LaunchWithPluginAsync(plugin);
@@ -66,7 +61,7 @@ namespace Extra.Tests.Recaptcha.AntiCaptcha
             await CheckSuccessVerify(page);
         }
 
-        private async Task CheckSuccessVerify(IPage page)
+        private static async Task CheckSuccessVerify(IPage page)
         {
             var successElement = await page.QuerySelectorAsync("div[id='main'] div[class='description'] h2");
             var elementValue = await (await successElement.GetPropertyAsync("textContent")).JsonValueAsync<string>();

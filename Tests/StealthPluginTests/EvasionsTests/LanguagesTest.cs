@@ -17,7 +17,7 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
 
             await page.GoToAsync("https://google.com");
 
-            var fingerPrint = await new FingerPrint().GetFingerPrint(page);
+            var fingerPrint = await FingerPrint.GetFingerPrint(page);
 
             Assert.Contains("en-US", fingerPrint["languages"].Select(e => e.Value<string>()));
         }  
@@ -31,7 +31,7 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
 
             await page.GoToAsync("https://google.com");
 
-            var fingerPrint = await new FingerPrint().GetFingerPrint(page);
+            var fingerPrint = await FingerPrint.GetFingerPrint(page);
 
             Assert.Contains("fr-FR", fingerPrint["languages"].Select(e => e.Value<string>()));
         }

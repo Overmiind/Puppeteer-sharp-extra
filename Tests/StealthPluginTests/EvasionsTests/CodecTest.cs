@@ -14,7 +14,7 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
             var plugin = new Codec();
             var page = await LaunchAndGetPage(plugin);
             await page.GoToAsync("https://google.com");
-            var fingerPrint = await new FingerPrint().GetFingerPrint(page);
+            var fingerPrint = await FingerPrint.GetFingerPrint(page);
 
             Assert.Equal("probably", fingerPrint["videoCodecs"]["ogg"].Value<string>());
             Assert.Equal("probably", fingerPrint["videoCodecs"]["h264"].Value<string>());

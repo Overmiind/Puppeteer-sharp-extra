@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 using PuppeteerExtraSharp.Plugins.Recaptcha.Provider.AntiCaptcha.Models;
 using PuppeteerExtraSharp.Plugins.Recaptcha.RestClient;
 using RestSharp;
@@ -17,7 +18,7 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha.Provider.AntiCaptcha
             _options = options;
         }
 
-        public Task<AntiCaptchaTaskResult> CreateTaskAsync(string pageUrl, string key, CancellationToken token = default)
+        public async Task<AntiCaptchaTaskResult> CreateTaskAsync(string pageUrl, string key, CancellationToken token = default)
         {
             var content = new AntiCaptchaRequest()
             {
@@ -32,8 +33,8 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha.Provider.AntiCaptcha
 
 
 
-            var result = _client.PostWithJsonAsync<AntiCaptchaTaskResult>("createTask", content, token);
-            return result;
+            var result = await  _client.PostWithJsonAsync<JObject>("createTask", content, token);
+            return result.ToObject<AntiCaptchaTaskResult>();
         }
 
 

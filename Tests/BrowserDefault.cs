@@ -10,7 +10,7 @@ namespace Extra.Tests
 {
     public abstract class BrowserDefault : IDisposable
     {
-        private readonly List<IBrowser> _launchedBrowsers = new List<IBrowser>();
+        private readonly List<IBrowser> _launchedBrowsers = [];
         protected BrowserDefault()
         {
         }
@@ -38,11 +38,9 @@ namespace Extra.Tests
 
         protected async Task<IPage> LaunchAndGetPage(PuppeteerExtraPlugin plugin = null)
         {
-            IBrowser browser = null;
-            if (plugin != null)
-                browser = await LaunchWithPluginAsync(plugin);
-            else
-                browser = await LaunchAsync();
+            IBrowser browser;
+            if (plugin != null) browser = await LaunchWithPluginAsync(plugin);
+            else browser = await LaunchAsync();
 
             var page = (await browser.PagesAsync())[0];
 
