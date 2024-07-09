@@ -18,22 +18,25 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
             await page.GoToAsync("https://google.com");
 
             var fingerPrint = await FingerPrint.GetFingerPrint(page);
+            var fingerprintLanguages = JArray.Parse(fingerPrint["languages"].Value<string>()).Select(t => t.Value<string>()).ToList();
 
-            Assert.Contains("en-US", fingerPrint["languages"].Select(e => e.Value<string>()));
+            Assert.Contains("en-US", fingerprintLanguages);
         }  
         
         
         [Fact]
         public async Task ShouldWorkWithCustomSettings()
         {
+            string[] langs = ["fr-FR"];
             var plugin = new Languages(new StealthLanguagesOptions("fr-FR"));
             var page = await LaunchAndGetPage(plugin);
 
             await page.GoToAsync("https://google.com");
 
             var fingerPrint = await FingerPrint.GetFingerPrint(page);
+            var fingerprintLanguages = JArray.Parse(fingerPrint["languages"].Value<string>()).Select(t => t.Value<string>()).ToList();
 
-            Assert.Contains("fr-FR", fingerPrint["languages"].Select(e => e.Value<string>()));
+            Assert.False(fingerprintLanguages.Except(langs).Any());
         }
     }
 }

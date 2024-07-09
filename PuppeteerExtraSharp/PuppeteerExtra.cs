@@ -10,7 +10,7 @@ namespace PuppeteerExtraSharp
 {
     public class PuppeteerExtra
     {
-        private List<PuppeteerExtraPlugin> _plugins = new List<PuppeteerExtraPlugin>();
+        private List<PuppeteerExtraPlugin> _plugins = [];
 
         public PuppeteerExtra Use(PuppeteerExtraPlugin plugin)
         {
@@ -76,7 +76,7 @@ namespace PuppeteerExtraSharp
 
         private void OrderPlugins()
         {
-            _plugins = _plugins.OrderBy(e => e.Requirements?.Contains(PluginRequirements.RunLast)).ToList();
+            _plugins = [.. _plugins.OrderBy(e => e.Requirements?.Contains(PluginRequirements.RunLast))];
         }
 
         private void CheckPluginRequirements(BrowserStartContext context)

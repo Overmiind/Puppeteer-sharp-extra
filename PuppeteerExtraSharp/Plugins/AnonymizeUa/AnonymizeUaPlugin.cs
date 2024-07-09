@@ -5,12 +5,8 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.AnonymizeUa
 {
-    public class AnonymizeUaPlugin: PuppeteerExtraPlugin
+    public class AnonymizeUaPlugin() : PuppeteerExtraPlugin("anonymize-ua")
     {
-        public AnonymizeUaPlugin(): base("anonymize-ua")
-        {
-        }
-
         private Func<string, string> _customAction;
         public void CustomizeUa(Func<string, string> uaAction)
         {

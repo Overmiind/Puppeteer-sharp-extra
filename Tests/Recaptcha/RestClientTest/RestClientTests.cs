@@ -29,6 +29,5 @@ namespace Extra.Tests.Recaptcha.RestClientTest
 
             Assert.Equal(data, actual);
         }
-
     }
 }

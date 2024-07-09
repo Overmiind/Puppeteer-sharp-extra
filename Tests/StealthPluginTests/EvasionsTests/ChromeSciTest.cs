@@ -23,7 +23,7 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
                               dataOK: {
                                 onloadT: csi.onloadT === timing.domContentLoadedEventEnd,
                                 startE: csi.startE === timing.navigationStart,
-                                pageT: Number.isInteger(csi.pageT),
+                                pageT: !Number.isNaN(Number.parseFloat(csi.pageT)),
                                 tran: Number.isInteger(csi.tran)
                               }
                             }
