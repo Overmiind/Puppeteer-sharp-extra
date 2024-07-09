@@ -1,6 +1,6 @@
 # Quickstart
   
-Work's with IPv$ and IPv6 proxies!  
+Work's with IPv4 and IPv6 proxies!  
 
 ```c#
 var extra = new PuppeteerExtra();
