@@ -1,6 +1,6 @@
 # PuppeteerExtraSharp
 
-[![NuGet Badge](https://buildstats.info/nuget/PuppeteerExtraSharp)](https://www.nuget.org/packages/PuppeteerExtraSharp)
+[![NuGet Badge](https://buildstats.info/nuget/VaKKuum.PuppeteerExtraSharp)](https://www.nuget.org/packages/VaKKuum.PuppeteerExtraSharp/)
 
 Puppeteer extra sharp is a .NET port of the [Node.js library](https://github.com/berstend/puppeteer-extra/tree/master/packages/puppeteer-extra)
 ## Quickstart
