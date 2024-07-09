@@ -40,7 +40,7 @@ await page.ScreenshotAsync("extra.png");
 💀[Puppeteer recaptcha plugin](https://github.com/Overmiind/PuppeteerExtraSharp/tree/master/Plugins/Recaptcha) 
 - Solves recaptcha automatically 
 
-🌐 [Puppeteer proxies plugin](https://github.com/VaKKuumDEV/Puppeteer-sharp-extra/tree/master/Plugins/Proxies)
+🌐 [Puppeteer proxies plugin](https://github.com/VaKKuumDEV/Puppeteer-sharp-extra/tree/master/PuppeteerExtraSharp/Plugins/Proxies)
 - Applies proxies settings on every page
 - TODO: rotation and whitelist
 
