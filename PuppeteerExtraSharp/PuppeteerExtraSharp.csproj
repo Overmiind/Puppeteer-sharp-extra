@@ -30,6 +30,9 @@
     <None Remove="Plugins\ExtraStealth\Scripts\WebDriver.js" />
     <None Remove="Plugins\ExtraStealth\Scripts\WebGL.js" />
     <None Remove="Plugins\Recaptcha\Scripts\EnterRecaptchaCallBackScript.js" />
+    <None Update="Plugins\Recaptcha\Scripts\InjectScript.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -49,7 +52,9 @@
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\WebDriver.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\WebGL.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\ContentWindow.js" />
-    <EmbeddedResource Include="Plugins\Recaptcha\Scripts\EnterRecaptchaCallBackScript.js" />
+    <EmbeddedResource Include="Plugins\Recaptcha\Scripts\EnterRecaptchaCallBackScript.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
