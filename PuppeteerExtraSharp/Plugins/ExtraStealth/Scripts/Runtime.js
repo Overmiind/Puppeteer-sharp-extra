@@ -17,10 +17,48 @@
     if (existsAlready || isNotSecure) {
         return // Nothing to do here
     }
-
     window.chrome.runtime = {
         // There's a bunch of static data in that property which doesn't seem to change,
         // we should periodically check for updates: `JSON.stringify(window.chrome.runtime, null, 2)`
+        "OnInstalledReason": {
+            "CHROME_UPDATE": "chrome_update",
+            "INSTALL": "install",
+            "SHARED_MODULE_UPDATE": "shared_module_update",
+            "UPDATE": "update"
+        },
+        "OnRestartRequiredReason": {
+            "APP_UPDATE": "app_update",
+            "OS_UPDATE": "os_update",
+            "PERIODIC": "periodic"
+        },
+        "PlatformArch": {
+            "ARM": "arm",
+            "ARM64": "arm64",
+            "MIPS": "mips",
+            "MIPS64": "mips64",
+            "X86_32": "x86-32",
+            "X86_64": "x86-64"
+        },
+        "PlatformNaclArch": {
+            "ARM": "arm",
+            "MIPS": "mips",
+            "MIPS64": "mips64",
+            "X86_32": "x86-32",
+            "X86_64": "x86-64"
+        },
+        "PlatformOs": {
+            "ANDROID": "android",
+            "CROS": "cros",
+            "LINUX": "linux",
+            "MAC": "mac",
+            "OPENBSD": "openbsd",
+            "WIN": "win"
+        },
+        "RequestUpdateCheckStatus": {
+            "NO_UPDATE": "no_update",
+            "THROTTLED": "throttled",
+            "UPDATE_AVAILABLE": "update_available"
+        },
         // `chrome.runtime.id` is extension related and returns undefined in Chrome
         get id() {
             return undefined
@@ -96,7 +134,8 @@
     utils.mockWithProxy(
         window.chrome.runtime,
         'sendMessage',
-        function sendMessage() { },
+        function sendMessage() {
+        },
         sendMessageHandler
     )
 
@@ -183,25 +222,31 @@
     utils.mockWithProxy(
         window.chrome.runtime,
         'connect',
-        function connect() { },
+        function connect() {
+        },
         connectHandler
     )
 
     function makeConnectResponse() {
         const onSomething = () => ({
-            addListener: function addListener() { },
-            dispatch: function dispatch() { },
-            hasListener: function hasListener() { },
+            addListener: function addListener() {
+            },
+            dispatch: function dispatch() {
+            },
+            hasListener: function hasListener() {
+            },
             hasListeners: function hasListeners() {
                 return false
             },
-            removeListener: function removeListener() { }
+            removeListener: function removeListener() {
+            }
         })
 
         const response = {
             name: '',
             sender: undefined,
-            disconnect: function disconnect() { },
+            disconnect: function disconnect() {
+            },
             onDisconnect: onSomething(),
             onMessage: onSomething(),
             postMessage: function postMessage() {

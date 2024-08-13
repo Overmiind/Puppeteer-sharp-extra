@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Extra.Tests.StealthPluginTests.EvasionsTests
 {
-    public class ChromeAppTest: BrowserDefault
+    public class ChromeAppTest : BrowserDefault
     {
         [Fact]
         public async Task ShouldWork()
@@ -27,15 +27,15 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
 
             var installState = await page.EvaluateExpressionAsync<JObject>("chrome.app.InstallState");
             Assert.NotNull(installState);
-            Assert.Equal("disabled",installState["DISABLED"]);
-            Assert.Equal("installed",installState["INSTALLED"]);
-            Assert.Equal("not_installed",installState["NOT_INSTALLED"]);
+            Assert.Equal("disabled", installState["DISABLED"]);
+            Assert.Equal("installed", installState["INSTALLED"]);
+            Assert.Equal("not_installed", installState["NOT_INSTALLED"]);
 
             var runningState = await page.EvaluateExpressionAsync<JObject>("chrome.app.RunningState");
             Assert.NotNull(runningState);
-            Assert.Equal("cannot_run",runningState["CANNOT_RUN"]);
-            Assert.Equal("ready_to_run",runningState["READY_TO_RUN"]);
-            Assert.Equal("running",runningState["RUNNING"]);
+            Assert.Equal("cannot_run", runningState["CANNOT_RUN"]);
+            Assert.Equal("ready_to_run", runningState["READY_TO_RUN"]);
+            Assert.Equal("running", runningState["RUNNING"]);
 
             var details = await page.EvaluateExpressionAsync<object>("chrome.app.getDetails()");
             Assert.Null(details);

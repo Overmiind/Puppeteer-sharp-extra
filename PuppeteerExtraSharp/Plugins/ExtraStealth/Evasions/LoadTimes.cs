@@ -7,10 +7,10 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
     {
         public LoadTimes() : base("stealth-loadTimes") { }
 
-        public override Task OnPageCreated(Page page)
+        public override Task OnPageCreated(IPage page)
         {
             var script = Utils.GetScript("LoadTimes.js");
-            return Utils.EvaluateOnNewPageWithUtilsScript(page, script);
+            return Utils.EvaluateOnNewPage(page, script);
         }
     }
 }
