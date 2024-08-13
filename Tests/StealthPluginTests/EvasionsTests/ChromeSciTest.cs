@@ -12,26 +12,29 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
             var plugin = new ChromeSci();
             var page = await LaunchAndGetPage(plugin);
             await page.GoToAsync("https://google.com");
-            var sci = await page.EvaluateExpressionAsync("window.chrome.csi()");
-            Assert.NotNull(sci);
+            var sci = await page.EvaluateFunctionAsync(@"() => {
+                            const { timing } = window.performance
+                            const csi = window.chrome.csi()
+                            return {
+                              csi: {
+                                exists: window.chrome && 'csi' in window.chrome,
+                                toString: chrome.csi.toString()
+                              },
+                              dataOK: {
+                                onloadT: csi.onloadT === timing.domContentLoadedEventEnd,
+                                startE: csi.startE === timing.navigationStart,
+                                pageT: Number.isInteger(csi.pageT),
+                                tran: Number.isInteger(csi.tran)
+                              }
+                            }
+                          }");
 
-            var onLoad =
-                await page.EvaluateExpressionAsync<bool>(
-                    "window.chrome.csi().onLoadT === window.performance.domContentLoadedEventEnd");
-            Assert.True(onLoad);
-
-            //var startE =
-            //    await page.EvaluateExpressionAsync<bool>(
-            //        "window.chrome.csi().startE === window.performance.navigationStart");
-
-            //Assert.True(startE);
-
-            var pageT = await page.EvaluateExpressionAsync<bool>("Number.isInteger(window.chrome.csi().pageT)");
-            Assert.True(pageT);
-
-
-            var tran = await page.EvaluateExpressionAsync<bool>("Number.isInteger(window.chrome.csi().tran)");
-            Assert.True(tran);
+            Assert.True(sci["csi"].Value<bool>("exists"));
+            Assert.Equal("function () { [native code] }", sci["csi"]["toString"]);
+            Assert.True(sci["dataOK"].Value<bool>("onloadT"));
+            Assert.True(sci["dataOK"].Value<bool>("pageT"));
+            Assert.True(sci["dataOK"].Value<bool>("startE"));
+            Assert.True(sci["dataOK"].Value<bool>("tran"));
         }
     }
 }

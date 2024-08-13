@@ -17,7 +17,7 @@ namespace PuppeteerExtraSharp.Plugins.AnonymizeUa
             _customAction = uaAction;
         }
 
-        public override async Task OnPageCreated(Page page)
+        public override async Task OnPageCreated(IPage page)
         {
             var ua = await page.Browser.GetUserAgentAsync();
             ua = ua.Replace("HeadlessChrome", "Chrome");

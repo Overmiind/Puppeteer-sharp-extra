@@ -3,14 +3,14 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    internal class ChromeSci: PuppeteerExtraPlugin
+    public class ChromeSci: PuppeteerExtraPlugin
     {
         public ChromeSci(): base("stealth_sci") { }
 
-        public override Task OnPageCreated(Page page)
+        public override Task OnPageCreated(IPage page)
         {
             var script = Utils.GetScript("SCI.js");
-            return Utils.EvaluateOnNewPageWithUtilsScript(page, script);
+            return Utils.EvaluateOnNewPage(page, script);
         }
     }
 }
