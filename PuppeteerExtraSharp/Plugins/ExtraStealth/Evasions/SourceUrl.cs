@@ -24,7 +24,7 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
                     .GetField("_contextResolveTaskWrapper", BindingFlags.NonPublic | BindingFlags.Instance);
                 if (contextField is not null)
                 {
-                    var context = (TaskCompletionSource<ExecutionContext>) contextField.GetValue(mainWord);
+                    var context = (TaskCompletionSource<PuppeteerSharp.ExecutionContext>) contextField.GetValue(mainWord);
                     var execution = await context.Task;
                     var suffixField = execution.GetType()
                         .GetField("_evaluationScriptSuffix", BindingFlags.NonPublic | BindingFlags.Instance);

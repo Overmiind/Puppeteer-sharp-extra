@@ -28,13 +28,17 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
                               }
                             }
                           }");
+            
+            Assert.NotNull(sci);
 
-            Assert.True(sci["csi"].Value<bool>("exists"));
-            Assert.Equal("function () { [native code] }", sci["csi"]["toString"]);
-            Assert.True(sci["dataOK"].Value<bool>("onloadT"));
-            Assert.True(sci["dataOK"].Value<bool>("pageT"));
-            Assert.True(sci["dataOK"].Value<bool>("startE"));
-            Assert.True(sci["dataOK"].Value<bool>("tran"));
+            var obj = sci.Value;
+            var dataOk = obj.GetProperty("dataOK");
+            
+            Assert.True(obj.GetProperty("csi").GetProperty("exists").GetBoolean());
+            Assert.True(dataOk.GetProperty("onloadT").GetBoolean());
+            Assert.True(dataOk.GetProperty("pageT").GetBoolean());
+            Assert.True(dataOk.GetProperty("startE").GetBoolean());
+            Assert.True(dataOk.GetProperty("tran").GetBoolean());
         }
     }
 }

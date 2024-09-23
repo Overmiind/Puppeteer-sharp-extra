@@ -18,7 +18,7 @@ namespace Extra.Tests.Recaptcha.AntiCaptcha
         }
 
         [Fact]
-        public async void ShouldThrowCaptchaExceptionWhenCaptchaNotFound()
+        public async Task ShouldThrowCaptchaExceptionWhenCaptchaNotFound()
         {
             var plugin = new RecaptchaPlugin(new PuppeteerExtraSharp.Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(Resources.AntiCaptchaKey));
 
@@ -52,7 +52,7 @@ namespace Extra.Tests.Recaptcha.AntiCaptcha
         }
 
         [Fact]
-        public async void ShouldSolveCaptchaWithCallback()
+        public async Task ShouldSolveCaptchaWithCallback()
         {
             var plugin = new RecaptchaPlugin(new PuppeteerExtraSharp.Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(Resources.AntiCaptchaKey));
             var browser = await LaunchWithPluginAsync(plugin);
