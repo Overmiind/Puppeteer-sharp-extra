@@ -29,12 +29,12 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
                             }
                           }");
 
-            Assert.True(sci["csi"].Value<bool>("exists"));
-            Assert.Equal("function () { [native code] }", sci["csi"]["toString"]);
-            Assert.True(sci["dataOK"].Value<bool>("onloadT"));
-            Assert.True(sci["dataOK"].Value<bool>("pageT"));
-            Assert.True(sci["dataOK"].Value<bool>("startE"));
-            Assert.True(sci["dataOK"].Value<bool>("tran"));
+            Assert.True(sci.Value.GetProperty("csi").GetProperty("exists").GetBoolean());
+            Assert.Equal("function () { [native code] }", sci.Value.GetProperty("csi").GetProperty("toString").GetString());
+            Assert.True(sci.Value.GetProperty("dataOK").GetProperty("onloadT").GetBoolean());
+            Assert.True(sci.Value.GetProperty("dataOK").GetProperty("pageT").GetBoolean());
+            Assert.True(sci.Value.GetProperty("dataOK").GetProperty("startE").GetBoolean());
+            Assert.True(sci.Value.GetProperty("dataOK").GetProperty("tran").GetBoolean());
         }
     }
 }
