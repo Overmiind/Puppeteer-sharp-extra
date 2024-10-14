@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <LangVersion>latest</LangVersion>
-    <Version>1.4.3</Version>
+    <Version>1.4.4</Version>
     <RepositoryUrl>https://github.com/VaKKuumDEV/Puppeteer-sharp-extra</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>puppeteer-extra recaptcha browser-automation browser-extension browser puppeteer netcore netcore31 stealth-client browser-testing c#</PackageTags>
