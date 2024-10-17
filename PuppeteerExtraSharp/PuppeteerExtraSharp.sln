@@ -7,6 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PuppeteerExtraSharp", "Pupp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Extra.Tests", "..\tests\Extra.Tests.csproj", "{FB432A25-A844-4C78-9194-E46D806B46E5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trexx.SocialNetworks.Helper.API", "..\..\Trexx.SocialNetworks>helpr\Trexx.SocialNetworks.Helper.API\Trexx.SocialNetworks.Helper.API.csproj", "{9D2354C3-B901-42C9-915F-017530F243AB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{53247AA4-0A47-4B51-A066-560638078898}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +28,10 @@ Global
 		{FB432A25-A844-4C78-9194-E46D806B46E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB432A25-A844-4C78-9194-E46D806B46E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB432A25-A844-4C78-9194-E46D806B46E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D2354C3-B901-42C9-915F-017530F243AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D2354C3-B901-42C9-915F-017530F243AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D2354C3-B901-42C9-915F-017530F243AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D2354C3-B901-42C9-915F-017530F243AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
