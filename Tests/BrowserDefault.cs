@@ -13,12 +13,12 @@ namespace Extra.Tests
 {
     public abstract class BrowserDefault : IDisposable
     {
-        private readonly List<Browser> _launchedBrowsers = new List<Browser>();
+        private readonly List<IBrowser> _launchedBrowsers = new List<IBrowser>();
         protected BrowserDefault()
         {
         }
 
-        protected async Task<Browser> LaunchAsync(LaunchOptions options = null)
+        protected async Task<IBrowser> LaunchAsync(LaunchOptions options = null)
         {
             //DownloadChromeIfNotExists();
             options ??= CreateDefaultOptions();
@@ -28,7 +28,7 @@ namespace Extra.Tests
             return browser;
         }
 
-        protected async Task<Browser> LaunchWithPluginAsync(PuppeteerExtraPlugin plugin, LaunchOptions options = null)
+        protected async Task<IBrowser> LaunchWithPluginAsync(PuppeteerExtraPlugin plugin, LaunchOptions options = null)
         {
             var extra = new PuppeteerExtra().Use(plugin);
             //DownloadChromeIfNotExists();
@@ -39,9 +39,9 @@ namespace Extra.Tests
             return browser;
         }
 
-        protected async Task<Page> LaunchAndGetPage(PuppeteerExtraPlugin plugin = null)
+        protected async Task<IPage> LaunchAndGetPage(PuppeteerExtraPlugin plugin = null)
         {
-            Browser browser = null;
+            IBrowser browser = null;
             if (plugin != null)
                 browser = await LaunchWithPluginAsync(plugin);
             else
@@ -61,7 +61,7 @@ namespace Extra.Tests
             await new BrowserFetcher(new BrowserFetcherOptions()
             {
                 Path = Constants.PathToChrome
-            }).DownloadAsync(BrowserFetcher.DefaultRevision);
+            }).DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
         }
 
         protected LaunchOptions CreateDefaultOptions()

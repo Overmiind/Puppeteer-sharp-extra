@@ -34,17 +34,14 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha.Provider._2Captcha
         }
 
 
-        public async Task<IRestResponse<TwoCaptchaResponse>> GetSolution(string id)
+        public async Task<RestResponse<TwoCaptchaResponse>> GetSolution(string id)
         {
-            var request = new RestRequest("res.php") {Method = Method.POST};
-            
-            request.AddQueryParameters(new Dictionary<string, string>()
-            {
-                ["id"] = id,
-                ["key"] = _userKey,
-                ["action"] = "get",
-                ["json"] = "1"
-            });
+            var request = new RestRequest("res.php") {Method = Method.Post};
+
+            request.AddQueryParameter("id", id);
+            request.AddQueryParameter("key", _userKey);
+            request.AddQueryParameter("action", "get");
+            request.AddQueryParameter("json", "1");
 
             var result = await _client.CreatePollingBuilder<TwoCaptchaResponse>(request).TriesLimit(_options.PendingCount).ActivatePollingAsync(
                 response => response.Data.request == "CAPCHA_NOT_READY" ? PollingAction.ContinuePolling : PollingAction.Break);

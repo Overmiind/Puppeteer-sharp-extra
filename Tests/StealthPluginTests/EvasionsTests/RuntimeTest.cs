@@ -48,7 +48,7 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
         }
 
 
-        private async Task AssertThrowsConnect(Page page, string error, params object[] args)
+        private async Task AssertThrowsConnect(IPage page, string error, params object[] args)
         {
             var start =
                 "Evaluation failed: TypeError: Error in invocation of runtime.connect(optional string extensionId, optional object connectInfo): ";

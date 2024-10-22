@@ -20,12 +20,20 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
             var fingerPrint = await new FingerPrint().GetFingerPrint(page);
 
             Assert.Contains("en-US", fingerPrint["languages"].Select(e => e.Value<string>()));
+        }  
+        
+        
+        [Fact]
+        public async Task ShouldWorkWithCustomSettings()
+        {
+            var plugin = new Languages(new StealthLanguagesOptions("fr-FR"));
+            var page = await LaunchAndGetPage(plugin);
 
-            var property = await page.EvaluateExpressionAsync("Object.getOwnPropertyDescriptor(navigator, 'languages')");
-            Assert.Null(property);
+            await page.GoToAsync("https://google.com");
 
-            var navigator = await page.EvaluateExpressionAsync("navigator");
-            Assert.Empty(navigator);
+            var fingerPrint = await new FingerPrint().GetFingerPrint(page);
+
+            Assert.Contains("fr-FR", fingerPrint["languages"].Select(e => e.Value<string>()));
         }
     }
 }

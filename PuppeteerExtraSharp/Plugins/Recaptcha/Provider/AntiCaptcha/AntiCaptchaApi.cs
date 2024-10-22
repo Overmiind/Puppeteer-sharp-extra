@@ -48,7 +48,7 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha.Provider.AntiCaptcha
 
             var request = new RestRequest("getTaskResult");
             request.AddJsonBody(content);
-            request.Method = Method.POST;
+            request.Method = Method.Post;
        
             var result = await _client.CreatePollingBuilder<TaskResultModel>(request).TriesLimit(_options.PendingCount)
                 .WithTimeoutSeconds(5).ActivatePollingAsync(

@@ -34,7 +34,7 @@ namespace PuppeteerExtraSharp.Plugins.BlockResources
         }
 
 
-        public override async Task OnPageCreated(Page page)
+        public override async Task OnPageCreated(IPage page)
         {
             await page.SetRequestInterceptionAsync(true);
             page.Request += (sender, args) => OnPageRequest(page, args);
@@ -42,7 +42,7 @@ namespace PuppeteerExtraSharp.Plugins.BlockResources
         }
 
 
-        private async void OnPageRequest(Page sender, RequestEventArgs e)
+        private async void OnPageRequest(IPage sender, RequestEventArgs e)
         {
             if (BlockResources.Any(rule => rule.IsRequestBlocked(sender, e.Request)))
             {

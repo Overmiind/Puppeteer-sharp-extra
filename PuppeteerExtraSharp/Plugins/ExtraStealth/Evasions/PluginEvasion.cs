@@ -3,14 +3,16 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    internal class PluginEvasion: PuppeteerExtraPlugin
+    public class PluginEvasion : PuppeteerExtraPlugin
     {
-        public PluginEvasion():base("stealth-pluginEvasion") { }
+        public PluginEvasion() : base("stealth-pluginEvasion")
+        {
+        }
 
-        public override async Task OnPageCreated(Page page)
+        public override async Task OnPageCreated(IPage page)
         {
             var scipt = Utils.GetScript("Plugin.js");
-            await page.EvaluateFunctionOnNewDocumentAsync(scipt);
+            await Utils.EvaluateOnNewPage(page, scipt);
         }
     }
 }

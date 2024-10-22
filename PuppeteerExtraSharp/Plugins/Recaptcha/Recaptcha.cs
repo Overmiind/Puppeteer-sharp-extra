@@ -18,7 +18,7 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha
             _options = options;
         }
 
-        public async Task<RecaptchaResult> Solve(Page page)
+        public async Task<RecaptchaResult> Solve(IPage page)
         {
             try
             {
@@ -28,6 +28,7 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha
 
                 return new RecaptchaResult()
                 {
+                    result = solution,
                     IsSuccess = true
                 };
             }
@@ -42,7 +43,7 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha
 
         }
 
-        public async Task<string> GetKeyAsync(Page page)
+        public async Task<string> GetKeyAsync(IPage page)
         {
             var element =
                 await page.QuerySelectorAsync("iframe[src^='https://www.google.com/recaptcha/api2/anchor'][name^=\"a-\"]");
@@ -64,22 +65,24 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha
             return await _provider.GetSolution(key, urlPage);
         }
 
-        public async Task WriteToInput(Page page, string value)
+        public async Task WriteToInput(IPage page, string value)
         {
             await page.EvaluateFunctionAsync(
                   $"() => {{document.getElementById('g-recaptcha-response').innerHTML='{value}'}}");
-
-
-            var script = ResourcesReader.ReadFile(this.GetType().Namespace + ".Scripts.EnterRecaptchaCallBackScript.js");
-
-            try
-            {
-                await page.EvaluateFunctionAsync($@"(value) => {{{script}}}", value);
-            }
-            catch(Exception ex)
-            {
-                // ignored
-            }
+            
+            await page.EvaluateFunctionAsync($@"
+                    () => {{ 
+                                const reduceObjectToArray = (obj) => Object.keys(obj).reduce((r, k) => r.concat(k, obj[k]), []);
+                                const client = ___grecaptcha_cfg.clients[0];
+                                let result = [];
+                                result = reduceObjectToArray(client).filter(c => Object.prototype.toString.call(c) === '[object Object]');
+                                result = result.flatMap(r => reduceObjectToArray(r));
+                                result = result.filter(c => Object.prototype.toString.call(c) === '[object Object]');
+                                const reqObj = result.find(r => r.callback);
+                                reqObj.callback('{value}')
+                            }}");
+         
+            
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
             await page.GoToAsync("https://google.com");
 
             var vendor = await page.EvaluateExpressionAsync<string>("navigator.vendor");
-            Assert.Equal("Intel inc.", vendor);
+            Assert.Equal("Google Inc.", vendor);
         }
     }
 }

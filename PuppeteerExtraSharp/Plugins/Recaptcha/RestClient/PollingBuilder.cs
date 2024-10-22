@@ -6,11 +6,11 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha.RestClient
 {
     public class PollingBuilder<T>
     {
-        private readonly IRestClient _client;
-        private readonly IRestRequest _request;
+        private readonly RestSharp.RestClient _client;
+        private readonly RestSharp.RestRequest _request;
         private int _timeout = 5;
         private int _limit = 5;
-        public PollingBuilder(IRestClient client, IRestRequest request)
+        public PollingBuilder(RestSharp.RestClient client, RestRequest request)
         {
             _client = client;
             _request = request;
@@ -28,7 +28,7 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha.RestClient
             return this;
         }
 
-        public async Task<IRestResponse<T>> ActivatePollingAsync(Func<IRestResponse<T>, PollingAction> resultDelegate)
+        public async Task<RestResponse<T>> ActivatePollingAsync(Func<RestResponse<T>, PollingAction> resultDelegate)
         {
             var response = await _client.ExecuteAsync<T>(_request);
 
