@@ -12,7 +12,9 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha.RestClient
 
         public RestClient(string url = null)
         {
-            _client = string.IsNullOrWhiteSpace(url) ? new RestSharp.RestClient() : new RestSharp.RestClient(url);
+            _client = string.IsNullOrWhiteSpace(url)
+                ? new RestSharp.RestClient()
+                : new RestSharp.RestClient(url);
         }
 
         public PollingBuilder<T> CreatePollingBuilder<T>(RestRequest request)
@@ -20,7 +22,10 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha.RestClient
             return new PollingBuilder<T>(_client, request);
         }
 
-        public async Task<T> PostWithJsonAsync<T>(string url, object content, CancellationToken token)
+        public async Task<T> PostWithJsonAsync<T>(
+            string url,
+            object content,
+            CancellationToken token)
         {
             var request = new RestRequest(url);
             request.AddHeader("Content-type", "application/json");
@@ -29,16 +34,24 @@ namespace PuppeteerExtraSharp.Plugins.Recaptcha.RestClient
             return await _client.PostAsync<T>(request, token);
         }
 
-        public async Task<T> PostWithQueryAsync<T>(string url, Dictionary<string, string> query, CancellationToken token = default)
+        public async Task<T> PostWithQueryAsync<T>(
+            string url,
+            Dictionary<string, string> query,
+            CancellationToken token = default)
         {
             var request = new RestRequest(url) { Method = Method.Post };
-            request.AddQueryParameters(query);
+            ExtendQueryParameters(request, query);
             return await _client.PostAsync<T>(request, token);
         }
 
-        private async Task<RestResponse<T>> ExecuteAsync<T>(RestRequest request, CancellationToken token)
+        private static void ExtendQueryParameters(
+            RestRequest request,
+            Dictionary<string, string> parameters)
         {
-            return await _client.ExecuteAsync<T>(request, token);
+            foreach (var parameter in parameters)
+            {
+                request.AddQueryParameter(parameter.Key, parameter.Value);
+            }
         }
     }
 }
