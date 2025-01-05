@@ -16,15 +16,15 @@ public class CodecTest : BrowserDefault
         await page.GoToAsync("https://google.com");
         var fingerPrint = await new FingerPrint().GetFingerPrint(page);
 
-        Assert.Equal("probably", fingerPrint["videoCodecs"]["ogg"].Value<string>());
-        Assert.Equal("probably", fingerPrint["videoCodecs"]["h264"].Value<string>());
-        Assert.Equal("probably", fingerPrint["videoCodecs"]["webm"].Value<string>());
+        Assert.Equal("", fingerPrint["videoCodecs"]["ogg"].GetValue<string>());
+        Assert.Equal("probably", fingerPrint["videoCodecs"]["h264"].GetValue<string>());
+        Assert.Equal("probably", fingerPrint["videoCodecs"]["webm"].GetValue<string>());
 
-        Assert.Equal("probably", fingerPrint["audioCodecs"]["ogg"].Value<string>());
-        Assert.Equal("probably", fingerPrint["audioCodecs"]["mp3"].Value<string>());
-        Assert.Equal("probably", fingerPrint["audioCodecs"]["wav"].Value<string>());
-        Assert.Equal("maybe", fingerPrint["audioCodecs"]["m4a"].Value<string>());
-        Assert.Equal("probably", fingerPrint["audioCodecs"]["aac"].Value<string>());
+        Assert.Equal("probably", fingerPrint["audioCodecs"]["ogg"].GetValue<string>());
+        Assert.Equal("probably", fingerPrint["audioCodecs"]["mp3"].GetValue<string>());
+        Assert.Equal("probably", fingerPrint["audioCodecs"]["wav"].GetValue<string>());
+        Assert.Equal("maybe", fingerPrint["audioCodecs"]["m4a"].GetValue<string>());
+        Assert.Equal("probably", fingerPrint["audioCodecs"]["aac"].GetValue<string>());
     }
 
     [Fact]

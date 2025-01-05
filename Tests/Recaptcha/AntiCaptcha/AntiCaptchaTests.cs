@@ -2,7 +2,6 @@
 using PuppeteerExtraSharp.Plugins.Recaptcha;
 using PuppeteerSharp;
 using Xunit;
-using Xunit.Abstractions;
 using Task = System.Threading.Tasks.Task;
 
 namespace Extra.Tests.Recaptcha.AntiCaptcha
@@ -10,13 +9,6 @@ namespace Extra.Tests.Recaptcha.AntiCaptcha
     [Collection("Captcha")]
     public class AntiCaptchaTests : BrowserDefault
     {
-        private readonly ITestOutputHelper _logger;
-
-        public AntiCaptchaTests(ITestOutputHelper _logger)
-        {
-            this._logger = _logger;
-        }
-
         [Fact]
         public async void ShouldThrowCaptchaExceptionWhenCaptchaNotFound()
         {
@@ -47,7 +39,7 @@ namespace Extra.Tests.Recaptcha.AntiCaptcha
             var button = await page.QuerySelectorAsync("input[type='submit']");
             await button.ClickAsync();
 
-            await page.WaitForTimeoutAsync(1000);
+            await Task.Delay(1000);
             await CheckSuccessVerify(page);
         }
 
@@ -62,7 +54,7 @@ namespace Extra.Tests.Recaptcha.AntiCaptcha
 
             Assert.Null(result.Exception);
 
-            await page.WaitForTimeoutAsync(1000);
+            await Task.Delay(1000);
             await CheckSuccessVerify(page);
         }
 

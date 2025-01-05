@@ -1,41 +1,56 @@
-﻿using System.Reflection;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using HarmonyLib;
 using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
 
 public class SourceUrl : PuppeteerExtraPlugin
 {
+    private const string EvaluationScriptUrl = "__puppeteer_evaluation_script__";
+    private const string EvaluationScriptSuffix = $"//# sourceURL={EvaluationScriptUrl}";
+    private const string EvaluationScriptSuffixReplace = "//# sourceURL=''";
+
     public SourceUrl() : base("SourceUrl")
     {
     }
 
-    public override Task OnPageCreated(IPage page)
+    public override void BeforeLaunch(LaunchOptions options)
     {
-        var mainWordProperty =
-            page.MainFrame.GetType().GetProperty("MainWorld",
-                BindingFlags.NonPublic
-                | BindingFlags.Public | BindingFlags.Instance);
-        var mainWordGetters = mainWordProperty.GetGetMethod(true);
+        var harmony = new Harmony("SourceUrl_Patch");
 
-        page.Load += async (_, _) =>
+        var original = AccessTools.Method(typeof(ExecutionContext), "ExecuteEvaluationAsync");
+        var prefix = new HarmonyMethod(typeof(SourceUrl), nameof(ExecuteEvaluationPrefix));
+
+        harmony.Patch(original, prefix: prefix);
+    }
+
+    private static bool ExecuteEvaluationPrefix(ref string method, ref object args)
+    {
+        if (args is Dictionary<string, object> dictionary)
         {
-            var mainWord = mainWordGetters.Invoke(page.MainFrame, null);
-            var contextField = mainWord.GetType()
-                .GetField("_contextResolveTaskWrapper",
-                    BindingFlags.NonPublic | BindingFlags.Instance);
-            if (contextField is not null)
+            if (dictionary.TryGetValue("expression", out var expression) &&
+                expression is string expressionString)
             {
-                var context =
-                    (TaskCompletionSource<ExecutionContext>)contextField.GetValue(mainWord);
-                var execution = await context.Task;
-                var suffixField = execution.GetType()
-                    .GetField("_evaluationScriptSuffix",
-                        BindingFlags.NonPublic | BindingFlags.Instance);
-                suffixField?.SetValue(execution, "//# sourceURL=''");
+                dictionary["expression"] = expressionString.Replace(
+                    EvaluationScriptSuffix,
+                    EvaluationScriptSuffixReplace);
             }
-        };
-        
-        return base.OnPageCreated(page);
+        }
+
+        var typeInfo = args.GetType();
+
+        if (typeInfo.Name == "RuntimeCallFunctionOnRequest")
+        {
+            var functionDeclarationProperty = typeInfo.GetProperty("FunctionDeclaration")!;
+
+            var value = functionDeclarationProperty.GetValue(args) as string;
+
+            var newValue = value!.Replace(EvaluationScriptSuffix, EvaluationScriptSuffixReplace);
+
+            functionDeclarationProperty.SetValue(args, newValue);
+        }
+
+        // to next execute, after change args
+        return true;
     }
 }

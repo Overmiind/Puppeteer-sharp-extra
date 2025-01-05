@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
 using Xunit;
@@ -16,7 +17,7 @@ public class LoadTimesTest : BrowserDefault
         await page.GoToAsync("https://google.com");
 
         var loadTimes =
-            await page.EvaluateFunctionAsync<JObject>("() => window.chrome.loadTimes()");
+            await page.EvaluateFunctionAsync<JsonObject>("() => window.chrome.loadTimes()");
 
         Assert.NotNull(loadTimes);
 

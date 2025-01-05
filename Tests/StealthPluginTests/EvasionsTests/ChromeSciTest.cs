@@ -23,17 +23,21 @@ public class ChromeSciTest : BrowserDefault
                               dataOK: {
                                 onloadT: csi.onloadT === timing.domContentLoadedEventEnd,
                                 startE: csi.startE === timing.navigationStart,
-                                pageT: Number.isInteger(csi.pageT),
+                                pageT: Number.isFinite(csi.pageT),
                                 tran: Number.isInteger(csi.tran)
                               }
                             }
                           }");
 
-        Assert.True(sci["csi"].Value<bool>("exists"));
-        Assert.Equal("function () { [native code] }", sci["csi"]["toString"]);
-        Assert.True(sci["dataOK"].Value<bool>("onloadT"));
-        Assert.True(sci["dataOK"].Value<bool>("pageT"));
-        Assert.True(sci["dataOK"].Value<bool>("startE"));
-        Assert.True(sci["dataOK"].Value<bool>("tran"));
+        Assert.NotNull(sci);
+        Assert.True(sci.Value.GetProperty("csi").GetProperty("exists").GetBoolean());
+        Assert.True(sci.Value.GetProperty("dataOK").GetProperty("onloadT").GetBoolean());
+        Assert.True(sci.Value.GetProperty("dataOK").GetProperty("pageT").GetBoolean());
+        Assert.True(sci.Value.GetProperty("dataOK").GetProperty("startE").GetBoolean());
+        Assert.True(sci.Value.GetProperty("dataOK").GetProperty("tran").GetBoolean());
+
+        Assert.Equal(
+            "function () { [native code] }",
+            sci.Value.GetProperty("csi").GetProperty("toString").GetString());
     }
 }

@@ -18,7 +18,7 @@ public class ContentWindowTest : BrowserDefault
 
         var finger = await new FingerPrint().GetFingerPrint(page);
 
-        Assert.Equal("object", finger["iframeChrome"]);
+        Assert.Equal("object", finger["iframeChrome"].GetValue<string>());
     }
 
     [Fact]
@@ -42,7 +42,7 @@ public class ContentWindowTest : BrowserDefault
             testFuncReturnValue);
 
         var result =
-            await page.EvaluateExpressionAsync(
+            await page.EvaluateExpressionAsync<string>(
                 "document.querySelector('iframe').contentWindow.mySuperFunction()");
 
         Assert.Equal(testFuncReturnValue, result);
@@ -57,27 +57,27 @@ public class ContentWindowTest : BrowserDefault
         await page.GoToAsync("https://google.com");
 
 
-        var basicFrame = await page.EvaluateFunctionAsync(@"() => {
+        var basicFrame = await page.EvaluateFunctionAsync<string>(@"() => {
                                     const el = document.createElement('iframe')
                                     document.body.appendChild(el)
                                     return typeof(el.contentWindow.chrome)
                                    }");
 
-        var sandboxSOIFrame = await page.EvaluateFunctionAsync(@"() => {
+        var sandboxSOIFrame = await page.EvaluateFunctionAsync<string>(@"() => {
                                     const el = document.createElement('iframe')
                                     el.setAttribute('sandbox', 'allow-same-origin')
                                     document.body.appendChild(el)
                                     return typeof(el.contentWindow.chrome)
                                    }");
 
-        var sandboxSOASIFrame = await page.EvaluateFunctionAsync(@"() => {
+        var sandboxSOASIFrame = await page.EvaluateFunctionAsync<string>(@"() => {
                                     const el = document.createElement('iframe')
                                     el.setAttribute('sandbox', 'allow-same-origin allow-scripts')
                                     document.body.appendChild(el)
                                     return typeof(el.contentWindow.chrome)
                                    }");
 
-        var srcdocIFrame = await page.EvaluateFunctionAsync(@"() => {
+        var srcdocIFrame = await page.EvaluateFunctionAsync<string>(@"() => {
                                     const el = document.createElement('iframe')
                                     el.srcdoc = 'blank page, boys.'
                                     document.body.appendChild(el)
@@ -170,14 +170,15 @@ public class ContentWindowTest : BrowserDefault
                                 }");
 
 
-        Assert.True(results.Value<bool>("descriptorsOK"));
-        Assert.True(results.Value<bool>("doesExist"));
-        Assert.True(results.Value<bool>("isNotAClone"));
-        Assert.True(results.Value<bool>("hasSameNumberOfPlugins"));
-        Assert.True(results.Value<bool>("SelfIsNotWindow"));
-        Assert.True(results.Value<bool>("SelfIsNotWindowTop"));
-        Assert.True(results.Value<bool>("TopIsNotSame"));
+        Assert.NotNull(results);
+        Assert.True(results.Value.GetProperty("descriptorsOK").GetBoolean());
+        Assert.True(results.Value.GetProperty("doesExist").GetBoolean());
+        Assert.True(results.Value.GetProperty("isNotAClone").GetBoolean());
+        Assert.True(results.Value.GetProperty("hasSameNumberOfPlugins").GetBoolean());
+        Assert.True(results.Value.GetProperty("SelfIsNotWindow").GetBoolean());
+        Assert.True(results.Value.GetProperty("SelfIsNotWindowTop").GetBoolean());
+        Assert.True(results.Value.GetProperty("TopIsNotSame").GetBoolean());
 
-        Assert.DoesNotContain("at Object.apply", results["StackTraces"]);
+        Assert.DoesNotContain("at Object.apply", results.Value.GetProperty("StackTraces").GetString());
     }
 }

@@ -36,13 +36,15 @@ public abstract class BrowserDefault : IDisposable
         return browser;
     }
 
-    protected async Task<IPage> LaunchAndGetPage(PuppeteerExtraPlugin plugin = null)
+    protected async Task<IPage> LaunchAndGetPage(
+        PuppeteerExtraPlugin plugin = null,
+        LaunchOptions options = null)
     {
         IBrowser browser = null;
         if (plugin != null)
-            browser = await LaunchWithPluginAsync(plugin);
+            browser = await LaunchWithPluginAsync(plugin, options);
         else
-            browser = await LaunchAsync();
+            browser = await LaunchAsync(options);
 
         var page = (await browser.PagesAsync())[0];
 

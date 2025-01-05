@@ -16,6 +16,6 @@ public class UserAgentTest : BrowserDefault
         var userAgent = await page.Browser.GetUserAgentAsync();
 
         var finger = await new FingerPrint().GetFingerPrint(page);
-        Assert.DoesNotContain("HeadlessChrome", finger.Value<string>("userAgent"));
+        Assert.DoesNotContain("HeadlessChrome", finger["userAgent"].GetValue<string>());
     }
 }

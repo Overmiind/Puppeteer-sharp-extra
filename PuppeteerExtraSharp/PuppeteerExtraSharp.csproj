@@ -9,39 +9,16 @@
     <PackageTags>puppeteer-extra recaptcha browser-automation browser-extension browser puppeteer netcore netcore31 stealth-client browser-testing c#</PackageTags>
     <PackageProjectUrl>https://github.com/Overmiind/Puppeteer-sharp-extra</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <UserSecretsId>945328fb-3e7e-4518-99f8-ec578bf688b1</UserSecretsId>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Plugins\ExtraStealth\Scripts\ChromeApp.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\Codec.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\Frame.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\HardwareConcurrency.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\Language.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\LoadTimes.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\Outdimensions.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\Permissions.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\Plugin.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\Runtime.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\SCI.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\Stacktrace.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\Utils.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\Vendor.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\WebDriver.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\WebGL.js" />
-    <None Remove="Plugins\Recaptcha\Scripts\EnterRecaptchaCallBackScript.js" />
-  </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\ChromeApp.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Codec.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\HardwareConcurrency.js" />
-    <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Language.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\LoadTimes.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Outdimensions.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Permissions.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Plugin.js" />
-    <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Runtime.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\SCI.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Stacktrace.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Utils.js" />
@@ -53,8 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="PuppeteerSharp" Version="9.0.2" />
-    <PackageReference Include="RestSharp" Version="108.0.3" />
+    <PackageReference Include="Lib.Harmony.Thin" Version="2.3.3" />
+    <PackageReference Include="PuppeteerSharp" Version="20.0.5" />
+    <PackageReference Include="RestSharp" Version="112.1.0" />
   </ItemGroup>
 
 </Project>
