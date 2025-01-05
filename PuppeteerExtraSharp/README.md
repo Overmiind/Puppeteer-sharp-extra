@@ -1,8 +1,12 @@
 # PuppeteerExtraSharp
 
-[![NuGet Badge](https://buildstats.info/nuget/PuppeteerExtraSharp)](https://www.nuget.org/packages/PuppeteerExtraSharp)
+Puppeteer extra sharp is a .NET port of the [Node.js library](https://github.com/berstend/puppeteer-extra/tree/master/packages/puppeteer-extra)*
 
-Puppeteer extra sharp is a .NET port of the [Node.js library](https://github.com/berstend/puppeteer-extra/tree/master/packages/puppeteer-extra)
+## Requirements
+
+- Only support dotnet 8, because in 'SourceUrl' plugin used [Harmony Thin](https://github.com/pardeike/Harmony) library
+to hide '\_\_puppeteer\_evaluation\_script\_\_'. Thanks for [commit](https://github.com/hardkoded/puppeteer-sharp/commit/e8a8133b22f2fe4c754cc8abf5cc6d506f5c9fcc) ( ｡ •̀ ᴖ •́ ｡)
+
 ## Quickstart
 
 ```c#
@@ -73,3 +77,5 @@ var browser = new PuppeteerExtra().ConnectAsync(new ConnectOptions());
 ```c# 
 var stealthPlugin = puppeteerExtra.GetPlugin<StealthPlugin>();
 ```
+
+<span style="font-size: 10px">*almost</span>
