@@ -2,17 +2,17 @@
 using PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
 using Xunit;
 
-namespace Extra.Tests.StealthPluginTests.EvasionsTests
+namespace Extra.Tests.StealthPluginTests.EvasionsTests;
+
+public class ChromeSciTest : BrowserDefault
 {
-    public class ChromeSciTest : BrowserDefault
+    [Fact]
+    public async Task ShouldWork()
     {
-        [Fact]
-        public async Task ShouldWork()
-        {
-            var plugin = new ChromeSci();
-            var page = await LaunchAndGetPage(plugin);
-            await page.GoToAsync("https://google.com");
-            var sci = await page.EvaluateFunctionAsync(@"() => {
+        var plugin = new ChromeSci();
+        var page = await LaunchAndGetPage(plugin);
+        await page.GoToAsync("https://google.com");
+        var sci = await page.EvaluateFunctionAsync(@"() => {
                             const { timing } = window.performance
                             const csi = window.chrome.csi()
                             return {
@@ -29,12 +29,11 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
                             }
                           }");
 
-            Assert.True(sci["csi"].Value<bool>("exists"));
-            Assert.Equal("function () { [native code] }", sci["csi"]["toString"]);
-            Assert.True(sci["dataOK"].Value<bool>("onloadT"));
-            Assert.True(sci["dataOK"].Value<bool>("pageT"));
-            Assert.True(sci["dataOK"].Value<bool>("startE"));
-            Assert.True(sci["dataOK"].Value<bool>("tran"));
-        }
+        Assert.True(sci["csi"].Value<bool>("exists"));
+        Assert.Equal("function () { [native code] }", sci["csi"]["toString"]);
+        Assert.True(sci["dataOK"].Value<bool>("onloadT"));
+        Assert.True(sci["dataOK"].Value<bool>("pageT"));
+        Assert.True(sci["dataOK"].Value<bool>("startE"));
+        Assert.True(sci["dataOK"].Value<bool>("tran"));
     }
 }

@@ -4,101 +4,102 @@ using Extra.Tests.Utils;
 using PuppeteerExtraSharp.Plugins.ExtraStealth;
 using Xunit;
 
-namespace Extra.Tests.StealthPluginTests.EvasionsTests
+namespace Extra.Tests.StealthPluginTests.EvasionsTests;
+
+public class ContentWindowTest : BrowserDefault
 {
-    public class ContentWindowTest : BrowserDefault
+    [Fact]
+    public async Task IFrameShouldBeObject()
     {
-        [Fact]
-        public async Task IFrameShouldBeObject()
-        {
-            var plugin = new StealthPlugin();
+        var plugin = new StealthPlugin();
 
-            var page = await LaunchAndGetPage(plugin);
-            await page.GoToAsync("https://google.com");
+        var page = await LaunchAndGetPage(plugin);
+        await page.GoToAsync("https://google.com");
 
-            var finger = await new FingerPrint().GetFingerPrint(page);
+        var finger = await new FingerPrint().GetFingerPrint(page);
 
-            Assert.Equal("object", finger["iframeChrome"]);
-        }
+        Assert.Equal("object", finger["iframeChrome"]);
+    }
 
-        [Fact]
-        public async Task ShouldNotBreakIFrames()
-        {
-            var plugin = new StealthPlugin();
+    [Fact]
+    public async Task ShouldNotBreakIFrames()
+    {
+        var plugin = new StealthPlugin();
 
-            var page = await LaunchAndGetPage(plugin);
-            await page.GoToAsync("https://google.com");
+        var page = await LaunchAndGetPage(plugin);
+        await page.GoToAsync("https://google.com");
 
-            const string testFuncReturnValue = "TESTSTRING";
+        const string testFuncReturnValue = "TESTSTRING";
 
-            await page.EvaluateFunctionAsync(@"(testFuncReturnValue) => {
+        await page.EvaluateFunctionAsync(@"(testFuncReturnValue) => {
                         const { document } = window // eslint-disable-line
                             const body = document.querySelector('body')
                             const iframe = document.createElement('iframe')
                             iframe.srcdoc = 'foobar'
                             iframe.contentWindow.mySuperFunction = () => testFuncReturnValue
                             body.appendChild(iframe)
-                        }", testFuncReturnValue);
+                        }",
+            testFuncReturnValue);
 
-            var result =
-                await page.EvaluateExpressionAsync(
-                    "document.querySelector('iframe').contentWindow.mySuperFunction()");
+        var result =
+            await page.EvaluateExpressionAsync(
+                "document.querySelector('iframe').contentWindow.mySuperFunction()");
 
-            Assert.Equal(testFuncReturnValue, result);
-        }
+        Assert.Equal(testFuncReturnValue, result);
+    }
 
-        [Fact]
-        public async Task ShouldCoverAllFrames()
-        {
-            var plugin = new StealthPlugin();
+    [Fact]
+    public async Task ShouldCoverAllFrames()
+    {
+        var plugin = new StealthPlugin();
 
-            var page = await LaunchAndGetPage(plugin);
-            await page.GoToAsync("https://google.com");
+        var page = await LaunchAndGetPage(plugin);
+        await page.GoToAsync("https://google.com");
 
 
-            var basicFrame = await page.EvaluateFunctionAsync(@"() => {
+        var basicFrame = await page.EvaluateFunctionAsync(@"() => {
                                     const el = document.createElement('iframe')
                                     document.body.appendChild(el)
                                     return typeof(el.contentWindow.chrome)
                                    }");
 
-            var sandboxSOIFrame = await page.EvaluateFunctionAsync(@"() => {
+        var sandboxSOIFrame = await page.EvaluateFunctionAsync(@"() => {
                                     const el = document.createElement('iframe')
                                     el.setAttribute('sandbox', 'allow-same-origin')
                                     document.body.appendChild(el)
                                     return typeof(el.contentWindow.chrome)
                                    }");
 
-            var sandboxSOASIFrame = await page.EvaluateFunctionAsync(@"() => {
+        var sandboxSOASIFrame = await page.EvaluateFunctionAsync(@"() => {
                                     const el = document.createElement('iframe')
                                     el.setAttribute('sandbox', 'allow-same-origin allow-scripts')
                                     document.body.appendChild(el)
                                     return typeof(el.contentWindow.chrome)
                                    }");
 
-            var srcdocIFrame = await page.EvaluateFunctionAsync(@"() => {
+        var srcdocIFrame = await page.EvaluateFunctionAsync(@"() => {
                                     const el = document.createElement('iframe')
                                     el.srcdoc = 'blank page, boys.'
                                     document.body.appendChild(el)
                                     return typeof(el.contentWindow.chrome)
                                    }");
 
-            Assert.Equal("object", basicFrame);
-            Assert.Equal("object", sandboxSOIFrame);
-            Assert.Equal("object", sandboxSOASIFrame);
-            Assert.Equal("object", srcdocIFrame);
-        }
+        Assert.Equal("object", basicFrame);
+        Assert.Equal("object", sandboxSOIFrame);
+        Assert.Equal("object", sandboxSOASIFrame);
+        Assert.Equal("object", srcdocIFrame);
+    }
 
 
-        [Fact]
-        public async Task ShouldEmulateFeatures()
-        {
-            var plugin = new StealthPlugin();
+    [Fact]
+    public async Task ShouldEmulateFeatures()
+    {
+        var plugin = new StealthPlugin();
 
-            var page = await LaunchAndGetPage(plugin);
-            await page.GoToAsync("https://google.com");
+        var page = await LaunchAndGetPage(plugin);
+        await page.GoToAsync("https://google.com");
 
-            var results = await page.EvaluateFunctionAsync(@"() => {
+        var results = await page.EvaluateFunctionAsync(@"() => {
                                 const results = {}
                                 
                                     const iframe = document.createElement('iframe')
@@ -167,17 +168,16 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
 
                                       return results
                                 }");
-            
-          
-            Assert.True(results.Value<bool>("descriptorsOK"));
-            Assert.True(results.Value<bool>("doesExist"));
-            Assert.True(results.Value<bool>("isNotAClone"));
-            Assert.True(results.Value<bool>("hasSameNumberOfPlugins"));
-            Assert.True(results.Value<bool>("SelfIsNotWindow"));
-            Assert.True(results.Value<bool>("SelfIsNotWindowTop"));
-            Assert.True(results.Value<bool>("TopIsNotSame"));
-            
-            Assert.DoesNotContain("at Object.apply", results["StackTraces"]);
-        }
+
+
+        Assert.True(results.Value<bool>("descriptorsOK"));
+        Assert.True(results.Value<bool>("doesExist"));
+        Assert.True(results.Value<bool>("isNotAClone"));
+        Assert.True(results.Value<bool>("hasSameNumberOfPlugins"));
+        Assert.True(results.Value<bool>("SelfIsNotWindow"));
+        Assert.True(results.Value<bool>("SelfIsNotWindowTop"));
+        Assert.True(results.Value<bool>("TopIsNotSame"));
+
+        Assert.DoesNotContain("at Object.apply", results["StackTraces"]);
     }
 }
