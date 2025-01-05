@@ -2,38 +2,38 @@
 using System.Threading.Tasks;
 using PuppeteerExtraSharp.Plugins.Recaptcha.Provider._2Captcha.Models;
 
-namespace PuppeteerExtraSharp.Plugins.Recaptcha.Provider._2Captcha
+namespace PuppeteerExtraSharp.Plugins.Recaptcha.Provider._2Captcha;
+
+public class TwoCaptcha : IRecaptchaProvider
 {
-    public class TwoCaptcha : IRecaptchaProvider
+    private readonly ProviderOptions _options;
+    private readonly TwoCaptchaApi _api;
+
+    public TwoCaptcha(string key, ProviderOptions options = null)
     {
-        private readonly ProviderOptions _options;
-        private readonly TwoCaptchaApi _api;
+        _options = options ?? ProviderOptions.CreateDefaultOptions();
+        _api = new TwoCaptchaApi(key, _options);
+    }
 
-        public TwoCaptcha(string key, ProviderOptions options = null)
-        {
-            _options = options ?? ProviderOptions.CreateDefaultOptions();
-            _api = new TwoCaptchaApi(key, _options);
-        }
+    public async Task<string> GetSolution(string key, string pageUrl, string proxyStr = null)
+    {
+        var task = await _api.CreateTaskAsync(key, pageUrl);
 
-        public async Task<string> GetSolution(string key, string pageUrl, string proxyStr = null)
-        {
-            var task = await _api.CreateTaskAsync(key, pageUrl);
-            
-            ThrowErrorIfBadStatus(task);
-            
-            await Task.Delay(_options.StartTimeoutSeconds * 1000);
+        ThrowErrorIfBadStatus(task);
 
-            var result = await _api.GetSolution(task.request);
+        await Task.Delay(_options.StartTimeoutSeconds * 1000);
 
-            ThrowErrorIfBadStatus(result.Data);
+        var result = await _api.GetSolution(task.request);
 
-            return result.Data.request;
-        }
+        ThrowErrorIfBadStatus(result.Data);
 
-        private void ThrowErrorIfBadStatus(TwoCaptchaResponse response)
-        {
-            if (response.status != 1 || string.IsNullOrEmpty(response.request))
-                throw new HttpRequestException($"Two captcha request ends with error [{response.status}] {response.request}");
-        }
+        return result.Data.request;
+    }
+
+    private void ThrowErrorIfBadStatus(TwoCaptchaResponse response)
+    {
+        if (response.status != 1 || string.IsNullOrEmpty(response.request))
+            throw new HttpRequestException(
+                $"Two captcha request ends with error [{response.status}] {response.request}");
     }
 }

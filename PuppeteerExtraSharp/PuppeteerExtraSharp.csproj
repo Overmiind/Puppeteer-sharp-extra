@@ -21,7 +21,6 @@
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Plugin.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\SCI.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Stacktrace.js" />
-    <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Utils.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Vendor.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\WebDriver.js" />
     <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\WebGL.js" />

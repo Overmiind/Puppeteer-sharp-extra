@@ -97,7 +97,7 @@ public class PuppeteerExtra
     private void OrderPlugins()
     {
         _plugins = _plugins
-            .OrderBy(e => e.Requirements?.Contains(PluginRequirements.RunLast))
+            .OrderBy(e => e.Requirements.Contains(PluginRequirements.RunLast))
             .ToList();
     }
 
