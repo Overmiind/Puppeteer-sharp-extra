@@ -120,6 +120,18 @@
   <data name="AntiCaptchaKey" xml:space="preserve">
     <value>""</value>
   </data>
+  <data name="ProxyIp" xml:space="preserve">
+    <value>""</value>
+  </data>
+  <data name="ProxyLogin" xml:space="preserve">
+    <value>""</value>
+  </data>
+  <data name="ProxyPassword" xml:space="preserve">
+    <value>""</value>
+  </data>
+  <data name="ProxyPort" xml:space="preserve">
+    <value>""</value>
+  </data>
   <data name="TwoCaptchaKey" xml:space="preserve">
     <value>""</value>
   </data>

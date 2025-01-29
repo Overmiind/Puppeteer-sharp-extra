@@ -16,7 +16,7 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
             var page = await LaunchAndGetPage(plugin);
             await page.GoToAsync("https://google.com");
 
-            var finger = await new FingerPrint().GetFingerPrint(page);
+            var finger = await FingerPrint.GetFingerPrint(page);
 
             Assert.Equal("object", finger["iframeChrome"]);
         }
@@ -44,7 +44,7 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
                 await page.EvaluateExpressionAsync(
                     "document.querySelector('iframe').contentWindow.mySuperFunction()");
 
-            Assert.Equal(testFuncReturnValue, result);
+            Assert.Equal(testFuncReturnValue, result.Value.GetString());
         }
 
         [Fact]
@@ -83,10 +83,10 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
                                     return typeof(el.contentWindow.chrome)
                                    }");
 
-            Assert.Equal("object", basicFrame);
-            Assert.Equal("object", sandboxSOIFrame);
-            Assert.Equal("object", sandboxSOASIFrame);
-            Assert.Equal("object", srcdocIFrame);
+            Assert.Equal("object", basicFrame.Value.GetString());
+            Assert.Equal("object", sandboxSOIFrame.Value.GetString());
+            Assert.Equal("object", sandboxSOASIFrame.Value.GetString());
+            Assert.Equal("object", srcdocIFrame.Value.GetString());
         }
 
 
@@ -169,15 +169,15 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
                                 }");
             
           
-            Assert.True(results.Value<bool>("descriptorsOK"));
-            Assert.True(results.Value<bool>("doesExist"));
-            Assert.True(results.Value<bool>("isNotAClone"));
-            Assert.True(results.Value<bool>("hasSameNumberOfPlugins"));
-            Assert.True(results.Value<bool>("SelfIsNotWindow"));
-            Assert.True(results.Value<bool>("SelfIsNotWindowTop"));
-            Assert.True(results.Value<bool>("TopIsNotSame"));
+            Assert.True(results.Value.GetProperty("descriptorsOK").GetBoolean());
+            Assert.True(results.Value.GetProperty("doesExist").GetBoolean());
+            Assert.True(results.Value.GetProperty("isNotAClone").GetBoolean());
+            Assert.True(results.Value.GetProperty("hasSameNumberOfPlugins").GetBoolean());
+            Assert.True(results.Value.GetProperty("SelfIsNotWindow").GetBoolean());
+            Assert.True(results.Value.GetProperty("SelfIsNotWindowTop").GetBoolean());
+            Assert.True(results.Value.GetProperty("TopIsNotSame").GetBoolean());
             
-            Assert.DoesNotContain("at Object.apply", results["StackTraces"]);
+            Assert.DoesNotContain("at Object.apply", results.Value.GetProperty("StackTraces").GetString());
         }
     }
 }

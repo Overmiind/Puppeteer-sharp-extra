@@ -1,32 +1,31 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using PuppeteerExtraSharp.Utils;
 using RestSharp;
 
 namespace PuppeteerExtraSharp.Plugins.Recaptcha.RestClient
 {
-    public class RestClient
+    public class RestClient(string url = null)
     {
-        private readonly RestSharp.RestClient _client;
-
-        public RestClient(string url = null)
-        {
-            _client = string.IsNullOrWhiteSpace(url) ? new RestSharp.RestClient() : new RestSharp.RestClient(url);
-        }
+        private readonly RestSharp.RestClient _client = string.IsNullOrWhiteSpace(url) ? new RestSharp.RestClient() : new RestSharp.RestClient(url);
 
         public PollingBuilder<T> CreatePollingBuilder<T>(RestRequest request)
         {
             return new PollingBuilder<T>(_client, request);
         }
 
-        public async Task<T> PostWithJsonAsync<T>(string url, object content, CancellationToken token)
+        public async Task<T> PostWithJsonAsync<T>(string url, object content, CancellationToken token) where T : JToken
         {
             var request = new RestRequest(url);
             request.AddHeader("Content-type", "application/json");
-            request.AddJsonBody(content);
+            request.AddJsonBody(JsonConvert.SerializeObject(content));
             request.Method = Method.Post;
-            return await _client.PostAsync<T>(request, token);
+
+            var response = await _client.PostAsync(request, token);
+            return JsonConvert.DeserializeObject<T>(response.Content);
         }
 
         public async Task<T> PostWithQueryAsync<T>(string url, Dictionary<string, string> query, CancellationToken token = default)

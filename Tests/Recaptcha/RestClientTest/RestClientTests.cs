@@ -1,28 +1,33 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Xunit;
+using Xunit.Abstractions;
 using RestClient = PuppeteerExtraSharp.Plugins.Recaptcha.RestClient.RestClient;
 
 namespace Extra.Tests.Recaptcha.RestClientTest
 {
     [Collection("Captcha")]
-    public class RestClientTests
+    public class RestClientTests(ITestOutputHelper output)
     {
+        private readonly ITestOutputHelper output = output;
+
         [Fact]
         public async Task ShouldWorkPostWithJson()
         {
             var client = new RestClient("https://postman-echo.com");
-            var data = ("test", "123");
+            Dictionary<string, string> data = new()
+            {
+                ["test"] = "test"
+            };
             
-            var result = await client.PostWithJsonAsync<Dictionary<string,string>>("post", data, new CancellationToken());
+            var result = await client.PostWithJsonAsync<JObject>("post", data, new CancellationToken());
 
-            var actual = JsonConvert.DeserializeObject<(string, string)>(result.First(e => e.Key == "json").Value);
+            output.WriteLine(result.ToString());
+            var actual = result["json"].ToObject<Dictionary<string, string>>();
 
             Assert.Equal(data, actual);
         }
-
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Extra.Tests
+﻿namespace Extra.Tests
 {
     public static class Constants
     {

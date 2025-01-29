@@ -1,6 +1,5 @@
-using System;
 using System.Net;
-using PuppeteerExtraSharp.Plugins.Recaptcha.Provider.AntiCaptcha;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Extra.Tests
@@ -8,9 +7,9 @@ namespace Extra.Tests
     public class ExtraLaunchTest: BrowserDefault
     {
         [Fact]
-        public async void ShouldReturnOkPage()
+        public async Task ShouldReturnOkPage()
         {
-            var browser = await this.LaunchAsync();
+            var browser = await LaunchAsync();
             var page = await browser.NewPageAsync();
             var response = await page.GoToAsync("http://google.com");
             Assert.Equal(HttpStatusCode.OK, response.Status);

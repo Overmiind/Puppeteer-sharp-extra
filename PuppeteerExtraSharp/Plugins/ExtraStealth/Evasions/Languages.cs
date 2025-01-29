@@ -1,32 +1,34 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
 {
-    public class Languages : PuppeteerExtraPlugin
+    public class Languages(StealthLanguagesOptions options = null) : PuppeteerExtraPlugin("stealth-language")
     {
-        public StealthLanguagesOptions Options { get; }
+        public StealthLanguagesOptions Options { get; } = options ?? new StealthLanguagesOptions("en-US", "en");
 
-        public Languages(StealthLanguagesOptions options = null) : base("stealth-language")
+        public override async Task OnPageCreated(IPage page)
         {
-            Options = options ?? new StealthLanguagesOptions("en-US", "en");
-        }
+            if (Options.Languages.Length > 0)
+            {
+                await page.SetExtraHttpHeadersAsync(new()
+                {
+                    ["Accept-Language"] = string.Join(',', Options.Languages),
+                });
 
-        public override Task OnPageCreated(IPage page)
-        {
+                List<string> langs = Options.Languages.Select(l => "\"" + l.ToString() + "\"").ToList();
+                await page.EvaluateExpressionOnNewDocumentAsync("Object.defineProperty(Object.getPrototypeOf(navigator), 'languages', { get: function () { '[native code]'; return '[" + string.Join(",", langs) + "]'; } });");
+            }
+
             var script = Utils.GetScript("Language.js");
-            return Utils.EvaluateOnNewPage(page,script, Options.Languages);
+            await Utils.EvaluateOnNewPage(page, script, Options.Languages);
         }
     }
 
-    public class StealthLanguagesOptions : IPuppeteerExtraPluginOptions
+    public class StealthLanguagesOptions(params string[] languages) : IPuppeteerExtraPluginOptions
     {
-        public object[] Languages { get; }
-
-        public StealthLanguagesOptions(params string[] languages)
-        {
-            Languages = languages.Cast<object>().ToArray();
-        }
+        public object[] Languages { get; } = languages.Cast<object>().ToArray();
     }
 }
