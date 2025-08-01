@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-using PuppeteerExtraSharpLite.Plugins;
+﻿using PuppeteerExtraSharpLite.Plugins;
 
 using PuppeteerSharp;
 
@@ -8,7 +6,7 @@ using PuppeteerSharp;
 namespace PuppeteerExtraSharpLite;
 
 public class PuppeteerExtra {
-    private List<PuppeteerExtraPlugin> _plugins = new();
+    private readonly List<PuppeteerExtraPlugin> _plugins = new();
 
     public PuppeteerExtra Use(PuppeteerExtraPlugin plugin) {
         _plugins.Add(plugin);
@@ -28,18 +26,31 @@ public class PuppeteerExtra {
         return browser;
     }
 
-    public async Task<IBrowser> ConnectAsync(ConnectOptions options) {
-        _plugins.ForEach(e => e.BeforeConnect(options));
-        var browser = await Puppeteer.ConnectAsync(options);
-        _plugins.ForEach(e => e.AfterConnect(browser));
-        await OnStart(new BrowserStartContext() {
-            StartType = StartType.Connect
-        }, browser);
-        return browser;
+public async Task<IBrowser> ConnectAsync(ConnectOptions options) {
+    foreach (var plugin in _plugins) {
+        plugin.BeforeConnect(options);
     }
 
+    var browser = await Puppeteer.ConnectAsync(options);
+
+    foreach (var plugin in _plugins) {
+        plugin.AfterConnect(browser);
+    }
+
+    await OnStart(new BrowserStartContext {
+        StartType = StartType.Connect
+    }, browser);
+
+    return browser;
+}
+
     public T GetPlugin<T>() where T : PuppeteerExtraPlugin {
-        return (T)_plugins.FirstOrDefault(e => e.GetType() == typeof(T));
+        foreach (var plugin in _plugins) {
+            if (plugin is T tPlugin) {
+                return tPlugin;
+            }
+        }
+        return default;
     }
 
     private async Task OnStart(BrowserStartContext context, IBrowser browser) {
@@ -49,22 +60,28 @@ public class PuppeteerExtra {
     }
 
     private void ResolveDependencies(PuppeteerExtraPlugin plugin) {
-        var dependencies = plugin.GetDependencies()?.ToList();
-        if (dependencies is null || !dependencies.Any())
+        var dependencies = plugin.GetDependencies();
+        if (dependencies.Count == 0) {
             return;
+        }
 
         foreach (var puppeteerExtraPlugin in dependencies) {
             Use(puppeteerExtraPlugin);
 
-            var plugDependencies = puppeteerExtraPlugin.GetDependencies()?.ToList();
+            var pluginDependencies = puppeteerExtraPlugin.GetDependencies();
 
-            if (plugDependencies != null && plugDependencies.Any())
-                plugDependencies.ForEach(ResolveDependencies);
+            foreach (var dependency in pluginDependencies) {
+                ResolveDependencies(dependency);
+            }
         }
     }
 
     private void OrderPlugins() {
-        _plugins = _plugins.OrderBy(e => e.Requirements?.Contains(PluginRequirements.RunLast)).ToList();
+        _plugins.Sort(static (a, b) => {
+            var aHasRunLast = a.Requirements?.Contains(PluginRequirements.RunLast) == true;
+            var bHasRunLast = b.Requirements?.Contains(PluginRequirements.RunLast) == true;
+            return aHasRunLast.CompareTo(bHasRunLast);
+        });
     }
 
     private void CheckPluginRequirements(BrowserStartContext context) {
@@ -87,13 +104,19 @@ public class PuppeteerExtra {
     private async Task Register(IBrowser browser) {
         var pages = await browser.PagesAsync();
 
-        browser.TargetCreated += async (sender, args) => {
-            _plugins.ForEach(e => e.OnTargetCreated(args.Target));
+        browser.TargetCreated += async (sender, args) => await UpdatePluginsOnTargetCreated(args);
+
+        async Task UpdatePluginsOnTargetCreated(TargetChangedArgs args) {
+            foreach (var plugin in _plugins) {
+                plugin.OnTargetCreated(args.Target);
+            }
             if (args.Target.Type == TargetType.Page) {
                 var page = await args.Target.PageAsync();
-                _plugins.ForEach(async e => await e.OnPageCreated(page));
+                foreach (var plugin in _plugins) {
+                    await plugin.OnPageCreated(page);
+                }
             }
-        };
+        }
 
         foreach (var puppeteerExtraPlugin in _plugins) {
             browser.TargetChanged += (sender, args) => puppeteerExtraPlugin.OnTargetChanged(args.Target);
