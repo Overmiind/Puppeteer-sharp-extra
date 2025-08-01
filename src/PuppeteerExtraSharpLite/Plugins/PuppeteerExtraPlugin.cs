@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-
-using PuppeteerSharp;
+﻿using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Plugins;
 

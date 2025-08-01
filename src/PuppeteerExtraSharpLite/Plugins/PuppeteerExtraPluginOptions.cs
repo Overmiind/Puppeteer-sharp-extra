@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace PuppeteerExtraSharpLite.Plugins;
+﻿namespace PuppeteerExtraSharpLite.Plugins;
 
 public interface IPuppeteerExtraPluginOptions {
 }

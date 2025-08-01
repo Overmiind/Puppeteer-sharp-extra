@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-using PuppeteerExtraSharp.Plugins.Recaptcha.Provider;
+﻿using PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider;
 
 using PuppeteerSharp;
 

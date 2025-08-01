@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 
-using PuppeteerExtraSharp.Plugins;
+using PuppeteerExtraSharpLite.Plugins;
 
 using PuppeteerSharp;
 
@@ -11,7 +8,7 @@ using PuppeteerSharp;
 namespace PuppeteerExtraSharpLite;
 
 public class PuppeteerExtra {
-    private List<PuppeteerExtraPlugin> _plugins = new List<PuppeteerExtraPlugin>();
+    private List<PuppeteerExtraPlugin> _plugins = new();
 
     public PuppeteerExtra Use(PuppeteerExtraPlugin plugin) {
         _plugins.Add(plugin);

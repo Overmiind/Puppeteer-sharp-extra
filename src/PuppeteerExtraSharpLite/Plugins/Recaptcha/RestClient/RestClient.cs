@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
-using PuppeteerExtraSharp.Utils;
+﻿using PuppeteerExtraSharpLite.Utils;
 
 using RestSharp;
 

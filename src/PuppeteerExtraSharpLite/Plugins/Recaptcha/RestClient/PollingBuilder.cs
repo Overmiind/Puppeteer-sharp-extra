@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-using RestSharp;
+﻿using RestSharp;
 
 namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.RestClient;
 

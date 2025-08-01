@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace PuppeteerExtraSharpLite.Plugins.Recaptcha;
+﻿namespace PuppeteerExtraSharpLite.Plugins.Recaptcha;
 
 public class CaptchaException : Exception {
     public CaptchaException(string pageUrl, string content) {

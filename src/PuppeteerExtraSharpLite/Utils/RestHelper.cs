@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-using RestSharp;
+﻿using RestSharp;
 
 namespace PuppeteerExtraSharpLite.Utils;
 
