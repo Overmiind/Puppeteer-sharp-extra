@@ -12,7 +12,7 @@ public abstract class PuppeteerExtraPlugin {
     public virtual List<PluginRequirements> Requirements { get; set; }
 
     public virtual ICollection<PuppeteerExtraPlugin> GetDependencies() {
-        return null;
+        return Array.Empty<PuppeteerExtraPlugin>();
     }
 
     public virtual void BeforeLaunch(LaunchOptions options) { }
