@@ -2,6 +2,8 @@
 
 using PuppeteerSharp;
 
+using ExecutionContext = PuppeteerSharp.ExecutionContext;
+
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 public class SourceUrl : PuppeteerExtraPlugin {
