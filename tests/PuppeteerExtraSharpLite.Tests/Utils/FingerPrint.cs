@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Reflection;
+using System.Text.Json;
 
 using PuppeteerSharp;
 
@@ -11,13 +12,19 @@ public class FingerPrint {
     /// <param name="page"></param>
     /// <returns></returns>
     public static async Task<JsonElement> GetFingerPrint(IPage page) {
-        var path = Path.Join("PuppeteerExtraSharpLite.Tests", "StealthPluginTests", "Script", "fpCollect.js");
+        var testAssemblyLocation = Assembly.GetExecutingAssembly().Location;
+        var testAssemblyDir = Path.GetDirectoryName(testAssemblyLocation)!;
 
-        if (!File.Exists(path)) {
-            throw new FileNotFoundException($"Script file not found: {path}");
+        // Navigate up to find the repository root (where we can find src/ folder)
+        var repoRoot = Helper.FindRepositoryRoot(testAssemblyDir);
+        var projectPath = Path.Combine(repoRoot, "tests", "PuppeteerExtraSharpLite.Tests");
+        var filePath = Path.Combine(projectPath, "StealthPluginTests", "Script", "fpCollect.js");
+
+        if (!File.Exists(filePath)) {
+            throw new FileNotFoundException($"Script file not found: {filePath}");
         }
 
-        var script = await File.ReadAllTextAsync(path);
+        var script = await File.ReadAllTextAsync(filePath);
         await page.EvaluateExpressionAsync(script);
 
         var fingerPrint =

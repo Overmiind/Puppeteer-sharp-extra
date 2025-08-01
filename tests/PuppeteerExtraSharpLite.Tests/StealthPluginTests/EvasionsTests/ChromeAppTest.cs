@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Text.Json;
 
 using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
@@ -14,26 +14,22 @@ public class ChromeAppTest : BrowserDefault {
         var page = await LaunchAndGetPage(plugin);
         await page.GoToAsync("https://google.com");
 
-        var chrome = await page.EvaluateExpressionAsync<JObject>("window.chrome");
-        Assert.NotNull(chrome);
+        var chrome = await page.EvaluateExpressionAsync<JsonElement>("window.chrome");
 
-        var app = await page.EvaluateExpressionAsync<JObject>("chrome.app");
-        Assert.NotNull(app);
+        var app = await page.EvaluateExpressionAsync<JsonElement>("chrome.app");
 
         var getIsInstalled = await page.EvaluateExpressionAsync<bool>("chrome.app.getIsInstalled()");
         Assert.False(getIsInstalled);
 
-        var installState = await page.EvaluateExpressionAsync<JObject>("chrome.app.InstallState");
-        Assert.NotNull(installState);
-        Assert.Equal("disabled", installState["DISABLED"]);
-        Assert.Equal("installed", installState["INSTALLED"]);
-        Assert.Equal("not_installed", installState["NOT_INSTALLED"]);
+        var installState = await page.EvaluateExpressionAsync<JsonElement>("chrome.app.InstallState");
+        Assert.Equal("disabled", installState.GetProperty("DISABLED").GetString());
+        Assert.Equal("installed", installState.GetProperty("INSTALLED").GetString());
+        Assert.Equal("not_installed", installState.GetProperty("NOT_INSTALLED").GetString());
 
-        var runningState = await page.EvaluateExpressionAsync<JObject>("chrome.app.RunningState");
-        Assert.NotNull(runningState);
-        Assert.Equal("cannot_run", runningState["CANNOT_RUN"]);
-        Assert.Equal("ready_to_run", runningState["READY_TO_RUN"]);
-        Assert.Equal("running", runningState["RUNNING"]);
+        var runningState = await page.EvaluateExpressionAsync<JsonElement>("chrome.app.RunningState");
+        Assert.Equal("cannot_run", runningState.GetProperty("CANNOT_RUN").GetString());
+        Assert.Equal("ready_to_run", runningState.GetProperty("READY_TO_RUN").GetString());
+        Assert.Equal("running", runningState.GetProperty("RUNNING").GetString());
 
         var details = await page.EvaluateExpressionAsync<object>("chrome.app.getDetails()");
         Assert.Null(details);

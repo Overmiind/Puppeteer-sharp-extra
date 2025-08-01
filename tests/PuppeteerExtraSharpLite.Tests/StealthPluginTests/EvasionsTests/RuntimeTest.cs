@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Text.Json;
 
 using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
@@ -14,11 +14,9 @@ public class RuntimeTest : BrowserDefault {
 
         await page.GoToAsync("https://google.com");
 
-        var runtime = await page.EvaluateExpressionAsync<JObject>("chrome.runtime");
-        Assert.NotNull(runtime);
+        var runtime = await page.EvaluateExpressionAsync<JsonElement>("chrome.runtime");
 
-        var runtimeConnect = await page.EvaluateExpressionAsync<JObject>("chrome.runtime.connect");
-        Assert.NotNull(runtimeConnect);
+        var runtimeConnect = await page.EvaluateExpressionAsync<JsonElement>("chrome.runtime.connect");
 
         var runtimeName = await page.EvaluateExpressionAsync<string>("chrome.runtime.connect.name");
         Assert.Equal("connect", runtimeName);

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Text.Json;
 
 using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
@@ -12,21 +12,19 @@ public class LoadTimesTest : BrowserDefault {
 
         await page.GoToAsync("https://google.com");
 
-        var loadTimes = await page.EvaluateFunctionAsync<JObject>("() => window.chrome.loadTimes()");
+        var loadTimes = await page.EvaluateFunctionAsync<JsonElement>("() => window.chrome.loadTimes()");
 
-        Assert.NotNull(loadTimes);
-
-        Assert.NotNull(loadTimes["connectionInfo"]);
-        Assert.NotNull(loadTimes["npnNegotiatedProtocol"]);
-        Assert.NotNull(loadTimes["wasAlternateProtocolAvailable"]);
-        Assert.NotNull(loadTimes["wasAlternateProtocolAvailable"]);
-        Assert.NotNull(loadTimes["wasFetchedViaSpdy"]);
-        Assert.NotNull(loadTimes["wasNpnNegotiated"]);
-        Assert.NotNull(loadTimes["firstPaintAfterLoadTime"]);
-        Assert.NotNull(loadTimes["requestTime"]);
-        Assert.NotNull(loadTimes["startLoadTime"]);
-        Assert.NotNull(loadTimes["commitLoadTime"]);
-        Assert.NotNull(loadTimes["finishDocumentLoadTime"]);
-        Assert.NotNull(loadTimes["firstPaintTime"]);
+        Assert.NotNull(loadTimes.GetProperty("connectionInfo").GetString());
+        Assert.NotNull(loadTimes.GetProperty("npnNegotiatedProtocol").GetString());
+        Assert.NotNull(loadTimes.GetProperty("wasAlternateProtocolAvailable").GetString());
+        Assert.NotNull(loadTimes.GetProperty("wasAlternateProtocolAvailable").GetString());
+        Assert.NotNull(loadTimes.GetProperty("wasFetchedViaSpdy").GetString());
+        Assert.NotNull(loadTimes.GetProperty("wasNpnNegotiated").GetString());
+        Assert.NotNull(loadTimes.GetProperty("firstPaintAfterLoadTime").GetString());
+        Assert.NotNull(loadTimes.GetProperty("requestTime").GetString());
+        Assert.NotNull(loadTimes.GetProperty("startLoadTime").GetString());
+        Assert.NotNull(loadTimes.GetProperty("commitLoadTime").GetString());
+        Assert.NotNull(loadTimes.GetProperty("finishDocumentLoadTime").GetString());
+        Assert.NotNull(loadTimes.GetProperty("firstPaintTime").GetString());
     }
 }
