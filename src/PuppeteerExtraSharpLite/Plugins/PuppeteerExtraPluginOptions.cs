@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PuppeteerExtraSharp.Plugins
-{
-    public interface IPuppeteerExtraPluginOptions
-    {
-    }
+namespace PuppeteerExtraSharpLite.Plugins;
+
+public interface IPuppeteerExtraPluginOptions {
 }

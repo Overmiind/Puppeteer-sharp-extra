@@ -1,26 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
+
+using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
+
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharp.Plugins.ExtraStealth
-{
-    public class StealthPlugin : PuppeteerExtraPlugin
+namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth;
+
+public class StealthPlugin : PuppeteerExtraPlugin {
+    private readonly IPuppeteerExtraPluginOptions[] _options;
+    private readonly List<PuppeteerExtraPlugin> _standardEvasions;
+
+    public StealthPlugin(params IPuppeteerExtraPluginOptions[] options) : base("stealth") {
+        _options = options;
+        _standardEvasions = GetStandardEvasions();
+    }
+
+    private List<PuppeteerExtraPlugin> GetStandardEvasions() {
+        return new List<PuppeteerExtraPlugin>()
     {
-        private readonly IPuppeteerExtraPluginOptions[] _options;
-        private readonly List<PuppeteerExtraPlugin> _standardEvasions;
-
-        public StealthPlugin(params IPuppeteerExtraPluginOptions[] options) : base("stealth")
-        {
-            _options = options;
-            _standardEvasions = GetStandardEvasions();
-        }
-
-        private List<PuppeteerExtraPlugin> GetStandardEvasions()
-        {
-            return new List<PuppeteerExtraPlugin>()
-        {
             new WebDriver(),
             // new ChromeApp(),
             new ChromeSci(),
@@ -38,24 +37,20 @@ namespace PuppeteerExtraSharp.Plugins.ExtraStealth
             new ContentWindow(),
             new SourceUrl()
         };
-        }
+    }
 
-        public override ICollection<PuppeteerExtraPlugin> GetDependencies() => _standardEvasions;
+    public override ICollection<PuppeteerExtraPlugin> GetDependencies() => _standardEvasions;
 
-        public override async Task OnPageCreated(IPage page)
-        {
-            var utilsScript = Utils.GetScript("Utils.js");
-            await page.EvaluateExpressionOnNewDocumentAsync(utilsScript);
-        }
+    public override async Task OnPageCreated(IPage page) {
+        var utilsScript = Utils.GetScript("Utils.js");
+        await page.EvaluateExpressionOnNewDocumentAsync(utilsScript);
+    }
 
-        private T GetOptionByType<T>() where T : IPuppeteerExtraPluginOptions
-        {
-            return _options.OfType<T>().FirstOrDefault();
-        }
+    private T GetOptionByType<T>() where T : IPuppeteerExtraPluginOptions {
+        return _options.OfType<T>().FirstOrDefault();
+    }
 
-        public void RemoveEvasionByType<T>() where T : PuppeteerExtraPlugin
-        {
-            _standardEvasions.RemoveAll(ev => ev is T);
-        }
+    public void RemoveEvasionByType<T>() where T : PuppeteerExtraPlugin {
+        _standardEvasions.RemoveAll(ev => ev is T);
     }
 }

@@ -1,16 +1,12 @@
-﻿using System.Threading.Tasks;
-using PuppeteerSharp;
+﻿using PuppeteerSharp;
 
-namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
-{
-    public class Codec : PuppeteerExtraPlugin
-    {
-        public Codec() : base("stealth-codec") { }
+namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
-        public override Task OnPageCreated(IPage page)
-        {
-            var script = Utils.GetScript("Codec.js");
-            return Utils.EvaluateOnNewPage(page, script);
-        }
+public class Codec : PuppeteerExtraPlugin {
+    public Codec() : base("stealth-codec") { }
+
+    public override Task OnPageCreated(IPage page) {
+        var script = Utils.GetScript("Codec.js");
+        return Utils.EvaluateOnNewPage(page, script);
     }
 }

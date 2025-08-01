@@ -1,17 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using PuppeteerSharp;
+﻿using PuppeteerSharp;
 
-namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
-{
-    public class OutDimensions : PuppeteerExtraPlugin
-    {
-        public OutDimensions() : base("stealth-dimensions") { }
+namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
-        public override async Task OnPageCreated(IPage page)
-        {
-            var script = Utils.GetScript("Outdimensions.js");
-            await page.EvaluateFunctionOnNewDocumentAsync(script);
-        }
+public class OutDimensions : PuppeteerExtraPlugin {
+    public OutDimensions() : base("stealth-dimensions") { }
+
+    public override async Task OnPageCreated(IPage page) {
+        var script = Utils.GetScript("Outdimensions.js");
+        await page.EvaluateFunctionOnNewDocumentAsync(script);
     }
 }

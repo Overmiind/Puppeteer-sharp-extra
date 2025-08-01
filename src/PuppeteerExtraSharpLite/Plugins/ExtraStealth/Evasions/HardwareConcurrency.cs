@@ -1,31 +1,24 @@
-﻿using System.Threading.Tasks;
-using PuppeteerSharp;
+﻿using PuppeteerSharp;
 
-namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
-{
-    public class HardwareConcurrency : PuppeteerExtraPlugin
-    {
-        public StealthHardwareConcurrencyOptions Options { get; }
+namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
-        public HardwareConcurrency(StealthHardwareConcurrencyOptions options = null) : base("stealth/hardwareConcurrency")
-        {
-            Options = options ?? new StealthHardwareConcurrencyOptions(4);
-        }
+public class HardwareConcurrency : PuppeteerExtraPlugin {
+    public StealthHardwareConcurrencyOptions Options { get; }
 
-        public override Task OnPageCreated(IPage page)
-        {
-            var script = Utils.GetScript("HardwareConcurrency.js");
-            return Utils.EvaluateOnNewPage(page, script, Options.Concurrency);
-        }
+    public HardwareConcurrency(StealthHardwareConcurrencyOptions options = null) : base("stealth/hardwareConcurrency") {
+        Options = options ?? new StealthHardwareConcurrencyOptions(4);
     }
 
-    public class StealthHardwareConcurrencyOptions : IPuppeteerExtraPluginOptions
-    {
-        public int Concurrency { get; }
+    public override Task OnPageCreated(IPage page) {
+        var script = Utils.GetScript("HardwareConcurrency.js");
+        return Utils.EvaluateOnNewPage(page, script, Options.Concurrency);
+    }
+}
 
-        public StealthHardwareConcurrencyOptions(int concurrency)
-        {
-            Concurrency = concurrency;
-        }
+public class StealthHardwareConcurrencyOptions : IPuppeteerExtraPluginOptions {
+    public int Concurrency { get; }
+
+    public StealthHardwareConcurrencyOptions(int concurrency) {
+        Concurrency = concurrency;
     }
 }

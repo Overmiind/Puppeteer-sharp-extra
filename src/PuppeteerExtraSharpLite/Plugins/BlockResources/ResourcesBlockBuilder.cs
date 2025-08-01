@@ -1,36 +1,29 @@
 ﻿using PuppeteerSharp;
 
-namespace PuppeteerExtraSharp.Plugins.BlockResources
-{
-    public class ResourcesBlockBuilder
-    {
-        private BlockRule Rule { get; set; } = new BlockRule();
+namespace PuppeteerExtraSharpLite.Plugins.BlockResources;
 
-        public ResourcesBlockBuilder BlockedResources(params ResourceType[] resources)
-        {
-            foreach (var resourceType in resources)
-            {
-                Rule.ResourceType.Add(resourceType);
-            }
+public class ResourcesBlockBuilder {
+    private BlockRule Rule { get; set; } = new BlockRule();
 
-            return this;
+    public ResourcesBlockBuilder BlockedResources(params ResourceType[] resources) {
+        foreach (var resourceType in resources) {
+            Rule.ResourceType.Add(resourceType);
         }
 
-        public ResourcesBlockBuilder OnlyForPage(IPage page)
-        {
-            Rule.IPage = page;
-            return this;
-        }
+        return this;
+    }
 
-        public ResourcesBlockBuilder ForUrl(string pattern)
-        {
-            Rule.SitePattern = pattern;
-            return this;
-        }
+    public ResourcesBlockBuilder OnlyForPage(IPage page) {
+        Rule.IPage = page;
+        return this;
+    }
 
-        internal BlockRule Build()
-        {
-            return this.Rule;
-        }
+    public ResourcesBlockBuilder ForUrl(string pattern) {
+        Rule.SitePattern = pattern;
+        return this;
+    }
+
+    internal BlockRule Build() {
+        return this.Rule;
     }
 }

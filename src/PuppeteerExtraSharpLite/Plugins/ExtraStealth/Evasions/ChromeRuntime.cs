@@ -1,16 +1,11 @@
-﻿using System.Threading.Tasks;
-using PuppeteerSharp;
+﻿using PuppeteerSharp;
 
-namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
-{
-    public class ChromeRuntime: PuppeteerExtraPlugin
-    {
-        public ChromeRuntime(): base("stealth-runtime") { }
-        
-        public override Task OnPageCreated(IPage page)
-        {
-            var script = Utils.GetScript("Runtime.js");
-            return Utils.EvaluateOnNewPage(page, script);
-        }
+namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
+
+public class ChromeRuntime : PuppeteerExtraPlugin {
+    public ChromeRuntime() : base("stealth-runtime") {}
+    public override Task OnPageCreated(IPage page) {
+        var script = Utils.GetScript("Runtime.js");
+        return Utils.EvaluateOnNewPage(page, script);
     }
 }
