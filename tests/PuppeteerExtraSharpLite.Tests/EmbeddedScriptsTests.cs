@@ -1,4 +1,6 @@
 using System.Reflection;
+using System.Text.RegularExpressions;
+
 using Scripts = PuppeteerExtraSharpLite.Plugins.EmbeddedScripts.CS.Scripts;
 
 namespace PuppeteerExtraSharpLite.Tests;
@@ -42,8 +44,11 @@ public partial class EmbeddedScriptsTests {
 
 		var actual = File.ReadAllText(filePath);
 
-		// Ignore whitespace differences
-		Assert.Equal(actual, expected, ignoreLineEndingDifferences: true, ignoreWhiteSpaceDifferences: true, ignoreAllWhiteSpace: true);
+		// Normalize both strings to compare logic only, ignoring formatting differences
+		var normalizedActual = NormalizeScriptContent(actual);
+		var normalizedExpected = NormalizeScriptContent(expected);
+
+		Assert.Equal(normalizedExpected, normalizedActual);
 	}
 
 	private static string FindRepositoryRoot(string startPath) {
@@ -56,5 +61,12 @@ public partial class EmbeddedScriptsTests {
 			directory = directory.Parent;
 		}
 		throw new DirectoryNotFoundException($"Could not find repository root starting from {startPath}.");
+	}
+
+	[GeneratedRegex(@"\s+")]
+	private static partial Regex WhiteSpaceRegex();
+
+	private static string NormalizeScriptContent(string scriptContent) {
+		return WhiteSpaceRegex().Replace(scriptContent, "");
 	}
 }
