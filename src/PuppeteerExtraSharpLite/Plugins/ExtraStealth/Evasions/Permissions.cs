@@ -6,7 +6,7 @@ public class Permissions : PuppeteerExtraPlugin {
     public Permissions() : base("stealth-permissions") { }
 
     public override Task OnPageCreated(IPage page) {
-        var script = Utils.GetScript("Permissions.js");
+        var script = Scripts.Permissions.WithSourceUrl("Permissions.js");
         return Utils.EvaluateOnNewPage(page, script);
     }
 }

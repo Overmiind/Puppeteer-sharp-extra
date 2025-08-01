@@ -9,7 +9,7 @@ public class Vendor : PuppeteerExtraPlugin {
     }
 
     public override async Task OnPageCreated(IPage page) {
-        var script = Utils.GetScript("Vendor.js");
+        var script = Scripts.Vendor.WithSourceUrl("Vendor.js");
         await page.EvaluateFunctionOnNewDocumentAsync(script, _settings.Vendor);
     }
 }

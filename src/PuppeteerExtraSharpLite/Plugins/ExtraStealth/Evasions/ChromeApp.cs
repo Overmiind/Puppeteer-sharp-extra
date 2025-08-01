@@ -9,7 +9,7 @@ public class ChromeApp : PuppeteerExtraPlugin {
     public ChromeApp() : base("stealth-chromeApp") { }
 
     public override Task OnPageCreated(IPage page) {
-        var script = Utils.GetScript("ChromeApp.js");
+        var script = Scripts.ChromeApp.WithSourceUrl("ChromeApp.js");
         return Utils.EvaluateOnNewPage(page, script);
     }
 }

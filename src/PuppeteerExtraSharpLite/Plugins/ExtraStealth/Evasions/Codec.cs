@@ -6,7 +6,7 @@ public class Codec : PuppeteerExtraPlugin {
     public Codec() : base("stealth-codec") { }
 
     public override Task OnPageCreated(IPage page) {
-        var script = Utils.GetScript("Codec.js");
+        var script = Scripts.Codec.WithSourceUrl("Codec.js");
         return Utils.EvaluateOnNewPage(page, script);
     }
 }

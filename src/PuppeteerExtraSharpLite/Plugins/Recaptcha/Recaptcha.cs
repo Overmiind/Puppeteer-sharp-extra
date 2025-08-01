@@ -1,7 +1,6 @@
 ﻿using System.Web;
 
 using PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider;
-using PuppeteerExtraSharpLite.Utils;
 
 using PuppeteerSharp;
 
@@ -9,11 +8,9 @@ namespace PuppeteerExtraSharpLite.Plugins.Recaptcha;
 
 public class Recaptcha {
     private readonly IRecaptchaProvider _provider;
-    private readonly CaptchaOptions _options;
 
     public Recaptcha(IRecaptchaProvider provider, CaptchaOptions options) {
         _provider = provider;
-        _options = options;
     }
 
     public async Task<RecaptchaResult> Solve(IPage page) {
@@ -59,7 +56,7 @@ public class Recaptcha {
               $"() => {{document.getElementById('g-recaptcha-response').innerHTML='{value}'}}");
 
 
-        var script = ResourcesReader.ReadFile(this.GetType().Namespace + ".Scripts.EnterRecaptchaCallBackScript.js");
+        var script = Scripts.EnterRecaptchaCallBack;
 
         try {
             await page.EvaluateFunctionAsync($@"(value) => {{{script}}}", value);

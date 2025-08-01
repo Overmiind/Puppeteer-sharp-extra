@@ -1,15 +1,26 @@
-﻿using System.IO;
-using System.Reflection;
+using System;
+using System.IO;
+using System.IO.Compression;
+using System.Text;
 
 namespace PuppeteerExtraSharpLite.Utils;
 
-internal static class ResourcesReader {
-    public static string ReadFile(string path, Assembly customAssemly = null) {
-        var assembly = customAssemly ?? Assembly.GetExecutingAssembly();
-        using var stream = assembly.GetManifestResourceStream(path);
-        if (stream is null)
-            throw new FileNotFoundException($"File with path {path} not found!");
-        using var reader = new StreamReader(stream);
-        return reader.ReadToEnd();
+internal static class ResourcesReader
+{
+    public static string ReadFile(ReadOnlySpan<byte> resource)
+    {
+        using var ms = new MemoryStream();
+        using var cs = new GZipStream(ms, CompressionMode.Decompress);
+        ms.Write(resource);
+        ms.Position = 0;
+        
+        var buffer = new byte[1024];
+        using var memoryStream = new MemoryStream();
+        int count;
+        while ((count = cs.Read(buffer, 0, buffer.Length)) > 0)
+        {
+            memoryStream.Write(buffer, 0, count);
+        }
+        return Encoding.UTF8.GetString(memoryStream.ToArray());
     }
 }

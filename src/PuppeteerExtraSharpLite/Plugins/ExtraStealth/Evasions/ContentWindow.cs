@@ -11,7 +11,7 @@ public class ContentWindow : PuppeteerExtraPlugin {
         };
 
     public override Task OnPageCreated(IPage page) {
-        var script = Utils.GetScript("ContentWindow.js");
+        var script = Scripts.ContentWindow.WithSourceUrl("ContentWindow.js");
         return Utils.EvaluateOnNewPage(page, script);
     }
 }

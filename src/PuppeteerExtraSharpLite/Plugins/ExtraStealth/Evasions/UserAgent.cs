@@ -6,14 +6,10 @@ using PuppeteerSharp;
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 public class UserAgent : PuppeteerExtraPlugin {
-    private bool _isHeadless = false;
-
     public UserAgent() : base("stealth-userAgent") {
     }
 
-    public override void BeforeLaunch(LaunchOptions options) {
-        this._isHeadless = options.Headless;
-    }
+    public override void BeforeLaunch(LaunchOptions options) { }
 
     public override async Task OnPageCreated(IPage page) {
         var ua = await page.Browser.GetUserAgentAsync();

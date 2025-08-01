@@ -5,22 +5,13 @@
     <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
     <RootNamespace>PuppeteerExtraSharpLite.Tests</RootNamespace>
-    <TargetFramework>net8.0</TargetFramework>
-    <!--
-    To enable the Microsoft Testing Platform 'dotnet test' experience, add property:
-      <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
-
-    To enable the Microsoft Testing Platform native command line experience, add property:
-      <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
-
-    For more information on Microsoft Testing Platform support in xUnit.net, please visit:
-      https://xunit.net/docs/getting-started/v3/microsoft-testing-platform
-    -->
+    <TargetFramework>net9.0</TargetFramework>
+    <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="StealthPluginTests\Script\fpCollect.js" />
-    
   </ItemGroup>
 
   <ItemGroup>
@@ -41,10 +32,6 @@
     <PackageReference Include="PuppeteerSharp" Version="18.0.2" />
     <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\PuppeteerExtraSharpLite\PuppeteerExtraSharpLite.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -69,6 +56,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\PuppeteerExtraSharpLite\PuppeteerExtraSharpLite.csproj" />
   </ItemGroup>
 
 </Project>

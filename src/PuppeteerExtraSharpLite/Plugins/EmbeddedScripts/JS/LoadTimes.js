@@ -106,7 +106,7 @@
         },
         get firstPaintTime() {
             const fpEntry = performance.getEntriesByType('paint')[0] || {
-                startTime: timing.loadEventEnd / 1000 // Fallback if no navigation occured (`about:blank`)
+                startTime: timing.loadEventEnd / 1000 // Fallback if no navigation occurred (`about:blank`)
             }
             return toFixed(
                 (fpEntry.startTime + performance.timeOrigin) / 1000,

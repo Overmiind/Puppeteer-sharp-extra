@@ -7,7 +7,7 @@ public class PluginEvasion : PuppeteerExtraPlugin {
     }
 
     public override async Task OnPageCreated(IPage page) {
-        var scipt = Utils.GetScript("Plugin.js");
+        var scipt = Scripts.Plugin.WithSourceUrl("Plugin.js");
         await Utils.EvaluateOnNewPage(page, scipt);
     }
 }

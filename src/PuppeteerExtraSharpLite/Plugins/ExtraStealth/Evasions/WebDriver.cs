@@ -7,7 +7,7 @@ public class WebDriver : PuppeteerExtraPlugin {
     public WebDriver() : base("stealth-webDriver") { }
 
     public override Task OnPageCreated(IPage page) {
-        var script = Utils.GetScript("WebDriver.js");
+        var script = Scripts.WebDriver.WithSourceUrl("WebDriver.js");
         return page.EvaluateFunctionOnNewDocumentAsync(script);
     }
 

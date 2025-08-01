@@ -6,7 +6,7 @@ public class LoadTimes : PuppeteerExtraPlugin {
     public LoadTimes() : base("stealth-loadTimes") { }
 
     public override Task OnPageCreated(IPage page) {
-        var script = Utils.GetScript("LoadTimes.js");
+        var script = Scripts.LoadTimes.WithSourceUrl("LoadTimes.js");
         return Utils.EvaluateOnNewPage(page, script);
     }
 }

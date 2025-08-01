@@ -12,7 +12,7 @@ public class Languages : PuppeteerExtraPlugin {
     }
 
     public override Task OnPageCreated(IPage page) {
-        var script = Utils.GetScript("Language.js");
+        var script = Scripts.Language.WithSourceUrl("Language.js");
         return Utils.EvaluateOnNewPage(page, script, Options.Languages);
     }
 }

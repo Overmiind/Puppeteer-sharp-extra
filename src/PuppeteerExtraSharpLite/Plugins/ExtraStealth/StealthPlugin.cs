@@ -33,14 +33,13 @@ public class StealthPlugin : PuppeteerExtraPlugin {
             new StackTrace(),
             new HardwareConcurrency(GetOptionByType<StealthHardwareConcurrencyOptions>()),
             new ContentWindow(),
-            
         };
     }
 
     public override ICollection<PuppeteerExtraPlugin> GetDependencies() => _standardEvasions;
 
     public override async Task OnPageCreated(IPage page) {
-        var utilsScript = Utils.GetScript("Utils.js");
+        var utilsScript = Scripts.Utils.WithSourceUrl("Utils.js");
         await page.EvaluateExpressionOnNewDocumentAsync(utilsScript);
     }
 

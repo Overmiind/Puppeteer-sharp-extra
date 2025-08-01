@@ -9,7 +9,7 @@ public class WebGl : PuppeteerExtraPlugin {
     }
 
     public override async Task OnPageCreated(IPage page) {
-        var script = Utils.GetScript("WebGL.js");
+        var script = Scripts.WebGL.WithSourceUrl("WebGL.js");
         await page.EvaluateFunctionOnNewDocumentAsync(script, _options.Vendor, _options.Renderer);
     }
 }

@@ -10,7 +10,7 @@ public class HardwareConcurrency : PuppeteerExtraPlugin {
     }
 
     public override Task OnPageCreated(IPage page) {
-        var script = Utils.GetScript("HardwareConcurrency.js");
+        var script = Scripts.HardwareConcurrency.WithSourceUrl("HardwareConcurrency.js");
         return Utils.EvaluateOnNewPage(page, script, Options.Concurrency);
     }
 }
