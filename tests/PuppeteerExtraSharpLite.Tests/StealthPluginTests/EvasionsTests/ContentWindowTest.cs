@@ -1,11 +1,6 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using PuppeteerExtraSharpLite.Tests.Utils;
 
-using Extra.Tests.Utils;
-
-using PuppeteerExtraSharp.Plugins.ExtraStealth;
-
-using Xunit;
+using PuppeteerExtraSharpLite.Plugins.ExtraStealth;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
 

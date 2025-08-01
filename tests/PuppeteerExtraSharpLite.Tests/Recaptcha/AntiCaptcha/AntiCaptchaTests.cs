@@ -1,11 +1,8 @@
 ﻿using Extra.Tests.Properties;
 
-using PuppeteerExtraSharp.Plugins.Recaptcha;
+using PuppeteerExtraSharpLite.Plugins.Recaptcha;
 
 using PuppeteerSharp;
-
-using Xunit;
-using Xunit.Abstractions;
 
 using Task = System.Threading.Tasks.Task;
 
@@ -20,8 +17,8 @@ public class AntiCaptchaTests : BrowserDefault {
     }
 
     [Fact]
-    public async void ShouldThrowCaptchaExceptionWhenCaptchaNotFound() {
-        var plugin = new RecaptchaPlugin(new PuppeteerExtraSharp.Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(Resources.AntiCaptchaKey));
+    public async Task ShouldThrowCaptchaExceptionWhenCaptchaNotFound() {
+        var plugin = new RecaptchaPlugin(new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(Resources.AntiCaptchaKey));
 
         var browser = await LaunchWithPluginAsync(plugin);
 
@@ -35,7 +32,7 @@ public class AntiCaptchaTests : BrowserDefault {
 
     [Fact]
     public async Task ShouldSolveCaptchaWithSubmitButton() {
-        var plugin = new RecaptchaPlugin(new PuppeteerExtraSharp.Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(Resources.AntiCaptchaKey));
+        var plugin = new RecaptchaPlugin(new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(Resources.AntiCaptchaKey));
         var browser = await LaunchWithPluginAsync(plugin);
 
         var page = await browser.NewPageAsync();
@@ -47,13 +44,14 @@ public class AntiCaptchaTests : BrowserDefault {
         var button = await page.QuerySelectorAsync("input[type='submit']");
         await button.ClickAsync();
 
+        //TODO: fix outdated api
         await page.WaitForTimeoutAsync(1000);
         await CheckSuccessVerify(page);
     }
 
     [Fact]
     public async void ShouldSolveCaptchaWithCallback() {
-        var plugin = new RecaptchaPlugin(new PuppeteerExtraSharp.Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(Resources.AntiCaptchaKey));
+        var plugin = new RecaptchaPlugin(new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(Resources.AntiCaptchaKey));
         var browser = await LaunchWithPluginAsync(plugin);
         var page = await browser.NewPageAsync();
         await page.GoToAsync("https://lessons.zennolab.com/captchas/recaptcha/v2_nosubmit.php?level=low");
@@ -61,6 +59,7 @@ public class AntiCaptchaTests : BrowserDefault {
 
         Assert.Null(result.Exception);
 
+        //TODO: fix outdated api
         await page.WaitForTimeoutAsync(1000);
         await CheckSuccessVerify(page);
     }

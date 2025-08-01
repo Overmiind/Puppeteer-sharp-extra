@@ -1,10 +1,6 @@
-﻿using System.Threading.Tasks;
-
-using PuppeteerExtraSharpLite.Plugins.BlockResources;
+﻿using PuppeteerExtraSharpLite.Plugins.BlockResources;
 
 using PuppeteerSharp;
-
-using Xunit;
 
 namespace PuppeteerExtraSharpLite.Tests.BlockResourcesTests;
 

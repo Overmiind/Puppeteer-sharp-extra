@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-
-using PuppeteerExtraSharp;
-using PuppeteerExtraSharp.Plugins;
+﻿using PuppeteerExtraSharpLite.Plugins;
 
 using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Tests;
 
+//TODO: Revisit
 public abstract class BrowserDefault : IDisposable {
     private readonly List<IBrowser> _launchedBrowsers = new List<IBrowser>();
+
     protected BrowserDefault() {
     }
 
@@ -52,12 +44,13 @@ public abstract class BrowserDefault : IDisposable {
 
 
     private async void DownloadChromeIfNotExists() {
-        if (File.Exists(Constants.PathToChrome))
+        if (File.Exists(Constants.PathToChrome)) {
             return;
+        }
 
         await new BrowserFetcher(new BrowserFetcherOptions() {
             Path = Constants.PathToChrome
-        }).DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
+        }).DownloadAsync(BrowserTag.Stable);
     }
 
     protected LaunchOptions CreateDefaultOptions() {

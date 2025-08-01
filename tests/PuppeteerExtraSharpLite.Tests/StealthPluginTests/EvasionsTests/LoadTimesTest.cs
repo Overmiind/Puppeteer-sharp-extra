@@ -1,10 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using Newtonsoft.Json.Linq;
 
-using Newtonsoft.Json.Linq;
-
-using PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
-
-using Xunit;
+using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
 
