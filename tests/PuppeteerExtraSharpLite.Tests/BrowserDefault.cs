@@ -4,7 +4,6 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Tests;
 
-//TODO: Revisit
 public abstract class BrowserDefault : IDisposable {
     private readonly List<IBrowser> _launchedBrowsers = new List<IBrowser>();
 
