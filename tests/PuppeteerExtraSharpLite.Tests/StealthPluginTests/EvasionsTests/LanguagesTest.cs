@@ -1,8 +1,7 @@
 ﻿using PuppeteerExtraSharpLite.Tests.Utils;
 
-using Newtonsoft.Json.Linq;
-
 using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
+using System.Text.Json;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
 
@@ -14,9 +13,13 @@ public class LanguagesTest : BrowserDefault {
 
         await page.GoToAsync("https://google.com");
 
-        var fingerPrint = await new FingerPrint().GetFingerPrint(page);
+        var fingerPrint = await FingerPrint.GetFingerPrint(page);
 
-        Assert.Contains("en-US", fingerPrint["languages"].Select(e => e.Value<string>()));
+        JsonDocument doc = JsonDocument.Parse(fingerPrint.ToString());
+
+        var languages = doc.RootElement.GetProperty("languages").EnumerateObject().Select(e => e.Value.GetString());
+
+        Assert.Contains("en-US", languages);
     }
 
 
@@ -27,8 +30,12 @@ public class LanguagesTest : BrowserDefault {
 
         await page.GoToAsync("https://google.com");
 
-        var fingerPrint = await new FingerPrint().GetFingerPrint(page);
+        var fingerPrint = await FingerPrint.GetFingerPrint(page);
 
-        Assert.Contains("fr-FR", fingerPrint["languages"].Select(e => e.Value<string>()));
+        JsonDocument doc = JsonDocument.Parse(fingerPrint.ToString());
+
+        var languages = doc.RootElement.GetProperty("languages").EnumerateObject().Select(e => e.Value.GetString());
+
+        Assert.Contains("en-US", languages);
     }
 }

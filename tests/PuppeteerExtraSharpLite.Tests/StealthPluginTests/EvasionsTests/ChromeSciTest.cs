@@ -1,14 +1,16 @@
-﻿using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
+﻿using System.Text.Json;
+
+using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
 
 public class ChromeSciTest : BrowserDefault {
-  [Fact]
-  public async Task ShouldWork() {
-    var plugin = new ChromeSci();
-    var page = await LaunchAndGetPage(plugin);
-    await page.GoToAsync("https://google.com");
-    var sci = await page.EvaluateFunctionAsync(@"() => {
+    [Fact]
+    public async Task ShouldWork() {
+        var plugin = new ChromeSci();
+        var page = await LaunchAndGetPage(plugin);
+        await page.GoToAsync("https://google.com");
+        var sci = await page.EvaluateFunctionAsync(@"() => {
                             const { timing } = window.performance
                             const csi = window.chrome.csi()
                             return {
@@ -23,13 +25,13 @@ public class ChromeSciTest : BrowserDefault {
                                 tran: Number.isInteger(csi.tran)
                               }
                             }
-                          }");
+                          }") ?? new JsonElement();
 
-    Assert.True(sci["csi"].Value<bool>("exists"));
-    Assert.Equal("function () { [native code] }", sci["csi"]["toString"]);
-    Assert.True(sci["dataOK"].Value<bool>("onloadT"));
-    Assert.True(sci["dataOK"].Value<bool>("pageT"));
-    Assert.True(sci["dataOK"].Value<bool>("startE"));
-    Assert.True(sci["dataOK"].Value<bool>("tran"));
-  }
+        Assert.True(sci.GetProperty("csi").GetProperty("exists").GetBoolean());
+        Assert.Equal("function () { [native code] }", sci.GetProperty("csi").GetProperty("toString").GetString());
+        Assert.True(sci.GetProperty("dataOK").GetProperty("onloadT").GetBoolean());
+        Assert.True(sci.GetProperty("dataOK").GetProperty("pageT").GetBoolean());
+        Assert.True(sci.GetProperty("dataOK").GetProperty("startE").GetBoolean());
+        Assert.True(sci.GetProperty("dataOK").GetProperty("tran").GetBoolean());
+    }
 }

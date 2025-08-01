@@ -12,7 +12,7 @@ public class UserAgentTest : BrowserDefault {
         await page.GoToAsync("https://google.com");
         var userAgent = await page.Browser.GetUserAgentAsync();
 
-        var finger = await new FingerPrint().GetFingerPrint(page);
-        Assert.DoesNotContain("HeadlessChrome", finger.Value<string>("userAgent"));
+        var finger = await FingerPrint.GetFingerPrint(page);
+        Assert.DoesNotContain("HeadlessChrome", finger.GetProperty("userAgent").GetString());
     }
 }

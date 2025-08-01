@@ -1,32 +1,33 @@
-﻿using PuppeteerExtraSharpLite.Tests.Utils;
+﻿using System.Text.Json;
 
 using PuppeteerExtraSharpLite.Plugins.ExtraStealth;
+using PuppeteerExtraSharpLite.Tests.Utils;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
 
 public class ContentWindowTest : BrowserDefault {
-  [Fact]
-  public async Task IFrameShouldBeObject() {
-    var plugin = new StealthPlugin();
+    [Fact]
+    public async Task IFrameShouldBeObject() {
+        var plugin = new StealthPlugin();
 
-    var page = await LaunchAndGetPage(plugin);
-    await page.GoToAsync("https://google.com");
+        var page = await LaunchAndGetPage(plugin);
+        await page.GoToAsync("https://google.com");
 
-    var finger = await new FingerPrint().GetFingerPrint(page);
+        var finger = await FingerPrint.GetFingerPrint(page);
 
-    Assert.Equal("object", finger["iframeChrome"]);
-  }
+        Assert.Equal("object", finger.GetProperty("iframeChrome").GetString());
+    }
 
-  [Fact]
-  public async Task ShouldNotBreakIFrames() {
-    var plugin = new StealthPlugin();
+    [Fact]
+    public async Task ShouldNotBreakIFrames() {
+        var plugin = new StealthPlugin();
 
-    var page = await LaunchAndGetPage(plugin);
-    await page.GoToAsync("https://google.com");
+        var page = await LaunchAndGetPage(plugin);
+        await page.GoToAsync("https://google.com");
 
-    const string testFuncReturnValue = "TESTSTRING";
+        const string testFuncReturnValue = "TESTSTRING";
 
-    await page.EvaluateFunctionAsync(@"(testFuncReturnValue) => {
+        await page.EvaluateFunctionAsync(@"(testFuncReturnValue) => {
                         const { document } = window // eslint-disable-line
                             const body = document.querySelector('body')
                             const iframe = document.createElement('iframe')
@@ -35,73 +36,73 @@ public class ContentWindowTest : BrowserDefault {
                             body.appendChild(iframe)
                         }", testFuncReturnValue);
 
-    var result =
-        await page.EvaluateExpressionAsync(
-            "document.querySelector('iframe').contentWindow.mySuperFunction()");
+        var result =
+            await page.EvaluateExpressionAsync(
+                "document.querySelector('iframe').contentWindow.mySuperFunction()");
 
-    Assert.Equal(testFuncReturnValue, result);
-  }
+        Assert.Equal(testFuncReturnValue, result.ToString());
+    }
 
-  [Fact]
-  public async Task ShouldCoverAllFrames() {
-    var plugin = new StealthPlugin();
+    [Fact]
+    public async Task ShouldCoverAllFrames() {
+        var plugin = new StealthPlugin();
 
-    var page = await LaunchAndGetPage(plugin);
-    await page.GoToAsync("https://google.com");
+        var page = await LaunchAndGetPage(plugin);
+        await page.GoToAsync("https://google.com");
 
 
-    var basicFrame = await page.EvaluateFunctionAsync(@"() => {
+        var basicFrame = await page.EvaluateFunctionAsync(@"() => {
                                     const el = document.createElement('iframe')
                                     document.body.appendChild(el)
                                     return typeof(el.contentWindow.chrome)
                                    }");
 
-    var sandboxSOIFrame = await page.EvaluateFunctionAsync(@"() => {
+        var sandboxSOIFrame = await page.EvaluateFunctionAsync(@"() => {
                                     const el = document.createElement('iframe')
                                     el.setAttribute('sandbox', 'allow-same-origin')
                                     document.body.appendChild(el)
                                     return typeof(el.contentWindow.chrome)
                                    }");
 
-    var sandboxSOASIFrame = await page.EvaluateFunctionAsync(@"() => {
+        var sandboxSOASIFrame = await page.EvaluateFunctionAsync(@"() => {
                                     const el = document.createElement('iframe')
                                     el.setAttribute('sandbox', 'allow-same-origin allow-scripts')
                                     document.body.appendChild(el)
                                     return typeof(el.contentWindow.chrome)
                                    }");
 
-    var srcdocIFrame = await page.EvaluateFunctionAsync(@"() => {
+        var srcdocIFrame = await page.EvaluateFunctionAsync(@"() => {
                                     const el = document.createElement('iframe')
                                     el.srcdoc = 'blank page, boys.'
                                     document.body.appendChild(el)
                                     return typeof(el.contentWindow.chrome)
                                    }");
 
-    Assert.Equal("object", basicFrame);
-    Assert.Equal("object", sandboxSOIFrame);
-    Assert.Equal("object", sandboxSOASIFrame);
-    Assert.Equal("object", srcdocIFrame);
-  }
+        Assert.Equal("object", basicFrame.ToString());
+        Assert.Equal("object", sandboxSOIFrame.ToString());
+        Assert.Equal("object", sandboxSOASIFrame.ToString());
+        Assert.Equal("object", srcdocIFrame.ToString());
+    }
 
 
-  [Fact]
-  public async Task ShouldEmulateFeatures() {
-    var plugin = new StealthPlugin();
+    [Fact]
+    public async Task ShouldEmulateFeatures() {
+        var plugin = new StealthPlugin();
 
-    var page = await LaunchAndGetPage(plugin);
-    await page.GoToAsync("https://google.com");
+        var page = await LaunchAndGetPage(plugin);
+        await page.GoToAsync("https://google.com");
 
-    var results = await page.EvaluateFunctionAsync(@"() => {
+        JsonElement results = await page.EvaluateFunctionAsync(@"() => {
                                 const results = {}
-                                
+
                                     const iframe = document.createElement('iframe')
                                     iframe.srcdoc = 'page intentionally left blank' // Note: srcdoc
                                     document.body.appendChild(iframe)
-                                
+
                                     const basicIframe = document.createElement('iframe')
                                     basicIframe.src = 'data:text/plain;charset=utf-8,foobar'
                                     document.body.appendChild(iframe)
-                                
+
                                     results.descriptorsOK = (() => {
                                       // Verify iframe prototype isn't touched
                                       const descriptors = Object.getOwnPropertyDescriptors(
@@ -110,44 +111,44 @@ public class ContentWindowTest : BrowserDefault {
                                       const str = descriptors.contentWindow.get.toString()
                                       return str === `function get contentWindow() { [native code] }`
                                     })()
-                                
+
                                     results.noProxySignature = (() => {
                                       return iframe.srcdoc.toString.hasOwnProperty('[[IsRevoked]]') // eslint-disable-line
                                     })()
-                                
+
                                     results.doesExist = (() => {
                                       // Verify iframe isn't remapped to main window
                                       return !!iframe.contentWindow
                                     })()
-                                
+
                                     results.isNotAClone = (() => {
                                       // Verify iframe isn't remapped to main window
                                       return iframe.contentWindow !== window
                                     })()
-                                
+
                                     results.hasSameNumberOfPlugins = (() => {
                                       return (
                                         window.navigator.plugins.length ===
                                         iframe.contentWindow.navigator.plugins.length
                                       )
                                     })()
-                                
+
                                     results.SelfIsNotWindow = (() => {
                                       return iframe.contentWindow.self !== window
                                     })()
-                                
+
                                     results.SelfIsNotWindowTop = (() => {
                                       return iframe.contentWindow.self !== window.top
                                     })()
-                                
+
                                     results.TopIsNotSame = (() => {
                                       return iframe.contentWindow.top !== iframe.contentWindow
                                     })()
-                                
+
                                     results.FrameElementMatches = (() => {
                                       return iframe.contentWindow.frameElement === iframe
                                     })()
-                                
+
                                     results.StackTraces = (() => {
                                       try {
                                         // eslint-disable-next-line
@@ -159,17 +160,18 @@ public class ContentWindowTest : BrowserDefault {
                                       })()
 
                                       return results
-                                }");
+                                }")
+                                ?? new JsonElement();
 
 
-    Assert.True(results.Value<bool>("descriptorsOK"));
-    Assert.True(results.Value<bool>("doesExist"));
-    Assert.True(results.Value<bool>("isNotAClone"));
-    Assert.True(results.Value<bool>("hasSameNumberOfPlugins"));
-    Assert.True(results.Value<bool>("SelfIsNotWindow"));
-    Assert.True(results.Value<bool>("SelfIsNotWindowTop"));
-    Assert.True(results.Value<bool>("TopIsNotSame"));
+        Assert.True(results.GetProperty("descriptorsOK").GetBoolean());
+        Assert.True(results.GetProperty("doesExist").GetBoolean());
+        Assert.True(results.GetProperty("isNotAClone").GetBoolean());
+        Assert.True(results.GetProperty("hasSameNumberOfPlugins").GetBoolean());
+        Assert.True(results.GetProperty("SelfIsNotWindow").GetBoolean());
+        Assert.True(results.GetProperty("SelfIsNotWindowTop").GetBoolean());
+        Assert.True(results.GetProperty("TopIsNotSame").GetBoolean());
 
-    Assert.DoesNotContain("at Object.apply", results["StackTraces"]);
-  }
+        Assert.DoesNotContain("at Object.apply", results.GetProperty("StackTraces").GetString());
+    }
 }

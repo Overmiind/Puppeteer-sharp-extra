@@ -1,7 +1,5 @@
 ﻿using PuppeteerExtraSharpLite.Tests.Utils;
 
-using Newtonsoft.Json.Linq;
-
 using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
@@ -12,17 +10,17 @@ public class CodecTest : BrowserDefault {
         var plugin = new Codec();
         var page = await LaunchAndGetPage(plugin);
         await page.GoToAsync("https://google.com");
-        var fingerPrint = await new FingerPrint().GetFingerPrint(page);
+        var fingerPrint = await FingerPrint.GetFingerPrint(page);
 
-        Assert.Equal("probably", fingerPrint["videoCodecs"]["ogg"].Value<string>());
-        Assert.Equal("probably", fingerPrint["videoCodecs"]["h264"].Value<string>());
-        Assert.Equal("probably", fingerPrint["videoCodecs"]["webm"].Value<string>());
+        Assert.Equal("probably", fingerPrint.GetProperty("videoCodecs").GetProperty("ogg").GetString());
+        Assert.Equal("probably", fingerPrint.GetProperty("videoCodecs").GetProperty("h264").GetString());
+        Assert.Equal("probably", fingerPrint.GetProperty("videoCodecs").GetProperty("webm").GetString());
 
-        Assert.Equal("probably", fingerPrint["audioCodecs"]["ogg"].Value<string>());
-        Assert.Equal("probably", fingerPrint["audioCodecs"]["mp3"].Value<string>());
-        Assert.Equal("probably", fingerPrint["audioCodecs"]["wav"].Value<string>());
-        Assert.Equal("maybe", fingerPrint["audioCodecs"]["m4a"].Value<string>());
-        Assert.Equal("probably", fingerPrint["audioCodecs"]["aac"].Value<string>());
+        Assert.Equal("probably", fingerPrint.GetProperty("audioCodecs").GetProperty("ogg").GetString());
+        Assert.Equal("probably", fingerPrint.GetProperty("audioCodecs").GetProperty("mp3").GetString());
+        Assert.Equal("probably", fingerPrint.GetProperty("audioCodecs").GetProperty("wav").GetString());
+        Assert.Equal("maybe", fingerPrint.GetProperty("audioCodecs").GetProperty("m4a").GetString());
+        Assert.Equal("probably", fingerPrint.GetProperty("audioCodecs").GetProperty("aac").GetString());
     }
 
     [Fact]

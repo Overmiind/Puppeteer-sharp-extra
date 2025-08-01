@@ -1,9 +1,4 @@
-﻿using System.Reflection;
-using System.Threading.Tasks;
-
-using Newtonsoft.Json.Linq;
-
-using PuppeteerExtraSharp.Utils;
+﻿using System.Text.Json;
 
 using PuppeteerSharp;
 
@@ -15,12 +10,18 @@ public class FingerPrint {
     /// </summary>
     /// <param name="page"></param>
     /// <returns></returns>
-    public async Task<JObject> GetFingerPrint(IPage page) {
-        var script = ResourcesReader.ReadFile("Extra.Tests.StealthPluginTests.Script.fpCollect.js", Assembly.GetExecutingAssembly());
+    public static async Task<JsonElement> GetFingerPrint(IPage page) {
+        var path = Path.Join("PuppeteerExtraSharpLite.Tests", "StealthPluginTests", "Script", "fpCollect.js");
+
+        if (!File.Exists(path)) {
+            throw new FileNotFoundException($"Script file not found: {path}");
+        }
+
+        var script = await File.ReadAllTextAsync(path);
         await page.EvaluateExpressionAsync(script);
 
         var fingerPrint =
-            await page.EvaluateFunctionAsync<JObject>("async () => await fpCollect().generateFingerprint()");
+            await page.EvaluateFunctionAsync<JsonElement>("async () => await fpCollect().generateFingerprint()");
 
         return fingerPrint;
     }
