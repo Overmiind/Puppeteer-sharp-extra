@@ -44,13 +44,13 @@ public class AntiCaptchaTests : BrowserDefault {
         var button = await page.QuerySelectorAsync("input[type='submit']");
         await button.ClickAsync();
 
-        //TODO: fix outdated api
-        await page.WaitForTimeoutAsync(1000);
+        // Wait for the success verification element to appear
+        await page.WaitForSelectorAsync("div[id='main'] div[class='description'] h2", new WaitForSelectorOptions { Timeout = 10000 });
         await CheckSuccessVerify(page);
     }
 
     [Fact]
-    public async void ShouldSolveCaptchaWithCallback() {
+    public async Task ShouldSolveCaptchaWithCallback() {
         var plugin = new RecaptchaPlugin(new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(Resources.AntiCaptchaKey));
         var browser = await LaunchWithPluginAsync(plugin);
         var page = await browser.NewPageAsync();
@@ -59,8 +59,8 @@ public class AntiCaptchaTests : BrowserDefault {
 
         Assert.Null(result.Exception);
 
-        //TODO: fix outdated api
-        await page.WaitForTimeoutAsync(1000);
+        // Wait for the success verification element to appear
+        await page.WaitForSelectorAsync("div[id='main'] div[class='description'] h2", new WaitForSelectorOptions { Timeout = 10000 });
         await CheckSuccessVerify(page);
     }
 
