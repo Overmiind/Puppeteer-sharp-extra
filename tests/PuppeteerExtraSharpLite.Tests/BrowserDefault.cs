@@ -6,7 +6,7 @@ namespace PuppeteerExtraSharpLite.Tests;
 
 public abstract class BrowserDefault : IDisposable {
     private readonly List<IBrowser> _launchedBrowsers = new List<IBrowser>();
-    private static readonly SemaphoreSlim _browserFetchSemaphore = new(1, 1);
+    private static readonly SemaphoreSlim BrowserFetchSemaphore = new(1, 1);
     private static bool s_browserDownloaded = false;
 
     protected BrowserDefault() {
@@ -47,7 +47,7 @@ public abstract class BrowserDefault : IDisposable {
     private static async Task EnsureBrowserDownloadedAsync() {
         if (s_browserDownloaded) return;
 
-        await _browserFetchSemaphore.WaitAsync();
+        await BrowserFetchSemaphore.WaitAsync();
         try {
             if (s_browserDownloaded) return;
 
@@ -72,7 +72,7 @@ public abstract class BrowserDefault : IDisposable {
 
             throw new InvalidOperationException($"Failed to download browser after {maxRetries} attempts. This appears to be a network connectivity issue. You may need to manually install Chrome or run the tests when network conditions are better.", lastException);
         } finally {
-            _browserFetchSemaphore.Release();
+            BrowserFetchSemaphore.Release();
         }
     }
 
