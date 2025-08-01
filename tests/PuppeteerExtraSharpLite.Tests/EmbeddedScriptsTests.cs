@@ -1,3 +1,4 @@
+using System.Reflection;
 using Scripts = PuppeteerExtraSharpLite.Plugins.EmbeddedScripts.CS.Scripts;
 
 namespace PuppeteerExtraSharpLite.Tests;
@@ -26,7 +27,13 @@ public partial class EmbeddedScriptsTests {
 	[Theory]
 	[MemberData(nameof(EnterRecaptchaCallBack))]
 	public void EnsureScriptConsistency(string fileNameActual, string expected) {
-		const string projectPath = "../../src/PuppeteerExtraSharpLite";
+		// Get the directory where the test assembly is located
+		var testAssemblyLocation = Assembly.GetExecutingAssembly().Location;
+		var testAssemblyDir = Path.GetDirectoryName(testAssemblyLocation)!;
+
+		// Navigate up to find the repository root (where we can find src/ folder)
+		var repoRoot = FindRepositoryRoot(testAssemblyDir);
+		var projectPath = Path.Combine(repoRoot, "src", "PuppeteerExtraSharpLite");
 		var filePath = Path.Combine(projectPath, "Plugins", "EmbeddedScripts", "JS", fileNameActual);
 
 		if (!File.Exists(filePath)) {
@@ -36,6 +43,18 @@ public partial class EmbeddedScriptsTests {
 		var actual = File.ReadAllText(filePath);
 
 		// Ignore whitespace differences
-		Assert.Equal(actual, expected, ignoreAllWhiteSpace: true);
+		Assert.Equal(actual, expected, ignoreLineEndingDifferences: true, ignoreWhiteSpaceDifferences: true, ignoreAllWhiteSpace: true);
+	}
+
+	private static string FindRepositoryRoot(string startPath) {
+		var directory = new DirectoryInfo(startPath);
+		while (directory != null) {
+			// Look for src directory as indicator of repo root
+			if (directory.GetDirectories("src").Length > 0) {
+				return directory.FullName;
+			}
+			directory = directory.Parent;
+		}
+		throw new DirectoryNotFoundException($"Could not find repository root starting from {startPath}.");
 	}
 }
