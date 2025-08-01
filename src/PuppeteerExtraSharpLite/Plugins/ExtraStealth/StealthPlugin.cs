@@ -33,7 +33,7 @@ public class StealthPlugin : PuppeteerExtraPlugin {
             new StackTrace(),
             new HardwareConcurrency(GetOptionByType<StealthHardwareConcurrencyOptions>()),
             new ContentWindow(),
-            new SourceUrl()
+            
         };
     }
 

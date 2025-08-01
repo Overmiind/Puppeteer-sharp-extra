@@ -20,9 +20,7 @@
 
   <ItemGroup>
     <None Remove="StealthPluginTests\Script\fpCollect.js" />
-    <None Update="StealthPluginTests\EvasionsTests\SourceUrl\fixtures\Test.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    
   </ItemGroup>
 
   <ItemGroup>
@@ -40,11 +38,13 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageReference Include="xunit.v3" Version="3.0.0" />
+    <PackageReference Include="PuppeteerSharp" Version="18.0.2" />
+    <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\PuppeteerExtraSharpLite\PuppeteerExtraSharpLite.csproj" />
+    <ProjectReference Include="..\..\src\PuppeteerExtraSharpLite\PuppeteerExtraSharpLite.csproj" />
   </ItemGroup>
 
   <ItemGroup>

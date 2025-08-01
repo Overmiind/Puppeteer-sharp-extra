@@ -1,4 +1,4 @@
-﻿using PuppeteerExtraSharpLite.Utils;
+using PuppeteerExtraSharpLite.Utils;
 
 using PuppeteerSharp;
 
@@ -12,13 +12,12 @@ internal static class Utils {
         return Task.CompletedTask;
     }
 
-
     public static string GetScript(string name) {
-        var builder = new StringBuilder(typeof(Utils).Namespace);
-        builder.Append(".Scripts");
-        builder.Append("." + name);
-
-        var file = ResourcesReader.ReadFile(builder.ToString());
-        return file;
+        var path = $"{typeof(Utils).Namespace}.Scripts.{name}";
+        var builder = new StringBuilder(ResourcesReader.ReadFile(path));
+        builder.AppendLine();
+        builder.Append("//# sourceURL=");
+        builder.Append(name);
+        return builder.ToString();
     }
 }
