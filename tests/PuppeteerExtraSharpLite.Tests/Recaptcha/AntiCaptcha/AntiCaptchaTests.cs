@@ -1,7 +1,3 @@
-using PuppeteerExtraSharpLite.Tests.Properties;
-
-using PuppeteerExtraSharpLite.Plugins.Recaptcha;
-
 using PuppeteerSharp;
 
 using Task = System.Threading.Tasks.Task;
@@ -9,30 +5,23 @@ using Task = System.Threading.Tasks.Task;
 namespace PuppeteerExtraSharpLite.Tests.Recaptcha.AntiCaptcha;
 
 [Collection("Captcha")]
-public class AntiCaptchaTests : BrowserDefault {
-    private readonly ITestOutputHelper _logger;
-
-    public AntiCaptchaTests(ITestOutputHelper _logger) {
-        this._logger = _logger;
-    }
-
+public class AntiCaptchaTests : RecaptchaTestBase {
     [Fact]
     public async Task ShouldThrowCaptchaExceptionWhenCaptchaNotFound() {
-        var plugin = new RecaptchaPlugin(new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(Resources.AntiCaptchaKey));
+        var plugin = CreateRecaptchaPlugin();
 
-        var browser = await LaunchWithPluginAsync(plugin);
+        await using var browser = await LaunchWithPluginAsync(plugin);
 
         var page = await browser.NewPageAsync();
         await page.GoToAsync("https://lessons.zennolab.com/ru/index");
         var result = await plugin.SolveCaptchaAsync(page);
         Assert.NotNull(result.Exception);
         Assert.False(result.IsSuccess);
-        //await browser.CloseAsync();
     }
 
     [Fact]
     public async Task ShouldSolveCaptchaWithSubmitButton() {
-        var plugin = new RecaptchaPlugin(new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(Resources.AntiCaptchaKey));
+        var plugin = CreateRecaptchaPlugin();
         var browser = await LaunchWithPluginAsync(plugin);
 
         var page = await browser.NewPageAsync();
@@ -51,7 +40,7 @@ public class AntiCaptchaTests : BrowserDefault {
 
     [Fact]
     public async Task ShouldSolveCaptchaWithCallback() {
-        var plugin = new RecaptchaPlugin(new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(Resources.AntiCaptchaKey));
+        var plugin = CreateRecaptchaPlugin();
         var browser = await LaunchWithPluginAsync(plugin);
         var page = await browser.NewPageAsync();
         await page.GoToAsync("https://lessons.zennolab.com/captchas/recaptcha/v2_nosubmit.php?level=low");

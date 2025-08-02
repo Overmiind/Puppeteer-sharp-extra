@@ -1,14 +1,10 @@
-using PuppeteerExtraSharpLite.Tests.Properties;
-
-using PuppeteerExtraSharpLite.Plugins.Recaptcha;
-
 namespace PuppeteerExtraSharpLite.Tests.Recaptcha.TwoCaptcha;
 
 [Collection("Captcha")]
-public class TwoCaptchaProviderTest : BrowserDefault {
+public class TwoCaptchaProviderTest : RecaptchaTestBase {
     [Fact]
     public async Task ShouldResolveCaptchaInGooglePage() {
-        var plugin = new RecaptchaPlugin(new Plugins.Recaptcha.Provider._2Captcha.TwoCaptcha(Resources.TwoCaptchaKey));
+        var plugin = CreateRecaptchaPlugin();
         var browser = await this.LaunchWithPluginAsync(plugin);
 
         var page = (await browser.PagesAsync())[0];
@@ -26,7 +22,7 @@ public class TwoCaptchaProviderTest : BrowserDefault {
 
     [Fact]
     public async Task ShouldSolveInvisibleCaptcha() {
-        var plugin = new RecaptchaPlugin(new Plugins.Recaptcha.Provider._2Captcha.TwoCaptcha(Resources.TwoCaptchaKey));
+        var plugin = CreateRecaptchaPlugin();
         var browser = await this.LaunchWithPluginAsync(plugin);
 
         var page = (await browser.PagesAsync())[0];
@@ -45,5 +41,4 @@ public class TwoCaptchaProviderTest : BrowserDefault {
         Assert.Equal("Success!", elementPropery);
 
     }
-
 }
