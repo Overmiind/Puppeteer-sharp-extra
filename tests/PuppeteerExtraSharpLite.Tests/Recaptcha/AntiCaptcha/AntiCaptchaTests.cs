@@ -1,4 +1,4 @@
-﻿using Extra.Tests.Properties;
+using PuppeteerExtraSharpLite.Tests.Properties;
 
 using PuppeteerExtraSharpLite.Plugins.Recaptcha;
 
