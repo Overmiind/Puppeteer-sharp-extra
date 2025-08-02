@@ -2,19 +2,16 @@
 
 namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha;
 
-public class AntiCaptcha : IRecaptchaProvider
-{
+public class AntiCaptcha : IRecaptchaProvider {
     private readonly ProviderOptions _options;
     private readonly AntiCaptchaApi _api;
-    public AntiCaptcha(string userKey, ProviderOptions options = null)
-    {
+    public AntiCaptcha(string userKey, ProviderOptions options = null) {
         _options = options ?? ProviderOptions.CreateDefaultOptions();
         _api = new AntiCaptchaApi(userKey, _options);
     }
-    public async Task<string> GetSolution(string key, string pageUrl, string proxyStr = null)
-    {
+    public async Task<string> GetSolution(string key, string pageUrl, string proxyStr = null) {
         var task = await _api.CreateTaskAsync(pageUrl, key);
-        await System.Threading.Tasks.Task.Delay(_options.StartTimeoutSeconds * 1000);
+        await Task.Delay(_options.StartTimeoutSeconds * 1000);
         var result = await _api.PendingForResult(task.taskId);
 
         if (result.status != "ready" || result.solution is null || result.errorId != 0)

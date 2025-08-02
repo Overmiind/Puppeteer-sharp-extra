@@ -1,6 +1,7 @@
-using PuppeteerSharp;
+using PuppeteerExtraSharpLite.Tests.Utils;
 
-using Task = System.Threading.Tasks.Task;
+using PuppeteerSharp;
+using PuppeteerExtraSharpLite.Plugins.Recaptcha;
 
 namespace PuppeteerExtraSharpLite.Tests.Recaptcha.AntiCaptcha;
 
@@ -8,7 +9,10 @@ namespace PuppeteerExtraSharpLite.Tests.Recaptcha.AntiCaptcha;
 public class AntiCaptchaTests : RecaptchaTestBase {
     [Fact]
     public async Task ShouldThrowCaptchaExceptionWhenCaptchaNotFound() {
-        var plugin = CreateRecaptchaPlugin();
+        Assert.SkipUnless(Helper.TryGetEnvironmentVariable("AntiCaptchaKey", out var antiCaptchaKey),
+            "AntiCaptchaKey environment variable is not set. Skipping test.");
+
+        var plugin = new RecaptchaPlugin(new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(antiCaptchaKey));
 
         await using var browser = await LaunchWithPluginAsync(plugin);
 
@@ -21,8 +25,12 @@ public class AntiCaptchaTests : RecaptchaTestBase {
 
     [Fact]
     public async Task ShouldSolveCaptchaWithSubmitButton() {
-        var plugin = CreateRecaptchaPlugin();
-        var browser = await LaunchWithPluginAsync(plugin);
+        Assert.SkipUnless(Helper.TryGetEnvironmentVariable("AntiCaptchaKey", out var antiCaptchaKey),
+            "AntiCaptchaKey environment variable is not set. Skipping test.");
+
+        var plugin = new RecaptchaPlugin(new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(antiCaptchaKey));
+
+        await using var browser = await LaunchWithPluginAsync(plugin);
 
         var page = await browser.NewPageAsync();
         await page.GoToAsync("https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=low");
@@ -40,8 +48,12 @@ public class AntiCaptchaTests : RecaptchaTestBase {
 
     [Fact]
     public async Task ShouldSolveCaptchaWithCallback() {
-        var plugin = CreateRecaptchaPlugin();
-        var browser = await LaunchWithPluginAsync(plugin);
+        Assert.SkipUnless(Helper.TryGetEnvironmentVariable("AntiCaptchaKey", out var antiCaptchaKey),
+            "AntiCaptchaKey environment variable is not set. Skipping test.");
+
+        var plugin = new RecaptchaPlugin(new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(antiCaptchaKey));
+
+        await using var browser = await LaunchWithPluginAsync(plugin);
         var page = await browser.NewPageAsync();
         await page.GoToAsync("https://lessons.zennolab.com/captchas/recaptcha/v2_nosubmit.php?level=low");
         var result = await plugin.SolveCaptchaAsync(page);

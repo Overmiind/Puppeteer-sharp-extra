@@ -19,6 +19,7 @@ public static class Helper {
 		return File.ReadAllText(filePath);
 
 	}
+
 	public static string FindRepositoryRoot(string startPath) {
 		var directory = new DirectoryInfo(startPath);
 		while (directory != null) {
@@ -29,5 +30,10 @@ public static class Helper {
 			directory = directory.Parent;
 		}
 		throw new DirectoryNotFoundException($"Could not find repository root starting from {startPath}.");
+	}
+
+	public static bool TryGetEnvironmentVariable(string name, out string value) {
+		value = Environment.GetEnvironmentVariable(name) ?? string.Empty;
+		return value.Length > 0;
 	}
 }

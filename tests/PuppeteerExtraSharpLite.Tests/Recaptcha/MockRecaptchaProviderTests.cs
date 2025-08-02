@@ -1,5 +1,3 @@
-using PuppeteerExtraSharpLite.Tests.Recaptcha;
-
 namespace PuppeteerExtraSharpLite.Tests.Recaptcha;
 
 public class MockRecaptchaProviderTests {
