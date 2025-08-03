@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <PackageReference Include="PuppeteerSharp" Version="20.2.2" />
-    <PackageReference Include="RestSharp" Version="112.1.0" />
   </ItemGroup>
 
 </Project>

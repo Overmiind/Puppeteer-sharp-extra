@@ -4,7 +4,6 @@ using System.Net.Http.Json;
 using PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider._2Captcha.Models;
 using PuppeteerExtraSharpLite.Plugins.Recaptcha.RestClient;
 
-using RestSharp;
 using System.Text;
 
 namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider._2Captcha;
