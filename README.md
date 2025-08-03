@@ -92,14 +92,10 @@ Retrieves a registered plugin by type.
 var stealthPlugin = puppeteerExtra.GetPlugin<StealthPlugin>();
 ```
 
-## Caveats
+## Caveats / Testing
 
-- Some tests or integrations that rely on very specific browser APIs may not work without adjustment; this is due to differences in underlying PuppeteerSharp versions or environmental constraints.
+Some plugin tests for third-party services such as TwoCaptcha and AntiCaptcha require valid API credentials. The test suite is configured to read these credentials from environment variables; if the expected variables are not set, those specific plugin tests are skipped automatically. To include them in a test run, set the appropriate environment variables before executing the test command (e.g., on macOS/Linux: `export KEY_NAME=your_api_key` or on Windows PowerShell: `$env:KEY_NAME = 'your_api_key'`). Refer to the test project source for the exact variable names required.
 
 ## Contribution
 
 Patches, performance improvements, and fixes are welcome. Focus is on keeping the core lean and compatible with modern .NET publishing scenarios.
-
-## License
-
-(Include your license here if applicable.)
