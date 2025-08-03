@@ -5,6 +5,7 @@ using PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider._2Captcha.Models;
 using PuppeteerExtraSharpLite.Plugins.Recaptcha.RestClient;
 
 using RestSharp;
+using System.Text;
 
 namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider._2Captcha;
 
@@ -32,12 +33,15 @@ internal class TwoCaptchaApi {
 
 
     public async Task<TwoCaptchaResponse> GetSolution(string id) {
-        using var request = new HttpRequestMessage(HttpMethod.Post, "res.php");
+        // Build request URI with query parameters manually
+        var sb = new StringBuilder("res.php");
+        sb.Append('?');
+        sb.Append("id=").Append(Uri.EscapeDataString(id));
+        sb.Append('&').Append("key=").Append(Uri.EscapeDataString(_userKey));
+        sb.Append('&').Append("action=get");
+        sb.Append('&').Append("json=1");
 
-        request.AddQueryParameter("id", id);
-        request.AddQueryParameter("key", _userKey);
-        request.AddQueryParameter("action", "get");
-        request.AddQueryParameter("json", "1");
+        using var request = new HttpRequestMessage(HttpMethod.Post, sb.ToString());
 
         TwoCaptchaResponse? outerResult = null;
 
@@ -61,6 +65,6 @@ internal class TwoCaptchaApi {
                 return PollingAction.Break;
             });
 
-        return outerResult ?? new(); ;
+        return outerResult ?? new();
     }
 }
