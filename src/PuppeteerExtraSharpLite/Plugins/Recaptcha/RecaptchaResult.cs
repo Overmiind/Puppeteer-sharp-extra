@@ -2,5 +2,5 @@
 
 public class RecaptchaResult {
     public bool IsSuccess { get; set; } = true;
-    public CaptchaException Exception { get; set; }
+    public CaptchaException? Exception { get; set; }
 }

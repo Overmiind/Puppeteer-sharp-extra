@@ -37,7 +37,7 @@ internal class TwoCaptchaApi {
         request.AddQueryParameter("json", "1");
 
         var result = await _client.CreatePollingBuilder<TwoCaptchaResponse>(request).TriesLimit(_options.PendingCount).ActivatePollingAsync(
-            response => response.Data.request == "CAPCHA_NOT_READY" ? PollingAction.ContinuePolling : PollingAction.Break);
+            response => response.Data!.request == "CAPCHA_NOT_READY" ? PollingAction.ContinuePolling : PollingAction.Break);
 
         return result;
     }

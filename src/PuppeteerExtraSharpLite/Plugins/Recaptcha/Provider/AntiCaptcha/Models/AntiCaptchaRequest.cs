@@ -2,13 +2,13 @@
 
 public class AntiCaptchaRequest
 {
-    public string clientKey { get; set; }
-    public AntiCaptchaTask task { get; set; }
+    public string clientKey { get; set; } = string.Empty;
+    public AntiCaptchaTask? task { get; set; }
 }
 
 public class RequestForResultTask
 {
-    public string clientKey { get; set; }
+    public string clientKey { get; set; } = string.Empty;
     public int taskId { get; set; }
 }
 
@@ -21,7 +21,7 @@ public class AntiCaptchaTaskResult
 
 public class AntiCaptchaTask
 {
-    public string type { get; set; }
-    public string websiteURL { get; set; }
-    public string websiteKey { get; set; }
+    public string type { get; set; } = string.Empty;
+    public string websiteURL { get; set; } = string.Empty;
+    public string websiteKey { get; set; } = string.Empty;
 }

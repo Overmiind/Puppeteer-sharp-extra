@@ -45,11 +45,11 @@ public class AntiCaptchaApi {
         var result = await _client.CreatePollingBuilder<TaskResultModel>(request).TriesLimit(_options.PendingCount)
             .WithTimeoutSeconds(5).ActivatePollingAsync(
                 response => {
-                    if (response.Data.status == "ready" || response.Data.errorId != 0)
+                    if (response.Data!.status == "ready" || response.Data.errorId != 0)
                         return PollingAction.Break;
 
                     return PollingAction.ContinuePolling;
                 });
-        return result.Data;
+        return result.Data!;
     }
 }

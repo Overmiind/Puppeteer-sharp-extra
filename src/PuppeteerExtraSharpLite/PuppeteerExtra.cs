@@ -44,7 +44,7 @@ public async Task<IBrowser> ConnectAsync(ConnectOptions options) {
     return browser;
 }
 
-    public T GetPlugin<T>() where T : PuppeteerExtraPlugin {
+    public T? GetPlugin<T>() where T : PuppeteerExtraPlugin {
         foreach (var plugin in _plugins) {
             if (plugin is T tPlugin) {
                 return tPlugin;

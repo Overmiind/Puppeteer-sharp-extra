@@ -31,7 +31,7 @@ public class Recaptcha {
 
     }
 
-    public async Task<string> GetKeyAsync(IPage page) {
+    public static async Task<string> GetKeyAsync(IPage page) {
         var element =
             await page.QuerySelectorAsync("iframe[src^='https://www.google.com/recaptcha/api2/anchor'][name^=\"a-\"]");
 
@@ -40,10 +40,11 @@ public class Recaptcha {
 
         var src = await element.GetPropertyAsync("src");
 
-        if (src == null)
+        if (src is null) {
             throw new CaptchaException(page.Url, "Recaptcha key not found!");
+        }
 
-        var key = HttpUtility.ParseQueryString(src.ToString()).Get("k");
+        var key = HttpUtility.ParseQueryString(src!.ToString()!).Get("k")!;
         return key;
     }
 
@@ -51,10 +52,9 @@ public class Recaptcha {
         return await _provider.GetSolution(key, urlPage);
     }
 
-    public async Task WriteToInput(IPage page, string value) {
+    public static async Task WriteToInput(IPage page, string value) {
         await page.EvaluateFunctionAsync(
               $"() => {{document.getElementById('g-recaptcha-response').innerHTML='{value}'}}");
-
 
         var script = Scripts.EnterRecaptchaCallBack;
 

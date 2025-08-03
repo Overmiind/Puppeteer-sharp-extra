@@ -5,6 +5,7 @@ namespace PuppeteerExtraSharpLite.Plugins;
 public abstract class PuppeteerExtraPlugin {
     protected PuppeteerExtraPlugin(string pluginName) {
         Name = pluginName;
+        Requirements ??= [];
     }
 
     public string Name { get; }
