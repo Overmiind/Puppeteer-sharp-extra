@@ -1,4 +1,7 @@
-﻿using PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider._2Captcha.Models;
+﻿using System.Net.Http;
+using System.Net.Http.Json;
+
+using PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider._2Captcha.Models;
 using PuppeteerExtraSharpLite.Plugins.Recaptcha.RestClient;
 
 using RestSharp;
@@ -28,17 +31,36 @@ internal class TwoCaptchaApi {
     }
 
 
-    public async Task<RestResponse<TwoCaptchaResponse>> GetSolution(string id) {
-        var request = new RestRequest("res.php") { Method = Method.Post };
+    public async Task<TwoCaptchaResponse> GetSolution(string id) {
+        using var request = new HttpRequestMessage(HttpMethod.Post, "res.php");
 
         request.AddQueryParameter("id", id);
         request.AddQueryParameter("key", _userKey);
         request.AddQueryParameter("action", "get");
         request.AddQueryParameter("json", "1");
 
-        var result = await _client.CreatePollingBuilder<TwoCaptchaResponse>(request).TriesLimit(_options.PendingCount).ActivatePollingAsync(
-            response => response.Data!.request == "CAPCHA_NOT_READY" ? PollingAction.ContinuePolling : PollingAction.Break);
+        TwoCaptchaResponse? outerResult = null;
 
-        return result;
+        var result = await _client.CreatePollingBuilder<TwoCaptchaResponse>(request).TriesLimit(_options.PendingCount).ActivatePollingAsync(
+            async response => {
+                if (response.StatusCode != System.Net.HttpStatusCode.OK) {
+                    return PollingAction.ContinuePolling;
+                }
+
+                var result = await response.Content.ReadFromJsonAsync(JsonContext.Default.TwoCaptchaResponse);
+
+                if (result == null) {
+                    return PollingAction.ContinuePolling;
+                }
+
+                if (result.request == "CAPCHA_NOT_READY") {
+                    return PollingAction.ContinuePolling;
+                }
+
+                outerResult = result;
+                return PollingAction.Break;
+            });
+
+        return outerResult ?? new(); ;
     }
 }

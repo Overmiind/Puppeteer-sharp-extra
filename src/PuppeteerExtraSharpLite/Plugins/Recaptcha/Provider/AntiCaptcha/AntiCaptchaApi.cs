@@ -1,14 +1,17 @@
-﻿using PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha.Models;
-using PuppeteerExtraSharpLite.Plugins.Recaptcha.RestClient;
+﻿using System.Net.Http;
+using System.Net.Http.Json;
 
-using RestSharp;
+using PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha.Models;
+using PuppeteerExtraSharpLite.Plugins.Recaptcha.RestClient;
 
 namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha;
 
-public class AntiCaptchaApi {
+public class AntiCaptchaApi : IDisposable {
+    private bool _disposed;
+
     private readonly string _userKey;
     private readonly ProviderOptions _options;
-    private readonly RestClient.RestClient _client = new RestClient.RestClient("http://api.anti-captcha.com");
+    private readonly RestClient.RestClient _client = new("http://api.anti-captcha.com");
     public AntiCaptchaApi(string userKey, ProviderOptions options) {
         _userKey = userKey;
         _options = options;
@@ -24,8 +27,6 @@ public class AntiCaptchaApi {
             }
         };
 
-
-
         var result = _client.PostWithJsonAsync("createTask",
                                                                      content,
                                                                      JsonContext.Default.AntiCaptchaRequest,
@@ -34,6 +35,13 @@ public class AntiCaptchaApi {
         return result;
     }
 
+    public void Dispose() {
+        if (_disposed) {
+            return;
+        }
+        _client.Dispose();
+        _disposed = true;
+    }
 
     public async Task<TaskResultModel> PendingForResult(int taskId, CancellationToken token = default) {
         var content = new RequestForResultTask() {
@@ -42,18 +50,31 @@ public class AntiCaptchaApi {
         };
 
 
-        var request = new RestRequest("getTaskResult");
-        request.AddJsonBody(content);
-        request.Method = Method.Post;
+        var request = new HttpRequestMessage(HttpMethod.Post, "getTaskResult");
+        request.Content = JsonContent.Create(content, JsonContext.Default.RequestForResultTask);
 
-        var result = await _client.CreatePollingBuilder<TaskResultModel>(request).TriesLimit(_options.PendingCount)
+        TaskResultModel? outerResult = null;
+
+        await _client.CreatePollingBuilder<TaskResultModel>(request).TriesLimit(_options.PendingCount)
             .WithTimeoutSeconds(5).ActivatePollingAsync(
-                response => {
-                    if (response.Data!.status == "ready" || response.Data.errorId != 0)
+                async response => {
+                    if (response.StatusCode != System.Net.HttpStatusCode.OK) {
+                        return PollingAction.ContinuePolling;
+                    }
+
+                    var result = await response.Content.ReadFromJsonAsync(JsonContext.Default.TaskResultModel);
+
+                    if (result is null) {
+                        return PollingAction.ContinuePolling;
+                    }
+
+                    if (result.status == "ready" || result.errorId != 0) {
+                        outerResult = result;
                         return PollingAction.Break;
+                    }
 
                     return PollingAction.ContinuePolling;
                 });
-        return result.Data!;
+        return outerResult ?? new();
     }
 }

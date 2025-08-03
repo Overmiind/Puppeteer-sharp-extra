@@ -22,10 +22,10 @@ public class PollingBuilder<T> {
         return this;
     }
 
-    public async Task<HttpResponseMessage> ActivatePollingAsync(Func<HttpResponseMessage, PollingAction> resultDelegate) {
+    public async Task<HttpResponseMessage> ActivatePollingAsync(Func<HttpResponseMessage, Task<PollingAction>> resultDelegate) {
         var response = await _client.SendAsync(_request);
 
-        if (resultDelegate(response) == PollingAction.Break || _limit <= 1) {
+        if (await resultDelegate(response) == PollingAction.Break || _limit <= 1) {
             return response;
         }
 
