@@ -1,35 +1,51 @@
-﻿using PuppeteerExtraSharpLite.Utils;
+﻿using System.Net.Http;
+using System.Net.Http.Json;
+using System.Text.Json.Serialization.Metadata;
+
+using PuppeteerExtraSharpLite.Utils;
 
 using RestSharp;
 
 namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.RestClient;
 
-public class RestClient {
-    private readonly RestSharp.RestClient _client;
+public sealed class RestClient : IDisposable {
+    private readonly HttpClient _client;
+    private bool _disposed;
 
-    public RestClient(string url = null) {
-        _client = string.IsNullOrWhiteSpace(url) ? new RestSharp.RestClient() : new RestSharp.RestClient(url);
+    public RestClient(string url = "") {
+        _client = string.IsNullOrWhiteSpace(url) ? new HttpClient() : new HttpClient() {
+            BaseAddress = new Uri(url)
+        };
     }
 
     public PollingBuilder<T> CreatePollingBuilder<T>(RestRequest request) {
         return new PollingBuilder<T>(_client, request);
     }
 
-    public async Task<T> PostWithJsonAsync<T>(string url, object content, CancellationToken token) {
-        var request = new RestRequest(url);
-        request.AddHeader("Content-type", "application/json");
-        request.AddJsonBody(content);
-        request.Method = Method.Post;
-        return await _client.PostAsync<T>(request, token);
+    public void Dispose() {
+        if (_disposed) {
+            return;
+        }
+        _client.Dispose();
+        _disposed = true;
+    }
+
+    public async Task<TOutput?> PostWithJsonAsync<TInput, TOutput>(string url, TInput content, JsonTypeInfo<TInput> inputTypeInfo, JsonTypeInfo<TOutput> outputTypeInfo, CancellationToken token) {
+        var request = new HttpRequestMessage();
+        request.Headers.Add("Accept", "application/json");
+        request.Method = HttpMethod.Post;
+        request.Content = JsonContent.Create(content, inputTypeInfo);
+        request.RequestUri = new Uri(url);
+        var response = await _client.SendAsync(request, token);
+        return await response.Content.ReadFromJsonAsync(outputTypeInfo, token);
     }
 
     public async Task<T> PostWithQueryAsync<T>(string url, Dictionary<string, string> query, CancellationToken token = default) {
-        var request = new RestRequest(url) { Method = Method.Post };
-        request.AddQueryParameters(query);
-        return await _client.PostAsync<T>(request, token);
-    }
+        // var request = new RestRequest(url) { Method = Method.Post };
 
-    private async Task<RestResponse<T>> ExecuteAsync<T>(RestRequest request, CancellationToken token) {
-        return await _client.ExecuteAsync<T>(request, token);
+        // request.AddQueryParameters(query);
+        // return await _client.PostAsync<T>(request, token);
+        var request = new HttpRequestMessage(HttpMethod.Post, url);
+        // request.RequestUri.
     }
 }
