@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using PuppeteerSharp;
+﻿using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
@@ -12,16 +11,24 @@ public class WebDriver : PuppeteerExtraPlugin {
     }
 
     public override void BeforeLaunch(LaunchOptions options) {
-        var args = options.Args.ToList();
-        var idx = args.FindIndex(e => e.StartsWith("--disable-blink-features="));
+        var args = options.Args;
+        var idx = -1;
+        for (var i = 0; i < args.Length; i++) {
+            if (args[i].StartsWith("--disable-blink-features=")) {
+                idx = i;
+                break;
+            }
+        }
         if (idx != -1) {
             var arg = args[idx];
             args[idx] = $"{arg}, AutomationControlled";
             return;
         }
 
-        args.Add("--disable-blink-features=AutomationControlled");
+        string[] temp = new string[args.Length + 1];
+        Array.Copy(args, temp, args.Length);
+        temp[^1] = "--disable-blink-features=AutomationControlled";
 
-        options.Args = args.ToArray();
+        options.Args = temp;
     }
 }
