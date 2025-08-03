@@ -5,7 +5,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
-public class UserAgent : PuppeteerExtraPlugin {
+public partial class UserAgent : PuppeteerExtraPlugin {
     public UserAgent() : base("stealth-userAgent") {
     }
 
@@ -15,8 +15,8 @@ public class UserAgent : PuppeteerExtraPlugin {
         var ua = await page.Browser.GetUserAgentAsync();
         ua = ua.Replace("HeadlessChrome/", "Chrome/");
         var uaVersion = ua.Contains("Chrome/")
-            ? Regex.Match(ua, @"Chrome\/([\d|.]+)").Groups[1].Value
-            : Regex.Match(await page.Browser.GetVersionAsync(), @"\/([\d|.]+)").Groups[1].Value;
+            ? ChromeRegex().Match(ua).Groups[1].Value
+            : BrowserVersionRegex().Match(await page.Browser.GetVersionAsync()).Groups[1].Value;
 
         var platform = GetPlatform(ua);
         var brand = GetBrands(uaVersion);
@@ -51,7 +51,7 @@ public class UserAgent : PuppeteerExtraPlugin {
         await page.Client.SendAsync("Network.setUserAgentOverride", overrideObject);
     }
 
-    private string GetPlatform(string ua) {
+    private static string GetPlatform(string ua) {
         if (ua.Contains("Mac OS X")) {
             return "Mac OS X";
         }
@@ -67,77 +67,55 @@ public class UserAgent : PuppeteerExtraPlugin {
         return "Windows";
     }
 
-    public string GetPlatformVersion(string ua) {
+    public static string GetPlatformVersion(string ua) {
         if (ua.Contains("Mac OS X ")) {
-            return Regex.Match(ua, "Mac OS X ([^)]+)").Groups[1].Value;
+            return MacOSXVersionRegex().Match(ua).Groups[1].Value;
         }
 
         if (ua.Contains("Android ")) {
-            return Regex.Match(ua, "Android ([^;]+)").Groups[1].Value;
+            return AndroidVersionRegex().Match(ua).Groups[1].Value;
         }
 
         if (ua.Contains("Windows ")) {
-            return Regex.Match(ua, @"Windows .*?([\d|.]+);").Groups[1].Value;
+            return WindowsVersionRegex().Match(ua).Groups[1].Value;
         }
 
         return string.Empty;
     }
 
-    public string GetPlatformArch(bool isMobile) {
+    public static string GetPlatformArch(bool isMobile) {
         return isMobile ? string.Empty : "x86";
     }
 
-    public string GetPlatformModel(bool isMobile, string ua) {
-        return isMobile ? Regex.Match(ua, @"Android.*?;\s([^)]+)").Groups[1].Value : string.Empty;
+    public static string GetPlatformModel(bool isMobile, string ua) {
+        return isMobile ? PlatformModelRegex().Match(ua).Groups[1].Value : string.Empty;
     }
 
-    public bool GetIsMobile(string ua) {
-        return ua.Contains("Android");
-    }
+    public static bool GetIsMobile(string ua) => ua.Contains("Android");
 
-    private List<UserAgentBrand> GetBrands(string uaVersion) {
+    private static readonly int[][] UserAgentOrders =
+    [
+        [0, 1, 2],
+        [0, 2, 1],
+        [1, 0, 2],
+        [1, 2, 0],
+        [2, 0, 1],
+        [2, 1, 0]
+    ];
+
+    private static List<UserAgentBrand> GetBrands(string uaVersion) {
         var seed = int.Parse(uaVersion.Split('.')[0]);
 
-        var order = new List<List<int>>
-        {
-            new List<int>()
-            {
-                0, 1, 2
-            },
-            new List<int>()
-            {
-                0, 2, 1
-            },
-            new List<int>()
-            {
-                1, 0, 2
-            },
-            new List<int>()
-            {
-                1, 2, 0
-            },
-            new List<int>()
-            {
-                2, 0, 1
-            },
-            new List<int>()
-            {
-                2, 1, 0
-            },
-        }[seed % 6];
+        var order = UserAgentOrders[seed % 6];
 
-        var escapedChars = new List<string>()
-        {
-            " ",
-            " ",
-            ";"
-        };
+        string[] escapedChars = [" ", " ", ";"];
 
-        var greaseyBrand = $"{escapedChars[order[0]]}Not{escapedChars[order[1]]}A{escapedChars[order[2]]}Brand";
+        var greasyBrand = $"{escapedChars[order[0]]}Not{escapedChars[order[1]]}A{escapedChars[order[2]]}Brand";
+
         var greasedBrandVersionList = new Dictionary<int, UserAgentBrand>();
 
         greasedBrandVersionList.Add(order[0], new UserAgentBrand() {
-            Brand = greaseyBrand,
+            Brand = greasyBrand,
             Version = "99"
         });
         greasedBrandVersionList.Add(order[1], new UserAgentBrand() {
@@ -153,24 +131,43 @@ public class UserAgent : PuppeteerExtraPlugin {
     }
 
     private class OverrideUserAgent {
-        public string UserAgent { get; set; }
-        public string Platform { get; set; }
-        public string AcceptLanguage { get; set; }
-        public UserAgentMetadata UserAgentMetadata { get; set; }
+        public string UserAgent { get; set; } = string.Empty;
+        public string Platform { get; set; } = string.Empty;
+        public string AcceptLanguage { get; set; } = string.Empty;
+        public UserAgentMetadata UserAgentMetadata { get; set; } = new();
     }
 
     private class UserAgentMetadata {
-        public List<UserAgentBrand> Brands { get; set; }
-        public string FullVersion { get; set; }
-        public string Platform { get; set; }
-        public string PlatformVersion { get; set; }
-        public string Architecture { get; set; }
-        public string Model { get; set; }
+        public List<UserAgentBrand> Brands { get; set; } = [];
+        public string FullVersion { get; set; } = string.Empty;
+        public string Platform { get; set; } = string.Empty;
+        public string PlatformVersion { get; set; } = string.Empty;
+        public string Architecture { get; set; } = string.Empty;
+        public string Model { get; set; } = string.Empty;
         public bool Mobile { get; set; }
     }
 
     private class UserAgentBrand {
-        public string Brand { get; set; }
-        public string Version { get; set; }
+        public string Brand { get; set; } = string.Empty;
+        public string Version { get; set; } = string.Empty;
     }
+
+    [GeneratedRegex("Mac OS X ([^)]+)")]
+    private static partial Regex MacOSXVersionRegex();
+
+    [GeneratedRegex("Android ([^;]+)")]
+    private static partial Regex AndroidVersionRegex();
+
+    [GeneratedRegex(@"Windows .*?([\d|.]+);")]
+    private static partial Regex WindowsVersionRegex();
+
+    [GeneratedRegex(@"Android.*?;\s([^)]+)")]
+    private static partial Regex PlatformModelRegex();
+
+    [GeneratedRegex(@"Chrome\/([\d|.]+)")]
+    private static partial Regex ChromeRegex();
+
+    [GeneratedRegex(@"\/([\d|.]+)")]
+    private static partial Regex BrowserVersionRegex();
+
 }
