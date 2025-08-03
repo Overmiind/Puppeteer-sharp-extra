@@ -1,13 +1,13 @@
-﻿using RestSharp;
+﻿using System.Net.Http;
 
 namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.RestClient;
 
 public class PollingBuilder<T> {
-    private readonly RestSharp.RestClient _client;
-    private readonly RestSharp.RestRequest _request;
+    private readonly HttpClient _client;
+    private readonly HttpRequestMessage _request;
     private int _timeout = 5;
     private int _limit = 5;
-    public PollingBuilder(RestSharp.RestClient client, RestRequest request) {
+    public PollingBuilder(HttpClient client, HttpRequestMessage request) {
         _client = client;
         _request = request;
     }
@@ -22,11 +22,12 @@ public class PollingBuilder<T> {
         return this;
     }
 
-    public async Task<RestResponse<T>> ActivatePollingAsync(Func<RestResponse<T>, PollingAction> resultDelegate) {
-        var response = await _client.ExecuteAsync<T>(_request);
+    public async Task<HttpResponseMessage> ActivatePollingAsync(Func<HttpResponseMessage, PollingAction> resultDelegate) {
+        var response = await _client.SendAsync(_request);
 
-        if (resultDelegate(response) == PollingAction.Break || _limit <= 1)
+        if (resultDelegate(response) == PollingAction.Break || _limit <= 1) {
             return response;
+        }
 
         await Task.Delay(_timeout * 1000);
         _limit -= 1;

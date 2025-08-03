@@ -26,7 +26,11 @@ public class AntiCaptchaApi {
 
 
 
-        var result = _client.PostWithJsonAsync<AntiCaptchaTaskResult>("createTask", content, token);
+        var result = _client.PostWithJsonAsync("createTask",
+                                                                     content,
+                                                                     JsonContext.Default.AntiCaptchaRequest,
+                                                                     JsonContext.Default.AntiCaptchaTaskResult,
+                                                                     token);
         return result;
     }
 

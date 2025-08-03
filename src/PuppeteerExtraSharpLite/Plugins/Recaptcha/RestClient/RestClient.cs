@@ -1,10 +1,7 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json.Serialization.Metadata;
-
-using PuppeteerExtraSharpLite.Utils;
-
-using RestSharp;
 
 namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.RestClient;
 
@@ -18,7 +15,7 @@ public sealed class RestClient : IDisposable {
         };
     }
 
-    public PollingBuilder<T> CreatePollingBuilder<T>(RestRequest request) {
+    public PollingBuilder<T> CreatePollingBuilder<T>(HttpRequestMessage request) {
         return new PollingBuilder<T>(_client, request);
     }
 
@@ -40,12 +37,32 @@ public sealed class RestClient : IDisposable {
         return await response.Content.ReadFromJsonAsync(outputTypeInfo, token);
     }
 
-    public async Task<T> PostWithQueryAsync<T>(string url, Dictionary<string, string> query, CancellationToken token = default) {
-        // var request = new RestRequest(url) { Method = Method.Post };
+    public async Task<TOutput> PostWithQueryAsync<TOutput>(string url, Dictionary<string, string> query, JsonTypeInfo<TOutput> outputTypeInfo, CancellationToken token = default) {
+        // Build full URL with query parameters if any using StringBuilder (no LINQ)
+        var fullUrl = url;
+        if (query != null && query.Count > 0) {
+            var sb = new StringBuilder(url);
+            var separator = url.Contains('?') ? '&' : '?';
+            sb.Append(separator);
+            var first = true;
+            foreach (var kvp in query) {
+                if (!first) {
+                    sb.Append('&');
+                } else {
+                    first = false;
+                }
+                sb.Append(Uri.EscapeDataString(kvp.Key));
+                sb.Append('=');
+                sb.Append(Uri.EscapeDataString(kvp.Value));
+            }
+            fullUrl = sb.ToString();
+        }
+        var request = new HttpRequestMessage(HttpMethod.Post, fullUrl);
+        request.Headers.Add("Accept", "application/json");
 
-        // request.AddQueryParameters(query);
-        // return await _client.PostAsync<T>(request, token);
-        var request = new HttpRequestMessage(HttpMethod.Post, url);
-        // request.RequestUri.
+        var response = await _client.SendAsync(request, token);
+        response.EnsureSuccessStatusCode();
+        var result = await response.Content.ReadFromJsonAsync(outputTypeInfo, cancellationToken: token);
+        return result ?? throw new InvalidOperationException("Failed to deserialize response.");
     }
 }

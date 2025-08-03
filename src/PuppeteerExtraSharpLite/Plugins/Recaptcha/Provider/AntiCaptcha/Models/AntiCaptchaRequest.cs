@@ -12,7 +12,7 @@ public class RequestForResultTask
     public int taskId { get; set; }
 }
 
-public class AntiCaptchaTaskResult
+public struct AntiCaptchaTaskResult
 {
     public int errorId { get; set; }
     public int taskId { get; set; }

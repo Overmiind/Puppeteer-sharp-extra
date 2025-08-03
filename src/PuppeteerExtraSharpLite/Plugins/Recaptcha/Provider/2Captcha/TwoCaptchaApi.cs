@@ -6,7 +6,7 @@ using RestSharp;
 namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider._2Captcha;
 
 internal class TwoCaptchaApi {
-    private readonly RestClient.RestClient _client = new RestClient.RestClient("https://rucaptcha.com");
+    private readonly RestClient.RestClient _client = new("https://rucaptcha.com");
     private readonly string _userKey;
     private readonly ProviderOptions _options;
 
@@ -16,13 +16,13 @@ internal class TwoCaptchaApi {
     }
 
     public async Task<TwoCaptchaResponse> CreateTaskAsync(string key, string pageUrl) {
-        var result = await _client.PostWithQueryAsync<TwoCaptchaResponse>("in.php", new Dictionary<string, string>() {
+        var result = await _client.PostWithQueryAsync("in.php", new Dictionary<string, string>() {
             ["key"] = _userKey,
             ["googlekey"] = key,
             ["pageurl"] = pageUrl,
             ["json"] = "1",
             ["method"] = "userrecaptcha"
-        });
+        }, JsonContext.Default.TwoCaptchaResponse);
 
         return result;
     }
