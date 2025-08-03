@@ -1,14 +1,12 @@
 ﻿using System.Linq;
-
-
 using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Plugins.BlockResources;
 
 public class BlockResourcesPlugin : PuppeteerExtraPlugin {
-    public readonly List<BlockRule> BlockResources = new List<BlockRule>();
+    public readonly List<BlockRule> BlockResources = new();
 
-    public BlockResourcesPlugin(IEnumerable<ResourceType> blockResources = null) : base("block-resources") {
+    public BlockResourcesPlugin(IEnumerable<ResourceType>? blockResources = null) : base("block-resources") {
         if (blockResources != null)
             AddRule(builder => builder.BlockedResources(blockResources.ToArray()));
     }
@@ -18,7 +16,7 @@ public class BlockResourcesPlugin : PuppeteerExtraPlugin {
         builderAction(builder);
 
         var rule = builder.Build();
-        this.BlockResources.Add(builder.Build());
+        BlockResources.Add(builder.Build());
 
         return rule;
     }
@@ -32,7 +30,6 @@ public class BlockResourcesPlugin : PuppeteerExtraPlugin {
     public override async Task OnPageCreated(IPage page) {
         await page.SetRequestInterceptionAsync(true);
         page.Request += (sender, args) => OnPageRequest(page, args);
-
     }
 
 

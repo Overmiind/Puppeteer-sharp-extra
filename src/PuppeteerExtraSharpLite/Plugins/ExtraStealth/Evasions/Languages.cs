@@ -7,7 +7,7 @@ namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 public class Languages : PuppeteerExtraPlugin {
     public StealthLanguagesOptions Options { get; }
 
-    public Languages(StealthLanguagesOptions options = null) : base("stealth-language") {
+    public Languages(StealthLanguagesOptions? options = null) : base("stealth-language") {
         Options = options ?? new StealthLanguagesOptions("en-US", "en");
     }
 

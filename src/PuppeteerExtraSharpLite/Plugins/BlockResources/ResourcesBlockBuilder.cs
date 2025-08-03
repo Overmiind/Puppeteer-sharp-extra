@@ -24,6 +24,6 @@ public class ResourcesBlockBuilder {
     }
 
     internal BlockRule Build() {
-        return this.Rule;
+        return Rule;
     }
 }

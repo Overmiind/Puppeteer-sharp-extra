@@ -10,6 +10,7 @@
     <PackageTags>puppeteer-extra recaptcha browser-automation browser-extension browser puppeteer netcore stealth-client browser-testing c#</PackageTags>
     <PackageProjectUrl>https://github.com/dusrdev/PuppeteerExtraSharpLite</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

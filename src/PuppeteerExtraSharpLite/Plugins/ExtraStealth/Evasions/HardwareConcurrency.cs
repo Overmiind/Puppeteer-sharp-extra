@@ -5,7 +5,7 @@ namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 public class HardwareConcurrency : PuppeteerExtraPlugin {
     public StealthHardwareConcurrencyOptions Options { get; }
 
-    public HardwareConcurrency(StealthHardwareConcurrencyOptions options = null) : base("stealth/hardwareConcurrency") {
+    public HardwareConcurrency(StealthHardwareConcurrencyOptions? options = null) : base("stealth/hardwareConcurrency") {
         Options = options ?? new StealthHardwareConcurrencyOptions(4);
     }
 

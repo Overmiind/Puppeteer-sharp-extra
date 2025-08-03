@@ -23,15 +23,15 @@ public class StealthPlugin : PuppeteerExtraPlugin {
             new ChromeSci(),
             new ChromeRuntime(),
             new Codec(),
-            new Languages(GetOptionByType<StealthLanguagesOptions>()),
+            new Languages(GetOptionByType<StealthLanguagesOptions>()!),
             new OutDimensions(),
             new Permissions(),
             new UserAgent(),
-            new Vendor(GetOptionByType<StealthVendorSettings>()),
-            new WebGl(GetOptionByType<StealthWebGLOptions>()),
+            new Vendor(GetOptionByType<StealthVendorSettings>()!),
+            new WebGl(GetOptionByType<StealthWebGLOptions>()!),
             new PluginEvasion(),
             new StackTrace(),
-            new HardwareConcurrency(GetOptionByType<StealthHardwareConcurrencyOptions>()),
+            new HardwareConcurrency(GetOptionByType<StealthHardwareConcurrencyOptions>()!),
             new ContentWindow(),
         };
     }
@@ -43,7 +43,7 @@ public class StealthPlugin : PuppeteerExtraPlugin {
         await page.EvaluateExpressionOnNewDocumentAsync(utilsScript);
     }
 
-    private T GetOptionByType<T>() where T : IPuppeteerExtraPluginOptions {
+    private T? GetOptionByType<T>() where T : IPuppeteerExtraPluginOptions {
         return _options.OfType<T>().FirstOrDefault();
     }
 

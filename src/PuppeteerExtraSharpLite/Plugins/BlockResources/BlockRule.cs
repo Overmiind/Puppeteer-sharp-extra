@@ -5,13 +5,11 @@ using PuppeteerSharp;
 namespace PuppeteerExtraSharpLite.Plugins.BlockResources;
 
 public class BlockRule {
-    public string SitePattern;
-    public IPage IPage;
-    public HashSet<ResourceType> ResourceType = new HashSet<ResourceType>();
+    public string SitePattern  = string.Empty;
+    public IPage? IPage;
+    public HashSet<ResourceType> ResourceType = new();
 
-    internal BlockRule() {
-
-    }
+    internal BlockRule() { }
 
     public bool IsRequestBlocked(IPage fromPage, IRequest request) {
         if (!IsResourcesBlocked(request.ResourceType))
