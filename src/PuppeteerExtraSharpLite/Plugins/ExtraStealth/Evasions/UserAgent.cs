@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 using PuppeteerSharp;
 
@@ -103,7 +102,7 @@ public partial class UserAgent : PuppeteerExtraPlugin {
         [2, 1, 0]
     ];
 
-    private static List<UserAgentBrand> GetBrands(string uaVersion) {
+    private static UserAgentBrand[] GetBrands(string uaVersion) {
         var seed = int.Parse(uaVersion.Split('.')[0]);
 
         var order = UserAgentOrders[seed % 6];
@@ -112,22 +111,23 @@ public partial class UserAgent : PuppeteerExtraPlugin {
 
         var greasyBrand = $"{escapedChars[order[0]]}Not{escapedChars[order[1]]}A{escapedChars[order[2]]}Brand";
 
-        var greasedBrandVersionList = new Dictionary<int, UserAgentBrand>();
-
-        greasedBrandVersionList.Add(order[0], new UserAgentBrand() {
+        var brands = new UserAgentBrand[3];
+        brands[order[0]] = new UserAgentBrand()
+        {
             Brand = greasyBrand,
             Version = "99"
-        });
-        greasedBrandVersionList.Add(order[1], new UserAgentBrand() {
+        };
+        brands[order[1]] = new UserAgentBrand()
+        {
             Brand = "Chromium",
             Version = seed.ToString()
-        });
-        greasedBrandVersionList.Add(order[2], new UserAgentBrand() {
+        };
+        brands[order[2]] = new UserAgentBrand()
+        {
             Brand = "Google Chrome",
             Version = seed.ToString()
-        });
-
-        return greasedBrandVersionList.OrderBy(e => e.Key).Select(e => e.Value).ToList();
+        };
+        return brands;
     }
 
     private class OverrideUserAgent {
@@ -138,7 +138,7 @@ public partial class UserAgent : PuppeteerExtraPlugin {
     }
 
     private class UserAgentMetadata {
-        public List<UserAgentBrand> Brands { get; set; } = [];
+        public UserAgentBrand[] Brands { get; set; } = Array.Empty<UserAgentBrand>();
         public string FullVersion { get; set; } = string.Empty;
         public string Platform { get; set; } = string.Empty;
         public string PlatformVersion { get; set; } = string.Empty;
