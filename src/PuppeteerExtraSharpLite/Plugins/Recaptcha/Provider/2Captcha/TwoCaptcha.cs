@@ -22,9 +22,9 @@ public class TwoCaptcha : IRecaptchaProvider {
 
         var result = await _api.GetSolution(task.request);
 
-        ThrowErrorIfBadStatus(result.Data!);
+        ThrowErrorIfBadStatus(result);
 
-        return result.Data!.request;
+        return result.request;
     }
 
     private static void ThrowErrorIfBadStatus(TwoCaptchaResponse response) {
