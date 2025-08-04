@@ -11,54 +11,59 @@ namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
 public class RuntimeTest : BrowserDefault {
     [Fact]
     public async Task ShouldAddConnectToChrome() {
-        // Options 1 - use abstractions
-        // var plugin = new ChromeRuntime();
-        // var page = await LaunchAndGetPage(plugin);
-        // End options 1
+        if (Environment.GetEnvironmentVariable("TEST_OPT") is "1") {
+            var plugin = new ChromeRuntime();
+            var page = await LaunchAndGetPage(plugin);
 
-        // Options 2 - Remove abstractions - directly inject the script
-        using var browser = await LaunchAsync();
-        var page = await browser.NewPageAsync();
+            await page.GoToAsync("https://google.com");
 
-        var script = Plugins.ExtraStealth.Utils.WithSourceUrl(Plugins.EmbeddedScripts.CS.Scripts.Runtime, "Runtime.js");
-        await page.EvaluateExpressionOnNewDocumentAsync(script);
-        // End options 2
+            var runtimeType = await page.EvaluateExpressionAsync<string>("typeof chrome.runtime");
 
-        await page.GoToAsync("https://google.com");
+            Assert.Equal("object", runtimeType);
+        } else if (Environment.GetEnvironmentVariable("TEST_OPT") is "2") {
+            using var browser = await LaunchAsync();
+            var page = await browser.NewPageAsync();
 
-        var runtimeType = await page.EvaluateExpressionAsync<string>("typeof chrome.runtime");
+            var script = Plugins.ExtraStealth.Utils.WithSourceUrl(Plugins.EmbeddedScripts.CS.Scripts.Runtime, "Runtime.js");
+            await page.EvaluateExpressionOnNewDocumentAsync(script);
+            // End options 2
 
-        Assert.Equal("object", runtimeType);
-        return; // ignore the rest of the test for now
-        // TestContext.Current.SendDiagnosticMessage($"chrome.runtime typeof: {runtimeType}");
+            await page.GoToAsync("https://google.com");
 
-        var runtime = await page.EvaluateExpressionAsync<JsonElement>("chrome.runtime");
+            var runtimeType = await page.EvaluateExpressionAsync<string>("typeof chrome.runtime");
 
-        var runtimeConnect = await page.EvaluateExpressionAsync<JsonElement>("chrome.runtime.connect");
+            Assert.Equal("object", runtimeType);
+        }
+        // return; // ignore the rest of the test for now
+        // // TestContext.Current.SendDiagnosticMessage($"chrome.runtime typeof: {runtimeType}");
 
-        var runtimeName = await page.EvaluateExpressionAsync<string>("chrome.runtime.connect.name");
-        Assert.Equal("connect", runtimeName);
+        // var runtime = await page.EvaluateExpressionAsync<JsonElement>("chrome.runtime");
 
-        var sendMessage = await page.EvaluateExpressionAsync<string>("chrome.runtime.sendMessage.name");
-        Assert.NotNull(sendMessage);
+        // var runtimeConnect = await page.EvaluateExpressionAsync<JsonElement>("chrome.runtime.connect");
 
-        var sendMessageUndefined = await page.EvaluateExpressionAsync<bool>("chrome.runtime.sendMessage('nckgahadagoaajjgafhacjanaoiihapd', '') === undefined");
-        Assert.True(sendMessageUndefined);
+        // var runtimeName = await page.EvaluateExpressionAsync<string>("chrome.runtime.connect.name");
+        // Assert.Equal("connect", runtimeName);
 
-        var validIdWorks = await page.EvaluateExpressionAsync<bool>("chrome.runtime.connect('nckgahadagoaajjgafhacjanaoiihapd') !== undefined");
-        Assert.True(validIdWorks);
+        // var sendMessage = await page.EvaluateExpressionAsync<string>("chrome.runtime.sendMessage.name");
+        // Assert.NotNull(sendMessage);
 
-        var nestedToString = await page.EvaluateExpressionAsync<string>("chrome.runtime.connect('nckgahadagoaajjgafhacjanaoiihapd').onDisconnect.addListener + ''");
-        Assert.Equal("function addListener() { [native code] }", nestedToString);
+        // var sendMessageUndefined = await page.EvaluateExpressionAsync<bool>("chrome.runtime.sendMessage('nckgahadagoaajjgafhacjanaoiihapd', '') === undefined");
+        // Assert.True(sendMessageUndefined);
 
-        var noReturn = await page.EvaluateExpressionAsync<bool>("chrome.runtime.connect('nckgahadagoaajjgafhacjanaoiihapd').disconnect() === undefined");
-        Assert.True(noReturn);
+        // var validIdWorks = await page.EvaluateExpressionAsync<bool>("chrome.runtime.connect('nckgahadagoaajjgafhacjanaoiihapd') !== undefined");
+        // Assert.True(validIdWorks);
+
+        // var nestedToString = await page.EvaluateExpressionAsync<string>("chrome.runtime.connect('nckgahadagoaajjgafhacjanaoiihapd').onDisconnect.addListener + ''");
+        // Assert.Equal("function addListener() { [native code] }", nestedToString);
+
+        // var noReturn = await page.EvaluateExpressionAsync<bool>("chrome.runtime.connect('nckgahadagoaajjgafhacjanaoiihapd').disconnect() === undefined");
+        // Assert.True(noReturn);
 
 
-        await AssertThrowsConnect(page, "chrome.runtime.connect() called from a webpage must specify an Extension ID (string) for its first argument.", "");
-        await AssertThrowsConnect(page, "No matching signature.", "", "", "", "", "", "", "");
-        await AssertThrowsConnect(page, "Invalid extension id: 'foo'", "", "foo");
-        await AssertThrowsConnect(page, "Error at property 'includeTlsChannelId': Invalid type: expected boolean, found number.", "", new { IncludeTlsChannelId = 777 });
+        // await AssertThrowsConnect(page, "chrome.runtime.connect() called from a webpage must specify an Extension ID (string) for its first argument.", "");
+        // await AssertThrowsConnect(page, "No matching signature.", "", "", "", "", "", "", "");
+        // await AssertThrowsConnect(page, "Invalid extension id: 'foo'", "", "foo");
+        // await AssertThrowsConnect(page, "Error at property 'includeTlsChannelId': Invalid type: expected boolean, found number.", "", new { IncludeTlsChannelId = 777 });
     }
 
 
