@@ -13,7 +13,7 @@ public class PluginTest : BrowserDefault {
 
         var finger = await FingerPrint.GetFingerPrint(page);
 
-        Assert.Equal(3, finger.GetProperty("plugins").GetPropertyCount());
-        Assert.Equal(4, finger.GetProperty("mimeTypes").GetPropertyCount());
+        Assert.Equal(5, finger.GetProperty("plugins").GetArrayLength());
+        Assert.Equal(2, finger.GetProperty("mimeTypes").GetArrayLength());
     }
 }
