@@ -11,4 +11,5 @@ namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.RestClient;
 [JsonSerializable(typeof(TwoCaptchaResponse))]
 [JsonSerializable(typeof(RequestForResultTask))]
 [JsonSerializable(typeof(TaskResultModel))]
+[JsonSerializable(typeof(Dictionary<string, string>))]
 internal partial class JsonContext : JsonSerializerContext { }

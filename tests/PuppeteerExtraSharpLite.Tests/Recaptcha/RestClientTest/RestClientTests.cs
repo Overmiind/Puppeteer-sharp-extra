@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
+
+using PuppeteerExtraSharpLite.Plugins.Recaptcha.RestClient;
 
 using RestClient = PuppeteerExtraSharpLite.Plugins.Recaptcha.RestClient.RestClient;
 
@@ -8,14 +10,23 @@ namespace PuppeteerExtraSharpLite.Tests.Recaptcha.RestClientTest;
 public class RestClientTests {
     [Fact]
     public async Task ShouldWorkPostWithJson() {
-        var client = new RestClient("https://postman-echo.com");
-        var data = ("test", "123");
+        using var client = new RestClient("https://postman-echo.com");
+        Dictionary<string, string> data = new() {
+            ["test"] = "123"
+        };
 
-        var result = await client.PostWithJsonAsync<Dictionary<string, string>>("post", data, new CancellationToken());
+        var result = await client.PostWithJsonAsync("post",
+                                                    data,
+                                                    JsonContext.Default.DictionaryStringString,
+                                                    JsonContext.Default.DictionaryStringString,
+                                                    TestContext.Current.CancellationToken);
 
-        var actual = JsonConvert.DeserializeObject<(string, string)>(result.First(e => e.Key == "json").Value);
+        Assert.NotNull(result);
 
-        Assert.Equal(data, actual);
+        var inner = JsonSerializer.Deserialize(data["json"], JsonContext.Default.DictionaryStringString);
+
+        Assert.NotNull(inner);
+        Assert.Equal(data, inner);
     }
 
 }
