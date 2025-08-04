@@ -14,17 +14,37 @@ public class LoadTimesTest : BrowserDefault {
 
         var loadTimes = await page.EvaluateFunctionAsync<JsonElement>("() => window.chrome.loadTimes()");
 
-        Assert.NotNull(loadTimes.GetProperty("connectionInfo").GetString());
-        Assert.NotNull(loadTimes.GetProperty("npnNegotiatedProtocol").GetString());
-        Assert.NotNull(loadTimes.GetProperty("wasAlternateProtocolAvailable").GetString());
-        Assert.NotNull(loadTimes.GetProperty("wasAlternateProtocolAvailable").GetString());
-        Assert.NotNull(loadTimes.GetProperty("wasFetchedViaSpdy").GetString());
-        Assert.NotNull(loadTimes.GetProperty("wasNpnNegotiated").GetString());
-        Assert.NotNull(loadTimes.GetProperty("firstPaintAfterLoadTime").GetString());
-        Assert.NotNull(loadTimes.GetProperty("requestTime").GetString());
-        Assert.NotNull(loadTimes.GetProperty("startLoadTime").GetString());
-        Assert.NotNull(loadTimes.GetProperty("commitLoadTime").GetString());
-        Assert.NotNull(loadTimes.GetProperty("finishDocumentLoadTime").GetString());
-        Assert.NotNull(loadTimes.GetProperty("firstPaintTime").GetString());
+        Assert.True(loadTimes.TryGetProperty("connectionInfo", out var prop));
+        Assert.Equal(JsonValueKind.String, prop.ValueKind);
+
+        Assert.True(loadTimes.TryGetProperty("npnNegotiatedProtocol", out prop));
+        Assert.Equal(JsonValueKind.String, prop.ValueKind);
+
+        Assert.True(loadTimes.TryGetProperty("wasAlternateProtocolAvailable", out prop));
+        Assert.True(prop.ValueKind is JsonValueKind.True or JsonValueKind.False);
+
+        Assert.True(loadTimes.TryGetProperty("wasFetchedViaSpdy", out prop));
+        Assert.True(prop.ValueKind is JsonValueKind.True or JsonValueKind.False);
+
+        Assert.True(loadTimes.TryGetProperty("wasNpnNegotiated", out prop));
+        Assert.True(prop.ValueKind is JsonValueKind.True or JsonValueKind.False);
+
+        Assert.True(loadTimes.TryGetProperty("firstPaintAfterLoadTime", out prop));
+        Assert.Equal(JsonValueKind.Number, prop.ValueKind);
+
+        Assert.True(loadTimes.TryGetProperty("requestTime", out prop));
+        Assert.Equal(JsonValueKind.Number, prop.ValueKind);
+
+        Assert.True(loadTimes.TryGetProperty("startLoadTime", out prop));
+        Assert.Equal(JsonValueKind.Number, prop.ValueKind);
+
+        Assert.True(loadTimes.TryGetProperty("commitLoadTime", out prop));
+        Assert.Equal(JsonValueKind.Number, prop.ValueKind);
+
+        Assert.True(loadTimes.TryGetProperty("finishDocumentLoadTime", out prop));
+        Assert.Equal(JsonValueKind.Number, prop.ValueKind);
+
+        Assert.True(loadTimes.TryGetProperty("firstPaintTime", out prop));
+        Assert.Equal(JsonValueKind.Number, prop.ValueKind);
     }
 }
