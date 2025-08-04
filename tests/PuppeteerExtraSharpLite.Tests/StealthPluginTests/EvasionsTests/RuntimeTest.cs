@@ -11,6 +11,8 @@ namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
 public class RuntimeTest : BrowserDefault {
     [Fact]
     public async Task ShouldAddConnectToChrome() {
+        Assert.Fail("pending plugin abstraction re-write");
+
         if (Environment.GetEnvironmentVariable("TEST_OPT") is "1") {
             var plugin = new ChromeRuntime();
             var page = await LaunchAndGetPage(plugin);
