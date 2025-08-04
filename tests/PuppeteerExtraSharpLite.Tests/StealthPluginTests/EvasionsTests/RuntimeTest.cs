@@ -14,6 +14,9 @@ public class RuntimeTest : BrowserDefault {
 
         await page.GoToAsync("https://google.com");
 
+        var runtimeType = await page.EvaluateExpressionAsync<string>("typeof chrome.runtime");
+        TestContext.Current.SendDiagnosticMessage($"chrome.runtime typeof: {runtimeType}");
+
         var runtime = await page.EvaluateExpressionAsync<JsonElement>("chrome.runtime");
 
         var runtimeConnect = await page.EvaluateExpressionAsync<JsonElement>("chrome.runtime.connect");
