@@ -28,11 +28,9 @@ public sealed class RestClient : IDisposable {
     }
 
     public async Task<TOutput?> PostWithJsonAsync<TInput, TOutput>(string url, TInput content, JsonTypeInfo<TInput> inputTypeInfo, JsonTypeInfo<TOutput> outputTypeInfo, CancellationToken token) {
-        var request = new HttpRequestMessage();
+        var request = new HttpRequestMessage(HttpMethod.Post, url);
         request.Headers.Add("Accept", "application/json");
-        request.Method = HttpMethod.Post;
         request.Content = JsonContent.Create(content, inputTypeInfo);
-        request.RequestUri = new Uri(url);
         var response = await _client.SendAsync(request, token);
         return await response.Content.ReadFromJsonAsync(outputTypeInfo, token);
     }
