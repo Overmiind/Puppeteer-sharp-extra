@@ -2,22 +2,22 @@
 using System.Net.Http.Json;
 
 using PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha.Models;
-using PuppeteerExtraSharpLite.Plugins.Recaptcha.RestClient;
 
 namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha;
 
-public class AntiCaptchaApi : IDisposable {
-    private bool _disposed;
+public class AntiCaptchaApi {
+    private static readonly Uri Host = new("http://api.anti-captcha.com");
 
     private readonly string _userKey;
     private readonly ProviderOptions _options;
-    private readonly RestClient.RestClient _client = new("http://api.anti-captcha.com");
-    public AntiCaptchaApi(string userKey, ProviderOptions options) {
+    private readonly HttpClient _client;
+    public AntiCaptchaApi(HttpClient client, string userKey, ProviderOptions options) {
         _userKey = userKey;
         _options = options;
+        _client = client;
     }
 
-    public Task<AntiCaptchaTaskResult> CreateTaskAsync(string pageUrl, string key, CancellationToken token = default) {
+    public async Task<AntiCaptchaTaskResult> CreateTaskAsync(string pageUrl, string key, CancellationToken token = default) {
         var content = new AntiCaptchaRequest() {
             clientKey = _userKey,
             task = new AntiCaptchaTask() {
@@ -27,20 +27,15 @@ public class AntiCaptchaApi : IDisposable {
             }
         };
 
-        var result = _client.PostWithJsonAsync("createTask",
-                                                                     content,
-                                                                     JsonContext.Default.AntiCaptchaRequest,
-                                                                     JsonContext.Default.AntiCaptchaTaskResult,
-                                                                     token);
-        return result;
-    }
+        Uri uri = new(Host, "createTask");
+        using var message = new HttpRequestMessage(HttpMethod.Post, uri);
+        message.Headers.Add("Accept", "application/json");
+        message.Content = JsonContent.Create(content, JsonContext.Default.AntiCaptchaRequest);
 
-    public void Dispose() {
-        if (_disposed) {
-            return;
-        }
-        _client.Dispose();
-        _disposed = true;
+        using var response = await _client.SendAsync(message, token);
+        response.EnsureSuccessStatusCode();
+
+        return await response.Content.ReadFromJsonAsync(JsonContext.Default.AntiCaptchaTaskResult, cancellationToken: token);
     }
 
     public async Task<TaskResultModel> PendingForResult(int taskId, CancellationToken token = default) {
@@ -49,32 +44,38 @@ public class AntiCaptchaApi : IDisposable {
             taskId = taskId
         };
 
-
-        var request = new HttpRequestMessage(HttpMethod.Post, "getTaskResult");
-        request.Content = JsonContent.Create(content, JsonContext.Default.RequestForResultTask);
+        Uri uri = new(Host, "getTaskResult");
 
         TaskResultModel? outerResult = null;
 
-        await _client.CreatePollingBuilder<TaskResultModel>(request).TriesLimit(_options.PendingCount)
-            .WithTimeoutSeconds(5).ActivatePollingAsync(
+        await _client.SendPollingAsync(
+                () => {
+                    var message = new HttpRequestMessage(HttpMethod.Post, uri);
+                    message.Headers.Add("Accept", "application/json");
+                    message.Content = JsonContent.Create(content, JsonContext.Default.RequestForResultTask);
+                    return message;
+                },
                 async response => {
                     if (response.StatusCode != System.Net.HttpStatusCode.OK) {
-                        return PollingAction.ContinuePolling;
+                        return true;
                     }
 
                     var result = await response.Content.ReadFromJsonAsync(JsonContext.Default.TaskResultModel);
 
                     if (result is null) {
-                        return PollingAction.ContinuePolling;
+                        return true;
                     }
 
                     if (result.status == "ready" || result.errorId != 0) {
                         outerResult = result;
-                        return PollingAction.Break;
+                        return false;
                     }
 
-                    return PollingAction.ContinuePolling;
-                });
+                    return true;
+                },
+                _options.PendingCount,
+                _options.StartTimeoutSeconds * 1000);
+
         return outerResult ?? new();
     }
 }

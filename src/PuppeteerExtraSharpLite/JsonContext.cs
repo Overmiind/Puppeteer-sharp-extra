@@ -5,7 +5,7 @@ using PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider._2Captcha.Models;
 
 using PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha.Models;
 
-namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.RestClient;
+namespace PuppeteerExtraSharpLite;
 
 [JsonSerializable(typeof(AntiCaptchaRequest))]
 [JsonSerializable(typeof(AntiCaptchaTaskResult))]

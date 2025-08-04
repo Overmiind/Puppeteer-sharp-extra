@@ -8,9 +8,9 @@ public class TwoCaptcha : IRecaptchaProvider {
     private readonly ProviderOptions _options;
     private readonly TwoCaptchaApi _api;
 
-    public TwoCaptcha(string key, ProviderOptions? options = null) {
+    public TwoCaptcha(HttpClient client, string key, ProviderOptions? options = null) {
         _options = options ?? ProviderOptions.CreateDefaultOptions();
-        _api = new TwoCaptchaApi(key, _options);
+        _api = new TwoCaptchaApi(client, key, _options);
     }
 
     public async Task<string> GetSolution(string key, string pageUrl, string proxyStr = "") {

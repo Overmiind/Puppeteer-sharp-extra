@@ -7,9 +7,9 @@ public class AntiCaptcha : IRecaptchaProvider {
 
     private readonly AntiCaptchaApi _api;
 
-    public AntiCaptcha(string userKey, ProviderOptions? options = null) {
+    public AntiCaptcha(HttpClient client, string userKey, ProviderOptions? options = null) {
         _options = options ?? ProviderOptions.CreateDefaultOptions();
-        _api = new AntiCaptchaApi(userKey, _options);
+        _api = new AntiCaptchaApi(client, userKey, _options);
     }
 
     public async Task<string> GetSolution(string key, string pageUrl, string proxyStr = "") {
