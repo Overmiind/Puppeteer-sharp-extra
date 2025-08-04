@@ -40,6 +40,9 @@ public abstract class BrowserDefault : IDisposable {
 
         var page = (await browser.PagesAsync())[0];
 
+        // Ensure the page is fully initialized before returning
+        await page.WaitForNetworkIdleAsync();
+
         return page;
     }
 
