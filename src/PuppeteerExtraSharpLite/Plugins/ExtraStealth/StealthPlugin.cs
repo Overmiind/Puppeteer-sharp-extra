@@ -39,8 +39,14 @@ public class StealthPlugin : PuppeteerExtraPlugin {
     public override ICollection<PuppeteerExtraPlugin> GetDependencies() => _standardEvasions;
 
     public override async Task OnPageCreated(IPage page) {
+        // Load Utils script first before any evasion scripts run
         var utilsScript = Scripts.Utils.WithSourceUrl("Utils.js");
         await page.EvaluateExpressionOnNewDocumentAsync(utilsScript);
+
+        // Now load all the evasion scripts that depend on utils
+        foreach (var evasion in _standardEvasions) {
+            await evasion.OnPageCreated(page);
+        }
     }
 
     private T? GetOptionByType<T>() where T : IPuppeteerExtraPluginOptions {

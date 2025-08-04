@@ -1,4 +1,6 @@
-﻿using PuppeteerExtraSharpLite.Plugins;
+using System.Linq;
+
+using PuppeteerExtraSharpLite.Plugins;
 
 using PuppeteerSharp;
 
@@ -26,23 +28,23 @@ public class PuppeteerExtra {
         return browser;
     }
 
-public async Task<IBrowser> ConnectAsync(ConnectOptions options) {
-    foreach (var plugin in _plugins) {
-        plugin.BeforeConnect(options);
+    public async Task<IBrowser> ConnectAsync(ConnectOptions options) {
+        foreach (var plugin in _plugins) {
+            plugin.BeforeConnect(options);
+        }
+
+        var browser = await Puppeteer.ConnectAsync(options);
+
+        foreach (var plugin in _plugins) {
+            plugin.AfterConnect(browser);
+        }
+
+        await OnStart(new BrowserStartContext {
+            StartType = StartType.Connect
+        }, browser);
+
+        return browser;
     }
-
-    var browser = await Puppeteer.ConnectAsync(options);
-
-    foreach (var plugin in _plugins) {
-        plugin.AfterConnect(browser);
-    }
-
-    await OnStart(new BrowserStartContext {
-        StartType = StartType.Connect
-    }, browser);
-
-    return browser;
-}
 
     public T? GetPlugin<T>() where T : PuppeteerExtraPlugin {
         foreach (var plugin in _plugins) {
@@ -101,6 +103,22 @@ public async Task<IBrowser> ConnectAsync(ConnectOptions options) {
         }
     }
 
+    //TODO: optimize
+    private List<PuppeteerExtraPlugin> GetTopLevelPlugins() {
+        var dependencyPlugins = new HashSet<PuppeteerExtraPlugin>();
+
+        // Collect all dependency plugins
+        foreach (var plugin in _plugins) {
+            var dependencies = plugin.GetDependencies();
+            foreach (var dependency in dependencies) {
+                dependencyPlugins.Add(dependency);
+            }
+        }
+
+        // Return plugins that are not dependencies of other plugins
+        return _plugins.Where(plugin => !dependencyPlugins.Contains(plugin)).ToList();
+    }
+
     private async Task Register(IBrowser browser) {
         var pages = await browser.PagesAsync();
 
@@ -112,7 +130,10 @@ public async Task<IBrowser> ConnectAsync(ConnectOptions options) {
             }
             if (args.Target.Type == TargetType.Page) {
                 var page = await args.Target.PageAsync();
-                foreach (var plugin in _plugins) {
+                // Only run OnPageCreated for top-level plugins, not their dependencies
+                // Dependencies will be handled by their parent plugins
+                var topLevelPlugins = GetTopLevelPlugins();
+                foreach (var plugin in topLevelPlugins) {
                     await plugin.OnPageCreated(page);
                 }
             }
@@ -123,8 +144,13 @@ public async Task<IBrowser> ConnectAsync(ConnectOptions options) {
             browser.TargetDestroyed += (sender, args) => puppeteerExtraPlugin.OnTargetDestroyed(args.Target);
             browser.Disconnected += (sender, args) => puppeteerExtraPlugin.OnDisconnected();
             browser.Closed += (sender, args) => puppeteerExtraPlugin.OnClose();
+        }
+
+        // Handle existing pages - only for top-level plugins
+        var topLevelPlugins = GetTopLevelPlugins();
+        foreach (var plugin in topLevelPlugins) {
             foreach (var page in pages) {
-                await puppeteerExtraPlugin.OnPageCreated(page);
+                await plugin.OnPageCreated(page);
             }
         }
     }
