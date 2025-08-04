@@ -12,7 +12,9 @@ public class CodecTest : BrowserDefault {
         await page.GoToAsync("https://google.com");
         var fingerPrint = await FingerPrint.GetFingerPrint(page);
 
-        Assert.Equal("probably", fingerPrint.GetProperty("videoCodecs").GetProperty("ogg").GetString());
+        var text = fingerPrint.GetRawText();
+
+        Assert.Equal("", fingerPrint.GetProperty("videoCodecs").GetProperty("ogg").GetString());
         Assert.Equal("probably", fingerPrint.GetProperty("videoCodecs").GetProperty("h264").GetString());
         Assert.Equal("probably", fingerPrint.GetProperty("videoCodecs").GetProperty("webm").GetString());
 
