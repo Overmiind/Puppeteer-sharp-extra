@@ -15,9 +15,13 @@ public class LanguagesTest : BrowserDefault {
 
         var fingerPrint = await FingerPrint.GetFingerPrint(page);
 
-        JsonDocument doc = JsonDocument.Parse(fingerPrint.ToString());
+        var text = fingerPrint.GetRawText(); // for debug
 
-        var languages = doc.RootElement.GetProperty("languages").EnumerateObject().Select(e => e.Value.GetString());
+        var languagesJson = fingerPrint.GetProperty("languages").GetRawText();
+
+        var languages = JsonSerializer.Deserialize<string[]>(languagesJson);
+
+        Assert.NotNull(languages);
 
         Assert.Contains("en-US", languages);
     }

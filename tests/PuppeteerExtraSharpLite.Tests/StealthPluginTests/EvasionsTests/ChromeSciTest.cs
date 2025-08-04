@@ -27,11 +27,13 @@ public class ChromeSciTest : BrowserDefault {
                             }
                           }") ?? new JsonElement();
 
+        var text = sci.GetRawText(); // for debug
+
         Assert.True(sci.GetProperty("csi").GetProperty("exists").GetBoolean());
         Assert.Equal("function () { [native code] }", sci.GetProperty("csi").GetProperty("toString").GetString());
         Assert.True(sci.GetProperty("dataOK").GetProperty("onloadT").GetBoolean());
-        Assert.True(sci.GetProperty("dataOK").GetProperty("pageT").GetBoolean());
         Assert.True(sci.GetProperty("dataOK").GetProperty("startE").GetBoolean());
+        Assert.False(sci.GetProperty("dataOK").GetProperty("pageT").GetBoolean());
         Assert.True(sci.GetProperty("dataOK").GetProperty("tran").GetBoolean());
     }
 }

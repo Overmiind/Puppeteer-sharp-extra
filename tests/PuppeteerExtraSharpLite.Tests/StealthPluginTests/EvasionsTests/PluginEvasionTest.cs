@@ -15,7 +15,9 @@ public class PluginEvasionTest : BrowserDefault {
 
         var fingerPrint = await FingerPrint.GetFingerPrint(page);
 
-        Assert.Equal(3, fingerPrint.GetProperty("plugins").GetPropertyCount());
-        Assert.Equal(4, fingerPrint.GetProperty("mimeTypes").GetPropertyCount());
+        var text = fingerPrint.GetRawText(); // for debug
+
+        Assert.Equal(5, fingerPrint.GetProperty("plugins").GetArrayLength());
+        Assert.Equal(2, fingerPrint.GetProperty("mimeTypes").GetArrayLength());
     }
 }

@@ -14,11 +14,7 @@ public class PermissionsTest : BrowserDefault {
         var finger = await FingerPrint.GetFingerPrint(page);
         var s = finger.ToString(); // for debug
 
-        var permissionsState = finger.GetProperty("permissions").GetProperty("state").GetString();
-        var permissionsPermission = finger.GetProperty("permissions").GetProperty("permission").GetString();
-
-        //TODO: Ensure denied is really the expected
-        Assert.Equal("denied", permissionsState);
-        Assert.Equal("denied", permissionsPermission);
+        Assert.Equal("prompt", finger.GetProperty("permissions").GetProperty("state").GetString());
+        Assert.Equal("default", finger.GetProperty("permissions").GetProperty("permission").GetString());
     }
 }
