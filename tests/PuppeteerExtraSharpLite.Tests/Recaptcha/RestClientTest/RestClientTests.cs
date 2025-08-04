@@ -18,15 +18,14 @@ public class RestClientTests {
         var result = await client.PostWithJsonAsync("post",
                                                     data,
                                                     JsonContext.Default.DictionaryStringString,
-                                                    JsonContext.Default.DictionaryStringString,
+                                                    JsonContext.Default.JsonElement,
                                                     TestContext.Current.CancellationToken);
 
-        Assert.NotNull(result);
 
-        var inner = JsonSerializer.Deserialize(data["json"], JsonContext.Default.DictionaryStringString);
+        var json = result.GetProperty("json").GetRawText();
+        var inner = JsonSerializer.Deserialize(json, JsonContext.Default.DictionaryStringString);
 
         Assert.NotNull(inner);
         Assert.Equal(data, inner);
     }
-
 }
