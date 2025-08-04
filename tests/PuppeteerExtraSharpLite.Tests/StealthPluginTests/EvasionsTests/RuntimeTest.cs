@@ -11,14 +11,18 @@ namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
 public class RuntimeTest : BrowserDefault {
     [Fact]
     public async Task ShouldAddConnectToChrome() {
+        // Options 1 - use abstractions
         // var plugin = new ChromeRuntime();
         // var page = await LaunchAndGetPage(plugin);
+        // End options 1
 
+        // Options 2 - Remove abstractions - directly inject the script
         using var browser = await LaunchAsync();
         var page = await browser.NewPageAsync();
 
         var script = Plugins.ExtraStealth.Utils.WithSourceUrl(Plugins.EmbeddedScripts.CS.Scripts.Runtime, "Runtime.js");
         await page.EvaluateExpressionOnNewDocumentAsync(script);
+        // End options 2
 
         await page.GoToAsync("https://google.com");
 
