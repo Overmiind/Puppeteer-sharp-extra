@@ -5,32 +5,26 @@ using PuppeteerSharp;
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth;
 
 public class StealthPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
-    private readonly IPuppeteerExtraPluginOptions[] _options;
-
     public override string Name => nameof(StealthPlugin);
 
-    //TODO: Are they really required or preferred by default?
-    protected override string[] RequiredPlugins =>
-    [
-        nameof(WebDriver),
-        nameof(ChromeSci),
-        nameof(ChromeRuntime),
-        nameof(Codec),
-        nameof(Languages),
-        nameof(OutDimensions),
-        nameof(Permissions),
-        nameof(UserAgent),
-        nameof(Vendor),
-        nameof(WebGl),
-        nameof(PluginEvasion),
-        nameof(StackTrace),
-        nameof(HardwareConcurrency),
-        nameof(ContentWindow)
-    ];
-
-    public StealthPlugin(params IPuppeteerExtraPluginOptions[] options) : base() {
-        _options = options;
-    }
+    //TODO: Are they really required or preferred by default? (assuming no)
+    // protected override string[] RequiredPlugins =>
+    // [
+    //     nameof(WebDriver),
+    //     nameof(ChromeSci),
+    //     nameof(ChromeRuntime),
+    //     nameof(Codec),
+    //     nameof(Languages),
+    //     nameof(OutDimensions),
+    //     nameof(Permissions),
+    //     nameof(UserAgent),
+    //     nameof(Vendor),
+    //     nameof(WebGl),
+    //     nameof(PluginEvasion),
+    //     nameof(StackTrace),
+    //     nameof(HardwareConcurrency),
+    //     nameof(ContentWindow)
+    // ];
 
     public static PuppeteerExtraPlugin[] GetStandardEvasions() =>
     [
