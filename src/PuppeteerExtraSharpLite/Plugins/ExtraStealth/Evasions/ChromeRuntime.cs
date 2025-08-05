@@ -8,6 +8,6 @@ public class ChromeRuntime : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public ChromeRuntime() : base() { }
 
     public Task OnPageCreated(IPage page) {
-        return Utils.EvaluateOnNewPage(page, Scripts.Runtime);
+        return page.EvaluateExpressionOnNewDocumentAsync(Scripts.Runtime);
     }
 }
