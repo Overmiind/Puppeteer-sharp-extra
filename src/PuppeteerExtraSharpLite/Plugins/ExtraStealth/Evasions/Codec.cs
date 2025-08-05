@@ -8,6 +8,6 @@ public class Codec : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public Codec() : base() { }
 
     public Task OnPageCreated(IPage page) {
-        return Utils.EvaluateOnNewPage(page, Scripts.Codec);
+        return page.EvaluateExpressionOnNewDocumentAsync(Scripts.Codec);
     }
 }

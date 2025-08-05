@@ -7,8 +7,12 @@ namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
 public class CodecTest : BrowserDefault {
     [Fact]
     public async Task SupportsCodec() {
-        var plugin = new Codec();
-        var page = await LaunchAndGetPage(plugin);
+        var pluginManager = new PluginManager();
+        pluginManager.Register(new Codec());
+
+        using var browser = await pluginManager.LaunchAsync(CreateDefaultOptions());
+        using var page = await browser.NewPageAsync();
+
         await page.GoToAsync("https://google.com");
         var fingerPrint = await FingerPrint.GetFingerPrint(page);
 
@@ -27,8 +31,11 @@ public class CodecTest : BrowserDefault {
 
     [Fact]
     public async Task NotLeakModifications() {
-        var plugin = new Codec();
-        var page = await LaunchAndGetPage(plugin);
+        var pluginManager = new PluginManager();
+        pluginManager.Register(new Codec());
+
+        using var browser = await pluginManager.LaunchAsync(CreateDefaultOptions());
+        using var page = await browser.NewPageAsync();
 
         var canPlay =
             await page.EvaluateFunctionAsync<string>(
