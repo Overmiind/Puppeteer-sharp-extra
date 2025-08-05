@@ -5,8 +5,13 @@ namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests;
 public class StealthPluginTests : BrowserDefault {
     [Fact]
     public async Task ShouldBeNotDetected() {
-        var plugin = new StealthPlugin();
-        var page = await LaunchAndGetPage(plugin);
+        var pluginManager = new PluginManager();
+        pluginManager.Register(StealthPlugin.GetStandardEvasions());
+        pluginManager.Register(new StealthPlugin());
+
+        using var browser = await pluginManager.LaunchAsync(CreateDefaultOptions());
+        using var page = await browser.NewPageAsync();
+
         await page.GoToAsync("https://google.com");
 
         var webdriver = await page.EvaluateExpressionAsync<bool>("navigator.webdriver");
