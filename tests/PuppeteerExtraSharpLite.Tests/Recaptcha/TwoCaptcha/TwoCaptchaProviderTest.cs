@@ -10,7 +10,9 @@ public class TwoCaptchaProviderTest : RecaptchaTestBase {
         Assert.SkipUnless(Helper.TryGetEnvironmentVariable("TwoCaptchaProvider", out var antiCaptchaKey),
             "TwoCaptchaProvider environment variable is not set. Skipping test.");
 
-        var plugin = new RecaptchaPlugin(new Plugins.Recaptcha.Provider._2Captcha.TwoCaptcha(antiCaptchaKey));
+        using var client = new HttpClient();
+        var provider = new Plugins.Recaptcha.Provider._2Captcha.TwoCaptcha(client, antiCaptchaKey);
+        var plugin = new RecaptchaPlugin(provider);
 
         await using var browser = await LaunchWithPluginAsync(plugin);
 
@@ -32,7 +34,9 @@ public class TwoCaptchaProviderTest : RecaptchaTestBase {
         Assert.SkipUnless(Helper.TryGetEnvironmentVariable("TwoCaptchaProvider", out var antiCaptchaKey),
             "TwoCaptchaProvider environment variable is not set. Skipping test.");
 
-        var plugin = new RecaptchaPlugin(new Plugins.Recaptcha.Provider._2Captcha.TwoCaptcha(antiCaptchaKey));
+        using var client = new HttpClient();
+        var provider = new Plugins.Recaptcha.Provider._2Captcha.TwoCaptcha(client, antiCaptchaKey);
+        var plugin = new RecaptchaPlugin(provider);
 
         await using var browser = await LaunchWithPluginAsync(plugin);
 

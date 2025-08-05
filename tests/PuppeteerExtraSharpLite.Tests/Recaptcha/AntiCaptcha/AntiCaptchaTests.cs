@@ -1,7 +1,7 @@
+using PuppeteerExtraSharpLite.Plugins.Recaptcha;
 using PuppeteerExtraSharpLite.Tests.Utils;
 
 using PuppeteerSharp;
-using PuppeteerExtraSharpLite.Plugins.Recaptcha;
 
 namespace PuppeteerExtraSharpLite.Tests.Recaptcha.AntiCaptcha;
 
@@ -12,7 +12,9 @@ public class AntiCaptchaTests : RecaptchaTestBase {
         Assert.SkipUnless(Helper.TryGetEnvironmentVariable("AntiCaptchaKey", out var antiCaptchaKey),
             "AntiCaptchaKey environment variable is not set. Skipping test.");
 
-        var plugin = new RecaptchaPlugin(new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(antiCaptchaKey));
+        using var client = new HttpClient();
+        var provider = new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(client, antiCaptchaKey);
+        var plugin = new RecaptchaPlugin(provider);
 
         await using var browser = await LaunchWithPluginAsync(plugin);
 
@@ -28,7 +30,9 @@ public class AntiCaptchaTests : RecaptchaTestBase {
         Assert.SkipUnless(Helper.TryGetEnvironmentVariable("AntiCaptchaKey", out var antiCaptchaKey),
             "AntiCaptchaKey environment variable is not set. Skipping test.");
 
-        var plugin = new RecaptchaPlugin(new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(antiCaptchaKey));
+        using var client = new HttpClient();
+        var provider = new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(client, antiCaptchaKey);
+        var plugin = new RecaptchaPlugin(provider);
 
         await using var browser = await LaunchWithPluginAsync(plugin);
 
@@ -51,7 +55,9 @@ public class AntiCaptchaTests : RecaptchaTestBase {
         Assert.SkipUnless(Helper.TryGetEnvironmentVariable("AntiCaptchaKey", out var antiCaptchaKey),
             "AntiCaptchaKey environment variable is not set. Skipping test.");
 
-        var plugin = new RecaptchaPlugin(new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(antiCaptchaKey));
+        using var client = new HttpClient();
+        var provider = new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(client, antiCaptchaKey);
+        var plugin = new RecaptchaPlugin(provider);
 
         await using var browser = await LaunchWithPluginAsync(plugin);
         var page = await browser.NewPageAsync();
@@ -65,7 +71,7 @@ public class AntiCaptchaTests : RecaptchaTestBase {
         await CheckSuccessVerify(page);
     }
 
-    private async Task CheckSuccessVerify(IPage page) {
+    private static async Task CheckSuccessVerify(IPage page) {
         var successElement = await page.QuerySelectorAsync("div[id='main'] div[class='description'] h2");
         var elementValue = await (await successElement.GetPropertyAsync("textContent")).JsonValueAsync<string>();
         Assert.NotNull(successElement);
