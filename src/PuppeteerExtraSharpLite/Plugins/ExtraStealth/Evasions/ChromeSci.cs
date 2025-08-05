@@ -8,6 +8,6 @@ public class ChromeSci : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public ChromeSci() : base() { }
 
     public Task OnPageCreated(IPage page) {
-        return Utils.EvaluateOnNewPage(page, Scripts.SCI);
+        return page.EvaluateExpressionOnNewDocumentAsync(Scripts.SCI);
     }
 }

@@ -7,9 +7,14 @@ namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
 public class ChromeSciTest : BrowserDefault {
     [Fact]
     public async Task ShouldWork() {
-        var plugin = new ChromeSci();
-        var page = await LaunchAndGetPage(plugin);
+        var pluginManager = new PluginManager();
+        pluginManager.Register(new ChromeSci());
+
+        using var browser = await pluginManager.LaunchAsync(CreateDefaultOptions());
+        using var page = await browser.NewPageAsync();
+
         await page.GoToAsync("https://google.com");
+
         var sci = await page.EvaluateFunctionAsync(@"() => {
                             const { timing } = window.performance
                             const csi = window.chrome.csi()
