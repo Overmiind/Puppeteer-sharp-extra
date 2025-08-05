@@ -23,8 +23,4 @@ public abstract class RecaptchaTestBase : BrowserDefault {
         var provider = ServiceProvider.GetRequiredService<IRecaptchaProvider>();
         return new RecaptchaPlugin(provider);
     }
-
-    protected new void Dispose() {
-        base.Dispose();
-    }
 }
