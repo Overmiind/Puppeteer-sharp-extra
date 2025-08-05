@@ -3,7 +3,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Plugins.BlockResources;
 
-public class BlockResourcesPlugin : PuppeteerExtraPlugin {
+public class BlockResourcesPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin, IBeforeLaunchPlugin {
     public override string Name => nameof(BlockResourcesPlugin);
 
     public readonly List<BlockRule> BlockResources = new();
@@ -29,7 +29,7 @@ public class BlockResourcesPlugin : PuppeteerExtraPlugin {
     }
 
 
-    public override async Task OnPageCreated(IPage page) {
+    public async Task OnPageCreated(IPage page) {
         await page.SetRequestInterceptionAsync(true);
         page.Request += (sender, args) => OnPageRequest(page, args);
     }
@@ -45,7 +45,7 @@ public class BlockResourcesPlugin : PuppeteerExtraPlugin {
     }
 
 
-    public override void BeforeLaunch(LaunchOptions options) {
+    public void BeforeLaunch(LaunchOptions options) {
         options.Args = options.Args.Append("--site-per-process").Append("--disable-features=IsolateOrigins").ToArray();
     }
 }

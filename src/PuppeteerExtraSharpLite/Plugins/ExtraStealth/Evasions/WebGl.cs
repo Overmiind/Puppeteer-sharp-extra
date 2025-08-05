@@ -7,11 +7,11 @@ public class WebGl : PuppeteerExtraPlugin {
 
     private readonly StealthWebGLOptions _options;
 
-    public WebGl(StealthWebGLOptions options) : base() {
+    public WebGl(StealthWebGLOptions? options = null) : base() {
         _options = options ?? new StealthWebGLOptions("Intel Inc.", "Intel Iris OpenGL Engine");
     }
 
-    public override async Task OnPageCreated(IPage page) {
+    public async Task OnPageCreated(IPage page) {
         var script = Scripts.WebGL.WithSourceUrl("WebGL.js");
         await page.EvaluateFunctionOnNewDocumentAsync(script, _options.Vendor, _options.Renderer);
     }

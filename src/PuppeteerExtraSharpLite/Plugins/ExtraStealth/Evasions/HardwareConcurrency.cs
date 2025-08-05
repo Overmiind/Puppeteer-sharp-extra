@@ -2,7 +2,7 @@
 
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
-public class HardwareConcurrency : PuppeteerExtraPlugin {
+public class HardwareConcurrency : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(HardwareConcurrency);
 
     public StealthHardwareConcurrencyOptions Options { get; }
@@ -11,7 +11,7 @@ public class HardwareConcurrency : PuppeteerExtraPlugin {
         Options = options ?? new StealthHardwareConcurrencyOptions(4);
     }
 
-    public override Task OnPageCreated(IPage page) {
+    public Task OnPageCreated(IPage page) {
         var script = Scripts.HardwareConcurrency.WithSourceUrl("HardwareConcurrency.js");
         return Utils.EvaluateOnNewPage(page, script, Options.Concurrency);
     }

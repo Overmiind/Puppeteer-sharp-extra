@@ -4,7 +4,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Plugins.AnonymizeUa;
 
-public partial class AnonymizeUaPlugin : PuppeteerExtraPlugin {
+public partial class AnonymizeUaPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(AnonymizeUaPlugin);
 
     public AnonymizeUaPlugin() : base() {
@@ -16,7 +16,7 @@ public partial class AnonymizeUaPlugin : PuppeteerExtraPlugin {
         _customAction = uaAction;
     }
 
-    public override async Task OnPageCreated(IPage page) {
+    public async Task OnPageCreated(IPage page) {
         string ua = await page.Browser.GetUserAgentAsync();
         ua = ua.Replace("HeadlessChrome", "Chrome");
 

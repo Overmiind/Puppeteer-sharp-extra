@@ -4,11 +4,9 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Plugins.Recaptcha;
 
-public class RecaptchaPlugin : PuppeteerExtraPlugin {
-    private readonly Recaptcha _recaptcha;
-
+public class RecaptchaPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(RecaptchaPlugin);
-
+    private readonly Recaptcha _recaptcha;
 
     public RecaptchaPlugin(IRecaptchaProvider provider, CaptchaOptions? opt = null) : base() {
         _recaptcha = new Recaptcha(provider, opt ?? new CaptchaOptions());
@@ -18,7 +16,7 @@ public class RecaptchaPlugin : PuppeteerExtraPlugin {
         return await _recaptcha.Solve(page);
     }
 
-    public override async Task OnPageCreated(IPage page) {
+    public async Task OnPageCreated(IPage page) {
         await page.SetBypassCSPAsync(true);
     }
 }

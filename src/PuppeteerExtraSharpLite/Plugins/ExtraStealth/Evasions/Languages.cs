@@ -4,7 +4,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
-public class Languages : PuppeteerExtraPlugin {
+public class Languages : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(Languages);
 
     public StealthLanguagesOptions Options { get; }
@@ -13,7 +13,7 @@ public class Languages : PuppeteerExtraPlugin {
         Options = options ?? new StealthLanguagesOptions("en-US", "en");
     }
 
-    public override Task OnPageCreated(IPage page) {
+    public Task OnPageCreated(IPage page) {
         var script = Scripts.Language.WithSourceUrl("Language.js");
         return Utils.EvaluateOnNewPage(page, script, Options.Languages);
     }

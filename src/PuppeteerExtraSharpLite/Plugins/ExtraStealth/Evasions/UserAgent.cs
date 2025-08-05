@@ -4,15 +4,15 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
-public partial class UserAgent : PuppeteerExtraPlugin {
+public partial class UserAgent : PuppeteerExtraPlugin, IBeforeLaunchPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(UserAgent);
 
     public UserAgent() : base() {
     }
 
-    public override void BeforeLaunch(LaunchOptions options) { }
+    public void BeforeLaunch(LaunchOptions options) { }
 
-    public override async Task OnPageCreated(IPage page) {
+    public async Task OnPageCreated(IPage page) {
         var ua = await page.Browser.GetUserAgentAsync();
         ua = ua.Replace("HeadlessChrome/", "Chrome/");
         var uaVersion = ua.Contains("Chrome/")

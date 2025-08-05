@@ -2,7 +2,7 @@
 
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
-public class Vendor : PuppeteerExtraPlugin {
+public class Vendor : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(Vendor);
 
     private readonly StealthVendorSettings _settings;
@@ -11,7 +11,7 @@ public class Vendor : PuppeteerExtraPlugin {
         _settings = settings ?? new StealthVendorSettings("Google Inc.");
     }
 
-    public override async Task OnPageCreated(IPage page) {
+    public async Task OnPageCreated(IPage page) {
         var script = Scripts.Vendor.WithSourceUrl("Vendor.js");
         await page.EvaluateFunctionOnNewDocumentAsync(script, _settings.Vendor);
     }
