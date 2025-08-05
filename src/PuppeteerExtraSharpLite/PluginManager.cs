@@ -86,7 +86,7 @@ public class PluginManager {
                             }
                         };
                         break;
-                }
+                    }
                 case IOnTargetCreatedPlugin p: {
                         browser.TargetCreated += (sender, args) => p.OnTargetCreated(args.Target);
                         break;
