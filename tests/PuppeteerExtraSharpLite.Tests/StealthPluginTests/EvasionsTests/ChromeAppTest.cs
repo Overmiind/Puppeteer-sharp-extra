@@ -9,9 +9,12 @@ namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
 public class ChromeAppTest : BrowserDefault {
     [Fact]
     public async Task ShouldWork() {
-        var plugin = new ChromeApp();
+        var pluginManager = new PluginManager();
+        pluginManager.Register(new ChromeApp());
 
-        var page = await LaunchAndGetPage(plugin);
+        using var browser = await pluginManager.LaunchAsync(CreateDefaultOptions());
+        using var page = await browser.NewPageAsync();
+
         await page.GoToAsync("https://google.com");
 
         var chrome = await page.EvaluateExpressionAsync<JsonElement>("window.chrome");
@@ -36,7 +39,6 @@ public class ChromeAppTest : BrowserDefault {
 
         var runningStateFunc = await page.EvaluateExpressionAsync<string>("chrome.app.runningState()");
         Assert.Equal("cannot_run", runningStateFunc);
-
 
         await Assert.ThrowsAsync<EvaluationFailedException>(async () => await page.EvaluateExpressionAsync("chrome.app.getDetails('foo')"));
     }
