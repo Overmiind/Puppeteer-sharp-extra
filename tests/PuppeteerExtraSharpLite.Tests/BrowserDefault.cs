@@ -26,7 +26,7 @@ public abstract class BrowserDefault : IDisposable {
 
     protected async Task<IBrowser> LaunchWithPluginAsync(PuppeteerExtraPlugin plugin, LaunchOptions options) {
         await EnsureBrowserDownloadedAsync();
-        var extra = new PuppeteerExtra().Use(plugin);
+        var extra = new PluginManager().Register(plugin);
 
         var browser = await extra.LaunchAsync(options);
         _launchedBrowsers.Add(browser);
