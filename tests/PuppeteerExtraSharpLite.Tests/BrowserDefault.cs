@@ -76,7 +76,7 @@ public abstract class BrowserDefault {
         }
     }
 
-    protected static LaunchOptions CreateDefaultOptions() {
+    internal static LaunchOptions CreateDefaultOptions() {
         var options = new LaunchOptions() {
             Headless = Constants.Headless
         };
