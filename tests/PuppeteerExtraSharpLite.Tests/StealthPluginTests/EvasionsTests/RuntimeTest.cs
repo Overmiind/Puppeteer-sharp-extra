@@ -7,8 +7,6 @@ namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
 public class RuntimeTest : BrowserDefault {
     [Fact]
     public async Task ShouldAddConnectToChrome() {
-        TestContext.Current.SendDiagnosticMessage("Using Abstraction");
-
         var plugin = new ChromeRuntime();
         using var page = await LaunchAndGetPage(plugin);
 
@@ -17,6 +15,8 @@ public class RuntimeTest : BrowserDefault {
         var runtimeType = await page.EvaluateExpressionAsync<string>("typeof chrome.runtime");
 
         Assert.Equal("object", runtimeType);
+
+        //TODO: activate tests
         // return; // ignore the rest of the test for now
         // // TestContext.Current.SendDiagnosticMessage($"chrome.runtime typeof: {runtimeType}");
 
