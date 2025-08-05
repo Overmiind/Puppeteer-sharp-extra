@@ -1,4 +1,4 @@
-namespace PuppeteerExtraSharpLite.Plugins.EmbeddedScripts.CS;
+namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
     public static ReadOnlySpan<char> Utils =>
