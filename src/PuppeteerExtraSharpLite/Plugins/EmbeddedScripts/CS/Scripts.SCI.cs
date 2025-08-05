@@ -3,7 +3,7 @@ namespace PuppeteerExtraSharpLite.Plugins.EmbeddedScripts.CS;
 public static partial class Scripts {
     public static ReadOnlySpan<char> SCI =>
     """
-    () => {
+    (() => {
         if (!window.chrome) {
             // Use the exact property descriptor found in headful Chrome
             // fetch it via `Object.getOwnPropertyDescriptor(window, 'chrome')`
@@ -36,6 +36,6 @@ public static partial class Scripts {
             }
         }
         utils.patchToString(window.chrome.csi)
-    }
+    })();
     """;
 }

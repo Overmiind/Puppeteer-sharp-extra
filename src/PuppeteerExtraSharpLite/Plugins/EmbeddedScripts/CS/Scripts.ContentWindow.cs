@@ -3,7 +3,7 @@ namespace PuppeteerExtraSharpLite.Plugins.EmbeddedScripts.CS;
 public static partial class Scripts {
     public static ReadOnlySpan<char> ContentWindow =>
     """
-    () => {
+    (() => {
         try {
             // Adds a contentWindow proxy to the provided iframe element
             const addContentWindowProxy = iframe => {
@@ -101,6 +101,6 @@ public static partial class Scripts {
         } catch (err) {
            // console.warn(err)
         }
-    }
+    })();
     """;
 }

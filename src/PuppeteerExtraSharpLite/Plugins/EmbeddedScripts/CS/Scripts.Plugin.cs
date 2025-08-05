@@ -3,7 +3,7 @@ namespace PuppeteerExtraSharpLite.Plugins.EmbeddedScripts.CS;
 public static partial class Scripts {
     public static ReadOnlySpan<char> Plugin =>
     """
-    () => {
+    (() => {
         function generateFunctionMocks() {
             return (
                 proto,
@@ -307,6 +307,6 @@ public static partial class Scripts {
 
             // All done
         }
-    }
+    })();
     """;
 }

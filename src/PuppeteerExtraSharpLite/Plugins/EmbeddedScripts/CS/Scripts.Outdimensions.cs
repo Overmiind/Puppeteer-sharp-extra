@@ -3,7 +3,7 @@ namespace PuppeteerExtraSharpLite.Plugins.EmbeddedScripts.CS;
 public static partial class Scripts {
     public static ReadOnlySpan<char> Outdimensions =>
     """
-    () => {
+    (() => {
         try {
             if (window.outerWidth && window.outerHeight) {
                 return // nothing to do here
@@ -12,6 +12,6 @@ public static partial class Scripts {
             window.outerWidth = window.innerWidth
             window.outerHeight = window.innerHeight + windowFrame
         } catch (err) { }
-    }
+    })();
     """;
 }

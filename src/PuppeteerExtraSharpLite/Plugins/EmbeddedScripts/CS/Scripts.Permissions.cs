@@ -3,7 +3,7 @@ namespace PuppeteerExtraSharpLite.Plugins.EmbeddedScripts.CS;
 public static partial class Scripts {
     public static ReadOnlySpan<char> Permissions =>
     """
-    () => {
+    (() => {
         const isSecure = document.location.protocol.startsWith('https');
 
         // In headful on secure origins the permission should be "default", not "denied"
@@ -43,6 +43,6 @@ public static partial class Scripts {
             // Note: Don't use `Object.getPrototypeOf` here
             utils.replaceWithProxy(Permissions.prototype, 'query', handler);
         }
-    }
+    })();
     """;
 }

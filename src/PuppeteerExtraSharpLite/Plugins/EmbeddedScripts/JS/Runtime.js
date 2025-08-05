@@ -1,4 +1,4 @@
-() => {
+(() => {
     if (!window.chrome) {
         // Use the exact property descriptor found in headful Chrome
         // fetch it via `Object.getOwnPropertyDescriptor(window, 'chrome')`
@@ -258,4 +258,4 @@
         }
         return response
     }
-}
+})();

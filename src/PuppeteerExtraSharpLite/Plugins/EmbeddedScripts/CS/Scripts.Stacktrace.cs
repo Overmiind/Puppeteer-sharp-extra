@@ -3,7 +3,7 @@ namespace PuppeteerExtraSharpLite.Plugins.EmbeddedScripts.CS;
 public static partial class Scripts {
     public static ReadOnlySpan<char> Stacktrace =>
     """
-    () => {
+    (() => {
         const errors = {
             Error,
             EvalError,
@@ -42,6 +42,6 @@ public static partial class Scripts {
                 }
             })(errors[name])
         }
-    }
+    })();
     """;
 }

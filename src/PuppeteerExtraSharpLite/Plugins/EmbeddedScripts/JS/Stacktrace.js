@@ -1,4 +1,4 @@
-() => {
+(() => {
     const errors = {
         Error,
         EvalError,
@@ -37,4 +37,4 @@
             }
         })(errors[name])
     }
-}
+})();

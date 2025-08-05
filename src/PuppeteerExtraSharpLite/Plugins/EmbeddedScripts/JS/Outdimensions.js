@@ -1,4 +1,4 @@
-() => {
+(() => {
     try {
         if (window.outerWidth && window.outerHeight) {
             return // nothing to do here
@@ -7,4 +7,4 @@
         window.outerWidth = window.innerWidth
         window.outerHeight = window.innerHeight + windowFrame
     } catch (err) { }
-}
+})();

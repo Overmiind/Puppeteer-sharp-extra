@@ -4,7 +4,7 @@ public static partial class Scripts
 {
     public static ReadOnlySpan<char> Codec =>
     """
-    () => {
+    (() => {
         /**
          * Input might look funky, we need to normalize it so e.g. whitespace isn't an issue for our spoofing.
          *
@@ -68,6 +68,6 @@ public static partial class Scripts
             'canPlayType',
             canPlayType
         )
-    }
+    })();
     """;
 }

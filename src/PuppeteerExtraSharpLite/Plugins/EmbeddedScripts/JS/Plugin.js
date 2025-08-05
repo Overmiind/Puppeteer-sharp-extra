@@ -1,4 +1,4 @@
-() => {
+(() => {
     function generateFunctionMocks() {
         return (
             proto,
@@ -10,8 +10,7 @@
                 apply(target, ctx, args) {
                     if (!args.length) {
                         throw new TypeError(
-                            `Failed to execute 'item' on '${
-                                proto[Symbol.toStringTag]
+                            `Failed to execute 'item' on '${proto[Symbol.toStringTag]
                             }': 1 argument required, but only 0 present.`
                         )
                     }
@@ -28,8 +27,7 @@
                 apply(target, ctx, args) {
                     if (!args.length) {
                         throw new TypeError(
-                            `Failed to execute 'namedItem' on '${
-                                proto[Symbol.toStringTag]
+                            `Failed to execute 'namedItem' on '${proto[Symbol.toStringTag]
                             }': 1 argument required, but only 0 present.`
                         )
                     }
@@ -303,6 +301,4 @@
 
         // All done
     }
-
-
-}
+})();
