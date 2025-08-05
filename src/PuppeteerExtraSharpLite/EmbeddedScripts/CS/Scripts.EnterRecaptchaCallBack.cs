@@ -1,7 +1,7 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
-    public static ReadOnlySpan<char> EnterRecaptchaCallBack =>
+    public const string EnterRecaptchaCallBack =
     """
     const result = (function () {
         if (typeof (___grecaptcha_cfg) !== 'undefined') {

@@ -1,7 +1,7 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
-    public static ReadOnlySpan<char> WebDriver =>
+    public const string WebDriver =
     """
     (() => {
         if (navigator.webdriver === false) {

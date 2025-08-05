@@ -1,7 +1,7 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
-    public static ReadOnlySpan<char> Permissions =>
+    public const string Permissions =
     """
     (() => {
         const isSecure = document.location.protocol.startsWith('https');

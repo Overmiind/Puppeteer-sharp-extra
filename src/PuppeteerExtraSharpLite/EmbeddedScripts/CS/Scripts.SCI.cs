@@ -1,7 +1,7 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
-    public static ReadOnlySpan<char> SCI =>
+    public const string SCI =
     """
     (() => {
         if (!window.chrome) {

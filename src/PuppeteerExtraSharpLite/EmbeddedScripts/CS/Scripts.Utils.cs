@@ -1,7 +1,7 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
-    public static ReadOnlySpan<char> Utils =>
+    public const string Utils =
     """
     /**
      * A set of shared utility functions specifically for the purpose of modifying native browser APIs without leaving traces.

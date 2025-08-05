@@ -1,7 +1,7 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
-    public static ReadOnlySpan<char> Plugin =>
+    public const string Plugin =
     """
     (() => {
         function generateFunctionMocks() {

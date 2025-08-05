@@ -2,7 +2,7 @@ namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts
 {
-    public static ReadOnlySpan<char> Codec =>
+    public const string Codec =
     """
     (() => {
         /**

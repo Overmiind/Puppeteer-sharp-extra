@@ -1,7 +1,7 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
-    public static ReadOnlySpan<char> ChromeApp =>
+    public const string ChromeApp =
     """
     (() => {
         if (!window.chrome) {

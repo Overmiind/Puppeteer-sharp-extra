@@ -1,7 +1,7 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
-    public static ReadOnlySpan<char> Language =>
+    public const string Language =
     """
     (...languages) => {
         utils.replaceGetterWithProxy(

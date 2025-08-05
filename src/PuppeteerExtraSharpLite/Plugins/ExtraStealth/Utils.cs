@@ -10,8 +10,4 @@ internal static class Utils {
 
         return Task.CompletedTask;
     }
-
-    public static string WithSourceUrl(this ReadOnlySpan<char> script, string name) {
-        return $"{script}\n//# sourceURL={name}";
-    }
 }

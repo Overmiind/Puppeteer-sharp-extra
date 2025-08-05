@@ -1,7 +1,7 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
-    public static ReadOnlySpan<char> LoadTimes =>
+    public const string LoadTimes =
     """
     (() => {
         if (!window.chrome) {

@@ -1,7 +1,7 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
-    public static ReadOnlySpan<char> HardwareConcurrency =>
+    public const string HardwareConcurrency =
     """
     (concurrency) => {
         utils.replaceGetterWithProxy(

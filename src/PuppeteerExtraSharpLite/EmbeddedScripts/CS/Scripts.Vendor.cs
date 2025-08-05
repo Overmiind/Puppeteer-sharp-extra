@@ -1,7 +1,7 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
-    public static ReadOnlySpan<char> Vendor =>
+    public const string Vendor =
     """
     (vendor) => {
         // Overwrite the `vendor` property to use a custom getter.

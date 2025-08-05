@@ -1,7 +1,7 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
-    public static ReadOnlySpan<char> WebGL =>
+    public const string WebGL =
     """
     (vendor, renderer) => {
         const getParameterProxyHandler = {
