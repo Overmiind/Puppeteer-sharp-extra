@@ -3,8 +3,11 @@
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 public class Vendor : PuppeteerExtraPlugin {
+    public override string Name => nameof(Vendor);
+
     private readonly StealthVendorSettings _settings;
-    public Vendor(StealthVendorSettings? settings = null) : base("stealth-vendor") {
+
+    public Vendor(StealthVendorSettings? settings = null) : base() {
         _settings = settings ?? new StealthVendorSettings("Google Inc.");
     }
 

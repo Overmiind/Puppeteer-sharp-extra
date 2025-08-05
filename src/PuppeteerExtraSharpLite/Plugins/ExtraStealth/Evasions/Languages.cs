@@ -5,9 +5,11 @@ using PuppeteerSharp;
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 public class Languages : PuppeteerExtraPlugin {
+    public override string Name => nameof(Languages);
+
     public StealthLanguagesOptions Options { get; }
 
-    public Languages(StealthLanguagesOptions? options = null) : base("stealth-language") {
+    public Languages(StealthLanguagesOptions? options = null) : base() {
         Options = options ?? new StealthLanguagesOptions("en-US", "en");
     }
 

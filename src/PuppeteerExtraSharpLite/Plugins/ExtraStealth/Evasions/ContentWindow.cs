@@ -3,7 +3,9 @@
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 public class ContentWindow : PuppeteerExtraPlugin {
-    public ContentWindow() : base("Iframe.ContentWindow") { }
+    public override string Name => nameof(ContentWindow);
+
+    public ContentWindow() : base() { }
 
     public override List<PluginRequirements> Requirements { get; set; } = new()
     {

@@ -3,7 +3,9 @@
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 public class WebDriver : PuppeteerExtraPlugin {
-    public WebDriver() : base("stealth-webDriver") { }
+    public override string Name => nameof(WebDriver);
+
+    public WebDriver() : base() { }
 
     public override Task OnPageCreated(IPage page) {
         var script = Scripts.WebDriver.WithSourceUrl("WebDriver.js");

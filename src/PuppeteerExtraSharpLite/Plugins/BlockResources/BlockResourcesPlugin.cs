@@ -4,9 +4,11 @@ using PuppeteerSharp;
 namespace PuppeteerExtraSharpLite.Plugins.BlockResources;
 
 public class BlockResourcesPlugin : PuppeteerExtraPlugin {
+    public override string Name => nameof(BlockResourcesPlugin);
+
     public readonly List<BlockRule> BlockResources = new();
 
-    public BlockResourcesPlugin(IEnumerable<ResourceType>? blockResources = null) : base("block-resources") {
+    public BlockResourcesPlugin(IEnumerable<ResourceType>? blockResources = null) : base() {
         if (blockResources != null)
             AddRule(builder => builder.BlockedResources(blockResources.ToArray()));
     }

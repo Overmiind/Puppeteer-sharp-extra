@@ -3,7 +3,9 @@
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 public class Codec : PuppeteerExtraPlugin {
-    public Codec() : base("stealth-codec") { }
+    public override string Name => nameof(Codec);
+
+    public Codec() : base() { }
 
     public override Task OnPageCreated(IPage page) {
         var script = Scripts.Codec.WithSourceUrl("Codec.js");

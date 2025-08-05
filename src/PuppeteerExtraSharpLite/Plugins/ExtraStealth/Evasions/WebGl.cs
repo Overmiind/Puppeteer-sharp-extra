@@ -3,8 +3,11 @@
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 public class WebGl : PuppeteerExtraPlugin {
+    public override string Name => nameof(WebGl);
+
     private readonly StealthWebGLOptions _options;
-    public WebGl(StealthWebGLOptions options) : base("stealth-webGl") {
+
+    public WebGl(StealthWebGLOptions options) : base() {
         _options = options ?? new StealthWebGLOptions("Intel Inc.", "Intel Iris OpenGL Engine");
     }
 

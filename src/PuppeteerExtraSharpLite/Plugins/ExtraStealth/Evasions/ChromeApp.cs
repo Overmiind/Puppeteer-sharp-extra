@@ -6,7 +6,9 @@ using PuppeteerSharp;
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 public class ChromeApp : PuppeteerExtraPlugin {
-    public ChromeApp() : base("stealth-chromeApp") { }
+    public override string Name => nameof(ChromeApp);
+
+    public ChromeApp() : base() { }
 
     public override Task OnPageCreated(IPage page) {
         var script = Scripts.ChromeApp.WithSourceUrl("ChromeApp.js");

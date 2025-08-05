@@ -10,7 +10,10 @@ public class StealthPlugin : PuppeteerExtraPlugin {
     private readonly IPuppeteerExtraPluginOptions[] _options;
     private readonly List<PuppeteerExtraPlugin> _standardEvasions;
 
-    public StealthPlugin(params IPuppeteerExtraPluginOptions[] options) : base("stealth") {
+    public override string Name => nameof(StealthPlugin);
+
+
+    public StealthPlugin(params IPuppeteerExtraPluginOptions[] options) : base() {
         _options = options;
         _standardEvasions = GetStandardEvasions();
     }

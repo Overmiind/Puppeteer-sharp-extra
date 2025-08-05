@@ -3,7 +3,9 @@
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 public class PluginEvasion : PuppeteerExtraPlugin {
-    public PluginEvasion() : base("stealth-pluginEvasion") {
+    public override string Name => nameof(PluginEvasion);
+
+    public PluginEvasion() : base() {
     }
 
     public override async Task OnPageCreated(IPage page) {

@@ -5,7 +5,9 @@ using PuppeteerSharp;
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 public partial class UserAgent : PuppeteerExtraPlugin {
-    public UserAgent() : base("stealth-userAgent") {
+    public override string Name => nameof(UserAgent);
+
+    public UserAgent() : base() {
     }
 
     public override void BeforeLaunch(LaunchOptions options) { }

@@ -3,7 +3,9 @@
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 public class StackTrace : PuppeteerExtraPlugin {
-    public StackTrace() : base("stealth-stackTrace") { }
+    public override string Name => nameof(StackTrace);
+
+    public StackTrace() : base() { }
 
     public override Task OnPageCreated(IPage page) {
         var script = Scripts.Stacktrace.WithSourceUrl("Stacktrace.js");

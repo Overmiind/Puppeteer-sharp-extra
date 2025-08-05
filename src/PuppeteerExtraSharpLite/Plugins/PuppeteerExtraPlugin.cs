@@ -3,12 +3,11 @@
 namespace PuppeteerExtraSharpLite.Plugins;
 
 public abstract class PuppeteerExtraPlugin {
-    protected PuppeteerExtraPlugin(string pluginName) {
-        Name = pluginName;
+    protected PuppeteerExtraPlugin() {
         Requirements ??= [];
     }
 
-    public string Name { get; }
+    public abstract string Name { get; }
 
     public virtual List<PluginRequirements> Requirements { get; set; }
 

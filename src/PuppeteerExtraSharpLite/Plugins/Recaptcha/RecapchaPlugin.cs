@@ -7,7 +7,10 @@ namespace PuppeteerExtraSharpLite.Plugins.Recaptcha;
 public class RecaptchaPlugin : PuppeteerExtraPlugin {
     private readonly Recaptcha _recaptcha;
 
-    public RecaptchaPlugin(IRecaptchaProvider provider, CaptchaOptions? opt = null) : base("recaptcha") {
+    public override string Name => nameof(RecaptchaPlugin);
+
+
+    public RecaptchaPlugin(IRecaptchaProvider provider, CaptchaOptions? opt = null) : base() {
         _recaptcha = new Recaptcha(provider, opt ?? new CaptchaOptions());
     }
 

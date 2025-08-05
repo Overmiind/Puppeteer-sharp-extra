@@ -3,7 +3,9 @@
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 public class LoadTimes : PuppeteerExtraPlugin {
-    public LoadTimes() : base("stealth-loadTimes") { }
+    public override string Name => nameof(LoadTimes);
+
+    public LoadTimes() : base() { }
 
     public override Task OnPageCreated(IPage page) {
         var script = Scripts.LoadTimes.WithSourceUrl("LoadTimes.js");
