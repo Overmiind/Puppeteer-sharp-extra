@@ -6,7 +6,7 @@ using PuppeteerSharp;
 namespace PuppeteerExtraSharpLite.Tests.Recaptcha.AntiCaptcha;
 
 [Collection("Captcha")]
-public class AntiCaptchaTests : RecaptchaTestBase {
+public class AntiCaptchaTests {
     [Fact]
     public async Task ShouldThrowCaptchaExceptionWhenCaptchaNotFound() {
         Assert.SkipUnless(Helper.TryGetEnvironmentVariable("AntiCaptchaKey", out var antiCaptchaKey),
@@ -16,9 +16,12 @@ public class AntiCaptchaTests : RecaptchaTestBase {
         var provider = new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(client, antiCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
-        await using var browser = await LaunchWithPluginAsync(plugin);
+        var pluginManager = new PluginManager();
+        pluginManager.Register(plugin);
 
-        var page = await browser.NewPageAsync();
+        await using var browser = await pluginManager.LaunchAsync();
+        using var page = await browser.NewPageAsync();
+
         await page.GoToAsync("https://lessons.zennolab.com/ru/index");
         var result = await plugin.SolveCaptchaAsync(page);
         Assert.NotNull(result.Exception);
@@ -34,9 +37,12 @@ public class AntiCaptchaTests : RecaptchaTestBase {
         var provider = new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(client, antiCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
-        await using var browser = await LaunchWithPluginAsync(plugin);
+        var pluginManager = new PluginManager();
+        pluginManager.Register(plugin);
 
-        var page = await browser.NewPageAsync();
+        await using var browser = await pluginManager.LaunchAsync();
+        using var page = await browser.NewPageAsync();
+
         await page.GoToAsync("https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=low");
         var result = await plugin.SolveCaptchaAsync(page);
 
@@ -59,8 +65,12 @@ public class AntiCaptchaTests : RecaptchaTestBase {
         var provider = new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(client, antiCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
-        await using var browser = await LaunchWithPluginAsync(plugin);
-        var page = await browser.NewPageAsync();
+        var pluginManager = new PluginManager();
+        pluginManager.Register(plugin);
+
+        await using var browser = await pluginManager.LaunchAsync();
+        using var page = await browser.NewPageAsync();
+
         await page.GoToAsync("https://lessons.zennolab.com/captchas/recaptcha/v2_nosubmit.php?level=low");
         var result = await plugin.SolveCaptchaAsync(page);
 

@@ -4,7 +4,7 @@ using PuppeteerExtraSharpLite.Tests.Utils;
 namespace PuppeteerExtraSharpLite.Tests.Recaptcha.TwoCaptcha;
 
 [Collection("Captcha")]
-public class TwoCaptchaProviderTest : RecaptchaTestBase {
+public class TwoCaptchaProviderTest {
     [Fact]
     public async Task ShouldResolveCaptchaInGooglePage() {
         Assert.SkipUnless(Helper.TryGetEnvironmentVariable("TwoCaptchaProvider", out var antiCaptchaKey),
@@ -14,9 +14,11 @@ public class TwoCaptchaProviderTest : RecaptchaTestBase {
         var provider = new Plugins.Recaptcha.Provider._2Captcha.TwoCaptcha(client, antiCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
-        await using var browser = await LaunchWithPluginAsync(plugin);
+        var pluginManager = new PluginManager();
+        pluginManager.Register(plugin);
 
-        var page = (await browser.PagesAsync())[0];
+        await using var browser = await pluginManager.LaunchAsync();
+        using var page = await browser.NewPageAsync();
 
         await page.GoToAsync("https://www.google.com/recaptcha/api2/demo");
 
@@ -38,9 +40,11 @@ public class TwoCaptchaProviderTest : RecaptchaTestBase {
         var provider = new Plugins.Recaptcha.Provider._2Captcha.TwoCaptcha(client, antiCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
-        await using var browser = await LaunchWithPluginAsync(plugin);
+        var pluginManager = new PluginManager();
+        pluginManager.Register(plugin);
 
-        var page = (await browser.PagesAsync())[0];
+        await using var browser = await pluginManager.LaunchAsync();
+        using var page = await browser.NewPageAsync();
 
         await page.GoToAsync("https://recaptcha-demo.appspot.com/recaptcha-v2-invisible.php");
 
@@ -52,8 +56,8 @@ public class TwoCaptchaProviderTest : RecaptchaTestBase {
 
         Assert.Equal(2, elements.Length);
 
-        var elementPropery = await (await elements[1].GetPropertyAsync("textContent")).JsonValueAsync<string>();
-        Assert.Equal("Success!", elementPropery);
+        var elementProperty = await (await elements[1].GetPropertyAsync("textContent")).JsonValueAsync<string>();
+        Assert.Equal("Success!", elementProperty);
 
     }
 }

@@ -1,14 +1,17 @@
-﻿using PuppeteerExtraSharpLite.Tests.Utils;
-
-using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
+﻿using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
+using PuppeteerExtraSharpLite.Tests.Utils;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
 
-public class UserAgentTest : BrowserDefault {
+public class UserAgentTest {
     [Fact]
     public async Task ShouldWork() {
-        var plugin = new UserAgent();
-        var page = await LaunchAndGetPage(plugin);
+        var pluginManager = new PluginManager();
+        pluginManager.Register(new UserAgent());
+
+        await using var browser = await pluginManager.LaunchAsync();
+        using var page = await browser.NewPageAsync();
+
         await page.GoToAsync("https://google.com");
         var userAgent = await page.Browser.GetUserAgentAsync();
 

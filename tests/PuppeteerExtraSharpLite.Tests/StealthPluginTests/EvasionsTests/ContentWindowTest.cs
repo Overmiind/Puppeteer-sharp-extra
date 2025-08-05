@@ -1,17 +1,19 @@
 ﻿using System.Text.Json;
 
-using PuppeteerExtraSharpLite.Plugins.ExtraStealth;
 using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 using PuppeteerExtraSharpLite.Tests.Utils;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
 
-public class ContentWindowTest : BrowserDefault {
+public class ContentWindowTest {
     [Fact]
     public async Task IFrameShouldBeObject() {
-        var plugin = new StealthPlugin();
+        var pluginManager = new PluginManager();
+        pluginManager.Register(new ContentWindow());
 
-        var page = await LaunchAndGetPage(plugin);
+        await using var browser = await pluginManager.LaunchAsync();
+        using var page = await browser.NewPageAsync();
+
         await page.GoToAsync("https://google.com");
 
         var finger = await FingerPrint.GetFingerPrint(page);
@@ -24,7 +26,7 @@ public class ContentWindowTest : BrowserDefault {
         var pluginManager = new PluginManager();
         pluginManager.Register(new ContentWindow());
 
-        using var browser = await pluginManager.LaunchAsync(CreateDefaultOptions());
+        using var browser = await pluginManager.LaunchAsync();
         using var page = await browser.NewPageAsync();
 
         await page.GoToAsync("https://google.com");
@@ -62,11 +64,13 @@ public class ContentWindowTest : BrowserDefault {
 
     [Fact]
     public async Task ShouldCoverAllFrames() {
-        var plugin = new StealthPlugin();
+        var pluginManager = new PluginManager();
+        pluginManager.Register(new ContentWindow());
 
-        var page = await LaunchAndGetPage(plugin);
+        using var browser = await pluginManager.LaunchAsync();
+        using var page = await browser.NewPageAsync();
+
         await page.GoToAsync("https://google.com");
-
 
         var basicFrame = await page.EvaluateFunctionAsync(@"() => {
                                     const el = document.createElement('iframe')
@@ -104,9 +108,12 @@ public class ContentWindowTest : BrowserDefault {
 
     [Fact]
     public async Task ShouldEmulateFeatures() {
-        var plugin = new StealthPlugin();
+        var pluginManager = new PluginManager();
+        pluginManager.Register(new ContentWindow());
 
-        var page = await LaunchAndGetPage(plugin);
+        using var browser = await pluginManager.LaunchAsync();
+        using var page = await browser.NewPageAsync();
+
         await page.GoToAsync("https://google.com");
 
         JsonElement results = await page.EvaluateFunctionAsync(@"() => {
@@ -179,7 +186,6 @@ public class ContentWindowTest : BrowserDefault {
                                       return results
                                 }")
                                 ?? new JsonElement();
-
 
         Assert.True(results.GetProperty("descriptorsOK").GetBoolean());
         Assert.True(results.GetProperty("doesExist").GetBoolean());

@@ -2,11 +2,15 @@
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
 
-public class WebDriverTest : BrowserDefault {
+public class WebDriverTest {
     [Fact]
     public async Task ShouldWork() {
-        var plugin = new WebDriver();
-        var page = await LaunchAndGetPage(plugin);
+        var pluginManager = new PluginManager();
+        pluginManager.Register(new WebDriver());
+
+        await using var browser = await pluginManager.LaunchAsync();
+        using var page = await browser.NewPageAsync();
+
         await page.GoToAsync("https://google.com");
 
         var driver = await page.EvaluateExpressionAsync<bool>("navigator.webdriver");
@@ -15,8 +19,12 @@ public class WebDriverTest : BrowserDefault {
 
     [Fact]
     public async Task WontKillOtherMethods() {
-        var plugin = new WebDriver();
-        var page = await LaunchAndGetPage(plugin);
+        var pluginManager = new PluginManager();
+        pluginManager.Register(new WebDriver());
+
+        await using var browser = await pluginManager.LaunchAsync();
+        using var page = await browser.NewPageAsync();
+
         await page.GoToAsync("https://google.com");
 
         var data = await page.EvaluateExpressionAsync<bool>("navigator.javaEnabled()");

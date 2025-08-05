@@ -4,14 +4,16 @@ using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
 
-public class PluginEvasionTest : BrowserDefault {
+public class PluginEvasionTest {
     [Fact]
     public async Task ShouldNotHaveModifications() {
-        var stealthPlugin = new PluginEvasion();
-        var page = await LaunchAndGetPage(stealthPlugin);
+        var pluginManager = new PluginManager();
+        pluginManager.Register(new PluginEvasion());
+
+        await using var browser = await pluginManager.LaunchAsync();
+        using var page = await browser.NewPageAsync();
 
         await page.GoToAsync("https://google.com");
-
 
         var fingerPrint = await FingerPrint.GetFingerPrint(page);
 

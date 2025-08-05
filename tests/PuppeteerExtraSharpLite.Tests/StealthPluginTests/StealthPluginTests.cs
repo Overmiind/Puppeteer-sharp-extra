@@ -2,14 +2,14 @@
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests;
 
-public class StealthPluginTests : BrowserDefault {
+public class StealthPluginTests {
     [Fact]
     public async Task ShouldBeNotDetected() {
         var pluginManager = new PluginManager();
         pluginManager.Register(StealthPlugin.GetStandardEvasions());
         pluginManager.Register(new StealthPlugin());
 
-        using var browser = await pluginManager.LaunchAsync(CreateDefaultOptions());
+        await using var browser = await pluginManager.LaunchAsync();
         using var page = await browser.NewPageAsync();
 
         await page.GoToAsync("https://google.com");
@@ -20,10 +20,10 @@ public class StealthPluginTests : BrowserDefault {
         var headlessUserAgent = await page.EvaluateExpressionAsync<string>("window.navigator.userAgent");
         Assert.DoesNotContain("Headless", headlessUserAgent);
 
-        var webDriverOverriden =
+        var webDriverOverridden =
             await page.EvaluateExpressionAsync<bool>(
                 "Object.getOwnPropertyDescriptor(navigator.__proto__, 'webdriver') !== undefined");
-        Assert.True(webDriverOverriden);
+        Assert.True(webDriverOverridden);
 
         var plugins = await page.EvaluateExpressionAsync<int>("navigator.plugins.length");
         Assert.NotEqual(0, plugins);

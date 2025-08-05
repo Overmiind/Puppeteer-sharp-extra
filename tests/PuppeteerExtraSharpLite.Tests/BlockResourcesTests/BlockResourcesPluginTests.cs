@@ -4,10 +4,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Tests.BlockResourcesTests;
 
-public class BlockResourcesPluginTests : BrowserDefault {
-    public BlockResourcesPluginTests() {
-
-    }
+public class BlockResourcesPluginTests {
 
     [Fact]
     public void ShouldAddsToListOfRules() {
@@ -28,9 +25,14 @@ public class BlockResourcesPluginTests : BrowserDefault {
     [Fact]
     public async Task RuleForPage() {
         var plugin = new BlockResourcesPlugin();
-        var browser = await base.LaunchWithPluginAsync(plugin);
-        var actualPage = (await browser.PagesAsync())[0];
-        var otherPage = await browser.NewPageAsync();
+
+        var pluginManager = new PluginManager();
+        pluginManager.Register(plugin);
+
+        await using var browser = await pluginManager.LaunchAsync();
+        using var actualPage = await browser.NewPageAsync();
+        using var otherPage = await browser.NewPageAsync();
+
         var rule = plugin.AddRule(builder => builder.BlockedResources(ResourceType.Document).OnlyForPage(actualPage));
 
         Assert.True(rule.IsPageBlocked(actualPage));

@@ -4,13 +4,13 @@ using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
 
-public class CodecTest : BrowserDefault {
+public class CodecTest {
     [Fact]
     public async Task SupportsCodec() {
         var pluginManager = new PluginManager();
         pluginManager.Register(new Codec());
 
-        using var browser = await pluginManager.LaunchAsync(CreateDefaultOptions());
+        await using var browser = await pluginManager.LaunchAsync();
         using var page = await browser.NewPageAsync();
 
         await page.GoToAsync("https://google.com");
@@ -34,7 +34,7 @@ public class CodecTest : BrowserDefault {
         var pluginManager = new PluginManager();
         pluginManager.Register(new Codec());
 
-        using var browser = await pluginManager.LaunchAsync(CreateDefaultOptions());
+        using var browser = await pluginManager.LaunchAsync();
         using var page = await browser.NewPageAsync();
 
         var canPlay =

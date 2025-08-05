@@ -2,11 +2,15 @@
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
 
-public class VendorTest : BrowserDefault {
+public class VendorTest {
     [Fact]
     public async Task ShouldWork() {
-        var plugin = new Vendor();
-        var page = await LaunchAndGetPage(plugin);
+        var pluginManager = new PluginManager();
+        pluginManager.Register(new Vendor());
+
+        await using var browser = await pluginManager.LaunchAsync();
+        using var page = await browser.NewPageAsync();
+
         await page.GoToAsync("https://google.com");
 
         var vendor = await page.EvaluateExpressionAsync<string>("navigator.vendor");
