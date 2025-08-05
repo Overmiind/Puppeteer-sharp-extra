@@ -8,7 +8,6 @@ public class OutDimensions : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public OutDimensions() : base() { }
 
     public Task OnPageCreated(IPage page) {
-        var script = Scripts.Outdimensions.WithSourceUrl("Outdimensions.js");
-        return page.EvaluateFunctionOnNewDocumentAsync(script);
+        return page.EvaluateFunctionOnNewDocumentAsync(Scripts.Outdimensions);
     }
 }

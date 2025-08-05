@@ -8,7 +8,6 @@ public class Permissions : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public Permissions() : base() { }
 
     public Task OnPageCreated(IPage page) {
-        var script = Scripts.Permissions.WithSourceUrl("Permissions.js");
-        return Utils.EvaluateOnNewPage(page, script);
+        return Utils.EvaluateOnNewPage(page, Scripts.Permissions);
     }
 }

@@ -8,7 +8,6 @@ public class StackTrace : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public StackTrace() : base() { }
 
     public Task OnPageCreated(IPage page) {
-        var script = Scripts.Stacktrace.WithSourceUrl("Stacktrace.js");
-        return page.EvaluateFunctionOnNewDocumentAsync(script);
+        return page.EvaluateFunctionOnNewDocumentAsync(Scripts.Stacktrace);
     }
 }

@@ -8,7 +8,6 @@ public class Codec : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public Codec() : base() { }
 
     public Task OnPageCreated(IPage page) {
-        var script = Scripts.Codec.WithSourceUrl("Codec.js");
-        return Utils.EvaluateOnNewPage(page, script);
+        return Utils.EvaluateOnNewPage(page, Scripts.Codec);
     }
 }

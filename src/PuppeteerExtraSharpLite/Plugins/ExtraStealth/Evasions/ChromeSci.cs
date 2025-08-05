@@ -8,7 +8,6 @@ public class ChromeSci : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public ChromeSci() : base() { }
 
     public Task OnPageCreated(IPage page) {
-        var script = Scripts.SCI.WithSourceUrl("SCI.js");
-        return Utils.EvaluateOnNewPage(page, script);
+        return Utils.EvaluateOnNewPage(page, Scripts.SCI);
     }
 }

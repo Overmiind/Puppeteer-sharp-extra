@@ -12,8 +12,7 @@ public class HardwareConcurrency : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     }
 
     public Task OnPageCreated(IPage page) {
-        var script = Scripts.HardwareConcurrency.WithSourceUrl("HardwareConcurrency.js");
-        return Utils.EvaluateOnNewPage(page, script, Options.Concurrency);
+        return Utils.EvaluateOnNewPage(page, Scripts.HardwareConcurrency, [Options.Concurrency]);
     }
 }
 

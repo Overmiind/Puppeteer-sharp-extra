@@ -11,7 +11,6 @@ public class ChromeApp : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public ChromeApp() : base() { }
 
     public Task OnPageCreated(IPage page) {
-        var script = Scripts.ChromeApp.WithSourceUrl("ChromeApp.js");
-        return Utils.EvaluateOnNewPage(page, script);
+        return Utils.EvaluateOnNewPage(page, Scripts.ChromeApp);
     }
 }

@@ -3,5 +3,3 @@ global using System.Collections.Generic;
 global using System.Threading;
 global using System.Threading.Tasks;
 global using System.Collections.ObjectModel;
-
-global using Scripts = PuppeteerExtraSharpLite.Plugins.EmbeddedScripts.CS.Scripts;

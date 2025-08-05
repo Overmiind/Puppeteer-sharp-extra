@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
+﻿using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 using PuppeteerSharp;
 
@@ -55,17 +53,12 @@ public class StealthPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
 
     public async Task OnPageCreated(IPage page) {
         // Load Utils script first before any evasion scripts run
-        var utilsScript = Scripts.Utils.WithSourceUrl("Utils.js");
-        await page.EvaluateExpressionOnNewDocumentAsync(utilsScript);
+        await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Utils);
 
         // Now load all the evasion scripts that depend on utils
         //TODO: Replace logic
         // foreach (var evasion in _standardEvasions) {
         //     await evasion.OnPageCreated(page);
         // }
-    }
-
-    private T? GetOptionByType<T>() where T : IPuppeteerExtraPluginOptions {
-        return _options.OfType<T>().FirstOrDefault();
     }
 }

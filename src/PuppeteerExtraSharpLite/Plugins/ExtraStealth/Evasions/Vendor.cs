@@ -12,8 +12,7 @@ public class Vendor : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     }
 
     public async Task OnPageCreated(IPage page) {
-        var script = Scripts.Vendor.WithSourceUrl("Vendor.js");
-        await page.EvaluateFunctionOnNewDocumentAsync(script, _settings.Vendor);
+        await page.EvaluateFunctionOnNewDocumentAsync(Scripts.Vendor, _settings.Vendor);
     }
 }
 

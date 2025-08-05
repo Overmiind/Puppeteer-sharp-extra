@@ -8,8 +8,7 @@ public class WebDriver : PuppeteerExtraPlugin, IOnPageCreatedPlugin, IBeforeLaun
     public WebDriver() : base() { }
 
     public Task OnPageCreated(IPage page) {
-        var script = Scripts.WebDriver.WithSourceUrl("WebDriver.js");
-        return page.EvaluateFunctionOnNewDocumentAsync(script);
+        return page.EvaluateFunctionOnNewDocumentAsync(Scripts.WebDriver);
     }
 
     public void BeforeLaunch(LaunchOptions options) {

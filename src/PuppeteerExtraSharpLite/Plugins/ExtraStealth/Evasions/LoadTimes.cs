@@ -8,7 +8,6 @@ public class LoadTimes : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public LoadTimes() : base() { }
 
     public Task OnPageCreated(IPage page) {
-        var script = Scripts.LoadTimes.WithSourceUrl("LoadTimes.js");
-        return Utils.EvaluateOnNewPage(page, script);
+        return Utils.EvaluateOnNewPage(page, Scripts.LoadTimes);
     }
 }

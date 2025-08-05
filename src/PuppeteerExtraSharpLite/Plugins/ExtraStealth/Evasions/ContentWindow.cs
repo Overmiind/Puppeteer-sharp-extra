@@ -8,7 +8,6 @@ public class ContentWindow : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public ContentWindow() : base() { }
 
     public Task OnPageCreated(IPage page) {
-        var script = Scripts.ContentWindow.WithSourceUrl("ContentWindow.js");
-        return Utils.EvaluateOnNewPage(page, script);
+        return Utils.EvaluateOnNewPage(page, Scripts.ContentWindow);
     }
 }
