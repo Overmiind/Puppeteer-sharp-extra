@@ -12,7 +12,7 @@ public class ChromeAppTest {
     [Fact]
     public async Task ShouldWork() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new ChromeApp());
+        pluginManager.Register(new StealthPlugin()).Register(new ChromeApp());
 
         await using var browser = await pluginManager.LaunchAsync();
         using var page = await browser.NewPageAsync();

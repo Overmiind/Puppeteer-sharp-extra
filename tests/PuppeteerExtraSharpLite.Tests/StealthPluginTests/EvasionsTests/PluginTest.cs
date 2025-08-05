@@ -1,6 +1,7 @@
 ﻿using PuppeteerExtraSharpLite.Tests.Utils;
 
 using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
+using PuppeteerExtraSharpLite.Plugins.ExtraStealth;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
 
@@ -8,7 +9,7 @@ public class PluginTest {
     [Fact]
     public async Task HasMimeTypes() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new PluginEvasion());
+        pluginManager.Register(new StealthPlugin()).Register(new PluginEvasion());
 
         await using var browser = await pluginManager.LaunchAsync();
         using var page = await browser.NewPageAsync();

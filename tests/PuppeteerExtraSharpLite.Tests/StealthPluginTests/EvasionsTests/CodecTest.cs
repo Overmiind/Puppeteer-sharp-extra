@@ -1,6 +1,7 @@
 ﻿using PuppeteerExtraSharpLite.Tests.Utils;
 
 using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
+using PuppeteerExtraSharpLite.Plugins.ExtraStealth;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
 
@@ -8,7 +9,7 @@ public class CodecTest {
     [Fact]
     public async Task SupportsCodec() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new Codec());
+        pluginManager.Register(new StealthPlugin()).Register(new Codec());
 
         await using var browser = await pluginManager.LaunchAsync();
         using var page = await browser.NewPageAsync();
@@ -32,7 +33,7 @@ public class CodecTest {
     [Fact]
     public async Task NotLeakModifications() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new Codec());
+        pluginManager.Register(new StealthPlugin()).Register(new Codec());
 
         using var browser = await pluginManager.LaunchAsync();
         using var page = await browser.NewPageAsync();

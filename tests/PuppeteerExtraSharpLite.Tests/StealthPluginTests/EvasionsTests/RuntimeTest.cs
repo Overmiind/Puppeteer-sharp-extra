@@ -1,4 +1,5 @@
-﻿using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
+﻿using PuppeteerExtraSharpLite.Plugins.ExtraStealth;
+using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 using PuppeteerSharp;
 
@@ -8,7 +9,7 @@ public class RuntimeTest {
     [Fact]
     public async Task ShouldAddConnectToChrome() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new ChromeRuntime());
+        pluginManager.Register(new StealthPlugin()).Register(new ChromeRuntime());
 
         await using var browser = await pluginManager.LaunchAsync();
         using var page = await browser.NewPageAsync();

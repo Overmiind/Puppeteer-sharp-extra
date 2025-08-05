@@ -6,8 +6,7 @@ public class StealthPluginTests {
     [Fact]
     public async Task ShouldBeNotDetected() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(StealthPlugin.GetStandardEvasions());
-        pluginManager.Register(new StealthPlugin());
+        pluginManager.Register(new StealthPlugin()).Register(StealthPlugin.GetStandardEvasions());
 
         await using var browser = await pluginManager.LaunchAsync();
         using var page = await browser.NewPageAsync();

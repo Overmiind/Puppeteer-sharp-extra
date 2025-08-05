@@ -1,4 +1,5 @@
-﻿using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
+﻿using PuppeteerExtraSharpLite.Plugins.ExtraStealth;
+using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
 
@@ -6,7 +7,7 @@ public class VendorTest {
     [Fact]
     public async Task ShouldWork() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new Vendor());
+        pluginManager.Register(new StealthPlugin()).Register(new Vendor());
 
         await using var browser = await pluginManager.LaunchAsync();
         using var page = await browser.NewPageAsync();

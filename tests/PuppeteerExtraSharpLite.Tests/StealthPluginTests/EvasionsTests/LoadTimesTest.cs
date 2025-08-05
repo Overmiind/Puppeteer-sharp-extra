@@ -1,5 +1,7 @@
 ﻿using System.Text.Json;
 
+using PuppeteerExtraSharpLite.Plugins.ExtraStealth;
+
 using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
@@ -8,7 +10,7 @@ public class LoadTimesTest {
     [Fact]
     public async Task ShouldWork() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new LoadTimes());
+        pluginManager.Register(new StealthPlugin()).Register(new LoadTimes());
 
         await using var browser = await pluginManager.LaunchAsync();
         using var page = await browser.NewPageAsync();

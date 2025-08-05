@@ -1,6 +1,7 @@
 ﻿using PuppeteerExtraSharpLite.Tests.Utils;
 
 using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
+using PuppeteerExtraSharpLite.Plugins.ExtraStealth;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
 
@@ -8,7 +9,7 @@ public class PermissionsTest {
     [Fact]
     public async Task ShouldBeDeniedInHttpSite() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new Permissions());
+        pluginManager.Register(new StealthPlugin()).Register(new Permissions());
 
         await using var browser = await pluginManager.LaunchAsync();
         using var page = await browser.NewPageAsync();

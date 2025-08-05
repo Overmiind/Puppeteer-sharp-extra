@@ -1,5 +1,7 @@
 ﻿using System.Text.Json;
 
+using PuppeteerExtraSharpLite.Plugins.ExtraStealth;
+
 using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 using PuppeteerExtraSharpLite.Tests.Utils;
 
@@ -9,7 +11,7 @@ public class ContentWindowTest {
     [Fact]
     public async Task IFrameShouldBeObject() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new ContentWindow());
+        pluginManager.Register(new StealthPlugin()).Register(new ContentWindow());
 
         await using var browser = await pluginManager.LaunchAsync();
         using var page = await browser.NewPageAsync();
@@ -24,7 +26,7 @@ public class ContentWindowTest {
     [Fact]
     public async Task ShouldNotBreakIFrames() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new ContentWindow());
+        pluginManager.Register(new StealthPlugin()).Register(new ContentWindow());
 
         using var browser = await pluginManager.LaunchAsync();
         using var page = await browser.NewPageAsync();
@@ -65,7 +67,7 @@ public class ContentWindowTest {
     [Fact]
     public async Task ShouldCoverAllFrames() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new ContentWindow());
+        pluginManager.Register(new StealthPlugin()).Register(new ContentWindow());
 
         using var browser = await pluginManager.LaunchAsync();
         using var page = await browser.NewPageAsync();
@@ -109,7 +111,7 @@ public class ContentWindowTest {
     [Fact]
     public async Task ShouldEmulateFeatures() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new ContentWindow());
+        pluginManager.Register(new StealthPlugin()).Register(new ContentWindow());
 
         using var browser = await pluginManager.LaunchAsync();
         using var page = await browser.NewPageAsync();

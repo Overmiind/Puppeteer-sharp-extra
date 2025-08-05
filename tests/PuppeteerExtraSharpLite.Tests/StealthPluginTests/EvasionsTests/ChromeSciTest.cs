@@ -10,7 +10,7 @@ public class ChromeSciTest {
     [Fact]
     public async Task ShouldWork() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new ChromeSci());
+        pluginManager.Register(new StealthPlugin()).Register(new ChromeSci());
 
         await using var browser = await pluginManager.LaunchAsync();
         using var page = await browser.NewPageAsync();
