@@ -8,4 +8,4 @@
         window.outerHeight = window.innerHeight + windowFrame
     } catch (err) { }
 })();
-//# sourceURL=Outdimentsions.js
+//# sourceURL=Outdimensions.js
