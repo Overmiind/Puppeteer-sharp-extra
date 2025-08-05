@@ -1,8 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using PuppeteerSharp;
 
-using PuppeteerSharp;
-
-[assembly: InternalsVisibleTo("Extra.Tests")]
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 public class ChromeApp : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
@@ -11,6 +8,6 @@ public class ChromeApp : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public ChromeApp() : base() { }
 
     public Task OnPageCreated(IPage page) {
-        return Utils.EvaluateOnNewPage(page, Scripts.ChromeApp);
+        return page.EvaluateExpressionOnNewDocumentAsync(Scripts.ChromeApp);
     }
 }
