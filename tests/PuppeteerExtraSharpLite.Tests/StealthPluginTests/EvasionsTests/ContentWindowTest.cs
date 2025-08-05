@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 
 using PuppeteerExtraSharpLite.Plugins.ExtraStealth;
+using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 using PuppeteerExtraSharpLite.Tests.Utils;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
@@ -20,21 +21,37 @@ public class ContentWindowTest : BrowserDefault {
 
     [Fact]
     public async Task ShouldNotBreakIFrames() {
-        var plugin = new StealthPlugin();
+        var pluginManager = new PluginManager();
+        pluginManager.Register(new ContentWindow());
 
-        var page = await LaunchAndGetPage(plugin);
+        using var browser = await pluginManager.LaunchAsync(CreateDefaultOptions());
+        using var page = await browser.NewPageAsync();
+
         await page.GoToAsync("https://google.com");
 
         const string testFuncReturnValue = "TESTSTRING";
 
-        await page.EvaluateFunctionAsync(@"(testFuncReturnValue) => {
-                        const { document } = window // eslint-disable-line
-                            const body = document.querySelector('body')
-                            const iframe = document.createElement('iframe')
-                            iframe.srcdoc = 'foobar'
-                            iframe.contentWindow.mySuperFunction = () => testFuncReturnValue
-                            body.appendChild(iframe)
-                        }", testFuncReturnValue);
+        await page.EvaluateFunctionAsync(
+            """
+            async (testFuncReturnValue) => {
+                const { document } = window
+                const body = document.querySelector('body')
+                const iframe = document.createElement('iframe')
+                iframe.srcdoc = 'foobar'
+                body.appendChild(iframe)
+
+                // Wait for contentWindow to be set
+                await new Promise(resolve => {
+                    const check = () => {
+                        if (iframe.contentWindow) return resolve()
+                        requestAnimationFrame(check)
+                    }
+                    check()
+                })
+
+            iframe.contentWindow.mySuperFunction = () => testFuncReturnValue
+            }
+            """, testFuncReturnValue);
 
         var result =
             await page.EvaluateExpressionAsync(
