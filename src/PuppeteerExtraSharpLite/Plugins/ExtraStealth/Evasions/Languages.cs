@@ -14,7 +14,7 @@ public class Languages : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     }
 
     public Task OnPageCreated(IPage page) {
-        return Utils.EvaluateOnNewPage(page, Scripts.Language, [Options.Languages]);
+        return page.EvaluateFunctionOnNewDocumentAsync(Scripts.Language, [Options.Languages]);
     }
 }
 
