@@ -73,3 +73,4 @@
     }
     utils.patchToStringNested(window.chrome.app)
 })();
+//# sourceURL=ChromeApp.js

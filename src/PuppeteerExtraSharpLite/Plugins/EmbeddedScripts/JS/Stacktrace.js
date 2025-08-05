@@ -38,3 +38,4 @@
         })(errors[name])
     }
 })();
+//# sourceURL=Stacktrace.js

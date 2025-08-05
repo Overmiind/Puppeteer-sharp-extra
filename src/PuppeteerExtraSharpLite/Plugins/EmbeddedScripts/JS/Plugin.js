@@ -302,3 +302,4 @@
         // All done
     }
 })();
+//# sourceURL=Plugin.js

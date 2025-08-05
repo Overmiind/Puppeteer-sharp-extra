@@ -39,3 +39,4 @@
         utils.replaceWithProxy(Permissions.prototype, 'query', handler);
     }
 })();
+//# sourceURL=Permissions.js

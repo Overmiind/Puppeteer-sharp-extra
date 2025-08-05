@@ -37,5 +37,6 @@ public static partial class Scripts {
         }
         utils.patchToString(window.chrome.csi)
     })();
+    //# sourceURL=SCI.js
     """;
 }

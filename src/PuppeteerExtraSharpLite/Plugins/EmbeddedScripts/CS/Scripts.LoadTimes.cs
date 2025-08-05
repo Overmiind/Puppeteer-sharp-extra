@@ -128,5 +128,6 @@ public static partial class Scripts {
         }
         utils.patchToString(window.chrome.loadTimes)
     })();
+    //# sourceURL=LoadTimes.js
     """;
 }

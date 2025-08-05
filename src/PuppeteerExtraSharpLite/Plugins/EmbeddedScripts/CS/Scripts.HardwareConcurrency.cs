@@ -10,5 +10,6 @@ public static partial class Scripts {
             utils.makeHandler().getterValue(concurrency)
         )
     }
+    //# sourceURL=HardwareConcurrency.js
     """;
 }

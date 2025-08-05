@@ -6,3 +6,4 @@
         utils.makeHandler().getterValue(concurrency)
     )
 }
+//# sourceURL=HardwareConcurrency.js

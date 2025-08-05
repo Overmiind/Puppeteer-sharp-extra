@@ -11,5 +11,6 @@ public static partial class Scripts {
             utils.makeHandler().getterValue(vendor)
         )
     }
+    //# sourceURL=Vendor.js
     """;
 }

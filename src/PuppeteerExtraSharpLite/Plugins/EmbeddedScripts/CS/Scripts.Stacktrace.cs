@@ -43,5 +43,6 @@ public static partial class Scripts {
             })(errors[name])
         }
     })();
+    //# sourceURL=Stacktrace.js
     """;
 }

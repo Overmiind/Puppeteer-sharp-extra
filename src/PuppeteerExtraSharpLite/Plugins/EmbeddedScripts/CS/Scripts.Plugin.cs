@@ -308,5 +308,6 @@ public static partial class Scripts {
             // All done
         }
     })();
+    //# sourceURL=Plugin.js
     """;
 }

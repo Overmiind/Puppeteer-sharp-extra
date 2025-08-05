@@ -78,5 +78,6 @@ public static partial class Scripts {
         }
         utils.patchToStringNested(window.chrome.app)
     })();
+    //# sourceURL=ChromeApp.js
     """;
 }

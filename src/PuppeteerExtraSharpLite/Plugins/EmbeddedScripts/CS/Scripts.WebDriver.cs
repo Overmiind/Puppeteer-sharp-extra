@@ -13,5 +13,6 @@ public static partial class Scripts {
             delete Object.getPrototypeOf(navigator).webdriver
         }
     })();
+    //# sourceURL=WebDriver.js
     """;
 }

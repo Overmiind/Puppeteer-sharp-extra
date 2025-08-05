@@ -69,5 +69,6 @@ public static partial class Scripts
             canPlayType
         )
     })();
+    //# sourceURL=Codec.js
     """;
 }

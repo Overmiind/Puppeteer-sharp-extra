@@ -32,3 +32,4 @@
     }
     utils.patchToString(window.chrome.csi)
 })();
+//# sourceURL=SCI.js

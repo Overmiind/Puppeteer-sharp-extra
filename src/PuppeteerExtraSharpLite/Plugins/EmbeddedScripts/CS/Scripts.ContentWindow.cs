@@ -102,5 +102,6 @@ public static partial class Scripts {
            // console.warn(err)
         }
     })();
+    //# sourceURL=ContentWindow.js
     """;
 }

@@ -504,5 +504,6 @@ public static partial class Scripts {
     })
 
     utils.preloadCache();
+    //# sourceURL=Utils.js
     """;
 }

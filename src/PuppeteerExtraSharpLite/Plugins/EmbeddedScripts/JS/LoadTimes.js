@@ -123,3 +123,4 @@
     }
     utils.patchToString(window.chrome.loadTimes)
 })();
+//# sourceURL=LoadTimes.js

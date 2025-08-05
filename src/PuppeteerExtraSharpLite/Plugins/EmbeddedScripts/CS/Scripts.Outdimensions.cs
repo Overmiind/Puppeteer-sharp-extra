@@ -13,5 +13,6 @@ public static partial class Scripts {
             window.outerHeight = window.innerHeight + windowFrame
         } catch (err) { }
     })();
+    //# sourceURL=Outdimensions.js
     """;
 }

@@ -8,3 +8,4 @@
         delete Object.getPrototypeOf(navigator).webdriver
     }
 })();
+//# sourceURL=WebDriver.js

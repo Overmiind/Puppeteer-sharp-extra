@@ -6,3 +6,4 @@
         utils.makeHandler().getterValue(vendor)
     )
 }
+//# sourceURL=Vendor.js

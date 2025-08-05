@@ -24,3 +24,4 @@
     addProxy(WebGLRenderingContext.prototype, 'getParameter');
     addProxy(WebGL2RenderingContext.prototype, 'getParameter');
 }
+//# sourceURL=WebGL.js
