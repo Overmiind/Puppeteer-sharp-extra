@@ -12,7 +12,7 @@ public class HardwareConcurrency : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     }
 
     public Task OnPageCreated(IPage page) {
-        return Utils.EvaluateOnNewPage(page, Scripts.HardwareConcurrency, [Options.Concurrency]);
+        return page.EvaluateFunctionAsync(Scripts.HardwareConcurrency, [Options.Concurrency]);
     }
 }
 

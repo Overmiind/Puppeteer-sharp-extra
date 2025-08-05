@@ -9,6 +9,6 @@ public class PluginEvasion : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     }
 
     public async Task OnPageCreated(IPage page) {
-        await Utils.EvaluateOnNewPage(page, Scripts.Plugin);
+        await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Plugin);
     }
 }

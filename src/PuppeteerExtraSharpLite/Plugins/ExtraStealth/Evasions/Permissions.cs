@@ -8,6 +8,6 @@ public class Permissions : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public Permissions() : base() { }
 
     public Task OnPageCreated(IPage page) {
-        return Utils.EvaluateOnNewPage(page, Scripts.Permissions);
+        return page.EvaluateExpressionOnNewDocumentAsync(Scripts.Permissions);
     }
 }

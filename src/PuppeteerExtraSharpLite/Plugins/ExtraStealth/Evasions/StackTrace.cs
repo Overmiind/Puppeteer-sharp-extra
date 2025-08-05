@@ -8,6 +8,6 @@ public class StackTrace : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public StackTrace() : base() { }
 
     public Task OnPageCreated(IPage page) {
-        return page.EvaluateFunctionOnNewDocumentAsync(Scripts.Stacktrace);
+        return page.EvaluateExpressionOnNewDocumentAsync(Scripts.Stacktrace);
     }
 }
