@@ -8,6 +8,6 @@ public class ContentWindow : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public ContentWindow() : base() { }
 
     public Task OnPageCreated(IPage page) {
-        return Utils.EvaluateOnNewPage(page, Scripts.ContentWindow);
+        return page.EvaluateExpressionOnNewDocumentAsync(Scripts.ContentWindow);
     }
 }
