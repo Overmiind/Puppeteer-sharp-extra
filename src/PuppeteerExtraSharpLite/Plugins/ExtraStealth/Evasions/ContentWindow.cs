@@ -5,7 +5,8 @@ namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 public class ContentWindow : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(ContentWindow);
 
-    public ContentWindow() : base() { }
+    // StealthPlugin injects utils.js
+    protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
 
     public Task OnPageCreated(IPage page) {
         return page.EvaluateExpressionOnNewDocumentAsync(Scripts.ContentWindow);

@@ -11,6 +11,9 @@ public class Vendor : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
         _settings = settings ?? new StealthVendorSettings("Google Inc.");
     }
 
+    // StealthPlugin injects utils.js
+    protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
+
     public async Task OnPageCreated(IPage page) {
         await page.EvaluateFunctionOnNewDocumentAsync(Scripts.Vendor, _settings.Vendor);
     }

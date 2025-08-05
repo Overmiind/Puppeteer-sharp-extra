@@ -5,7 +5,8 @@ namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 public class ChromeSci : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(ChromeSci);
 
-    public ChromeSci() : base() { }
+    // StealthPlugin injects utils.js
+    protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
 
     public Task OnPageCreated(IPage page) {
         return page.EvaluateExpressionOnNewDocumentAsync(Scripts.SCI);

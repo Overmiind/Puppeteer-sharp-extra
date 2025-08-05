@@ -11,6 +11,9 @@ public class HardwareConcurrency : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
         Options = options ?? new StealthHardwareConcurrencyOptions(4);
     }
 
+    // StealthPlugin injects utils.js
+    protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
+
     public Task OnPageCreated(IPage page) {
         return page.EvaluateFunctionAsync(Scripts.HardwareConcurrency, [Options.Concurrency]);
     }

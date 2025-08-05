@@ -13,6 +13,9 @@ public class Languages : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
         Options = options ?? new StealthLanguagesOptions("en-US", "en");
     }
 
+    // StealthPlugin injects utils.js
+    protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
+
     public Task OnPageCreated(IPage page) {
         return page.EvaluateFunctionOnNewDocumentAsync(Scripts.Language, [Options.Languages]);
     }
