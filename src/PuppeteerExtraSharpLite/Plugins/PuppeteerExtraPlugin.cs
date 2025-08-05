@@ -11,7 +11,7 @@ public abstract class PuppeteerExtraPlugin {
 
     protected virtual string[] RequiredPlugins => [];
 
-    public ReadOnlyCollection<string> GetDeps => RequiredPlugins.AsReadOnly();
+    public ReadOnlyCollection<string> GetDependencies => RequiredPlugins.AsReadOnly();
 
     // public virtual List<PluginRequirements> Requirements { get; set; }
 

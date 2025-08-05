@@ -18,7 +18,7 @@ public class PluginManager {
                 continue;
             }
 
-            ReadOnlyCollection<string> dependencies = plugin.GetDeps;
+            ReadOnlyCollection<string> dependencies = plugin.GetDependencies;
 
             if (dependencies.Count > 0) {
                 foreach (var dependency in dependencies) {
