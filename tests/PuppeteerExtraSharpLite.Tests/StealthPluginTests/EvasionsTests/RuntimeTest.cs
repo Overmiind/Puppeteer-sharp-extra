@@ -26,8 +26,7 @@ public class RuntimeTest : BrowserDefault {
             using var browser = await LaunchAsync();
             var page = await browser.NewPageAsync();
 
-            var script = Plugins.ExtraStealth.Utils.WithSourceUrl(Plugins.EmbeddedScripts.CS.Scripts.Runtime, "Runtime.js");
-            await page.EvaluateExpressionOnNewDocumentAsync(script);
+            await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Runtime);
             // End options 2
 
             await page.GoToAsync("https://google.com");
