@@ -4,8 +4,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Tests;
 
-public abstract class BrowserDefault : IDisposable {
-    private readonly List<IBrowser> _launchedBrowsers = new List<IBrowser>();
+public abstract class BrowserDefault {
     private static readonly SemaphoreSlim BrowserFetchSemaphore = new(1, 1);
     private static bool s_browserDownloaded = false;
 
@@ -17,7 +16,6 @@ public abstract class BrowserDefault : IDisposable {
     protected async Task<IBrowser> LaunchAsync(LaunchOptions options) {
         await EnsureBrowserDownloadedAsync();
         var browser = await Puppeteer.LaunchAsync(options);
-        _launchedBrowsers.Add(browser);
         return browser;
     }
 
@@ -29,7 +27,6 @@ public abstract class BrowserDefault : IDisposable {
         var extra = new PluginManager().Register(plugin);
 
         var browser = await extra.LaunchAsync(options);
-        _launchedBrowsers.Add(browser);
         return browser;
     }
 
@@ -38,7 +35,7 @@ public abstract class BrowserDefault : IDisposable {
             ? await LaunchAsync()
             : await LaunchWithPluginAsync(plugin);
 
-        var page = (await browser.PagesAsync())[0];
+        var page = await browser.NewPageAsync();
 
         // Ensure the page is fully initialized before returning
         await page.WaitForNetworkIdleAsync();
@@ -110,11 +107,5 @@ public abstract class BrowserDefault : IDisposable {
         }
 
         return null;
-    }
-
-    public void Dispose() {
-        foreach (var launchedBrowser in _launchedBrowsers) {
-            launchedBrowser.CloseAsync().Wait();
-        }
     }
 }
