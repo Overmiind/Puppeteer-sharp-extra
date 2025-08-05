@@ -1,4 +1,4 @@
-﻿(() => {
+﻿() => {
     try {
         // Adds a contentWindow proxy to the provided iframe element
         const addContentWindowProxy = iframe => {
@@ -96,5 +96,5 @@
     } catch (err) {
         // console.warn(err)
     }
-})();
+}
 //# sourceURL=ContentWindow.js

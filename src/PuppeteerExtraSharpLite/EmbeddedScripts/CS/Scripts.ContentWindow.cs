@@ -101,7 +101,7 @@ public static partial class Scripts {
         } catch (err) {
            // console.warn(err)
         }
-    };
+    }
     //# sourceURL=ContentWindow.js
     """;
 }
