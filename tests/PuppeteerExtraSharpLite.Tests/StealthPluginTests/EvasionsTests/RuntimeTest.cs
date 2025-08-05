@@ -1,8 +1,4 @@
-﻿using System.Text.Json;
-
-using PuppeteerExtraSharpLite.Plugins.ExtraStealth;
-
-using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
+﻿using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 using PuppeteerSharp;
 
@@ -11,30 +7,16 @@ namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
 public class RuntimeTest : BrowserDefault {
     [Fact]
     public async Task ShouldAddConnectToChrome() {
-        Assert.Fail("pending plugin abstraction re-write");
+        TestContext.Current.SendDiagnosticMessage("Using Abstraction");
 
-        if (Environment.GetEnvironmentVariable("TEST_OPT") is "1") {
-            var plugin = new ChromeRuntime();
-            var page = await LaunchAndGetPage(plugin);
+        var plugin = new ChromeRuntime();
+        using var page = await LaunchAndGetPage(plugin);
 
-            await page.GoToAsync("https://google.com");
+        await page.GoToAsync("https://google.com");
 
-            var runtimeType = await page.EvaluateExpressionAsync<string>("typeof chrome.runtime");
+        var runtimeType = await page.EvaluateExpressionAsync<string>("typeof chrome.runtime");
 
-            Assert.Equal("object", runtimeType);
-        } else if (Environment.GetEnvironmentVariable("TEST_OPT") is "2") {
-            using var browser = await LaunchAsync();
-            var page = await browser.NewPageAsync();
-
-            await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Runtime);
-            // End options 2
-
-            await page.GoToAsync("https://google.com");
-
-            var runtimeType = await page.EvaluateExpressionAsync<string>("typeof chrome.runtime");
-
-            Assert.Equal("object", runtimeType);
-        }
+        Assert.Equal("object", runtimeType);
         // return; // ignore the rest of the test for now
         // // TestContext.Current.SendDiagnosticMessage($"chrome.runtime typeof: {runtimeType}");
 
