@@ -75,24 +75,20 @@ public class PluginManager {
         }
 
         // TODO: check plugin limitations
-        // TODO: Add page created calls (maybe TargetCreating with Type=Page is not enough?)
 
         foreach (var plugin in _plugins) {
             switch (plugin) {
-                case IOnTargetCreatedPlugin p: {
+                case IOnPageCreatedPlugin p: {
                         browser.TargetCreated += async (sender, args) => {
-                            p.OnTargetCreated(args.Target);
-
                             if (args.Target.Type == TargetType.Page) {
                                 var page = await args.Target.PageAsync();
-
-                                foreach (var relatedPlugin in _plugins) {
-                                    if (relatedPlugin.Name != plugin.Name && relatedPlugin is IOnPageCreatedPlugin pp) {
-                                        await pp.OnPageCreated(page);
-                                    }
-                                }
+                                await p.OnPageCreated(page);
                             }
                         };
+                        break;
+                }
+                case IOnTargetCreatedPlugin p: {
+                        browser.TargetCreated += (sender, args) => p.OnTargetCreated(args.Target);
                         break;
                     }
                 case IOnTargetChangedPlugin p: {
