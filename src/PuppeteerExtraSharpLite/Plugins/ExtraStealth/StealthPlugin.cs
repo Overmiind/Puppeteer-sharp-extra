@@ -7,29 +7,9 @@ namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth;
 public class StealthPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(StealthPlugin);
 
-    //TODO: Are they really required or preferred by default? (assuming no)
-    // protected override string[] RequiredPlugins =>
-    // [
-    //     nameof(WebDriver),
-    //     nameof(ChromeSci),
-    //     nameof(ChromeRuntime),
-    //     nameof(Codec),
-    //     nameof(Languages),
-    //     nameof(OutDimensions),
-    //     nameof(Permissions),
-    //     nameof(UserAgent),
-    //     nameof(Vendor),
-    //     nameof(WebGl),
-    //     nameof(PluginEvasion),
-    //     nameof(StackTrace),
-    //     nameof(HardwareConcurrency),
-    //     nameof(ContentWindow)
-    // ];
-
     public static PuppeteerExtraPlugin[] GetStandardEvasions() =>
     [
         new WebDriver(),
-        // new ChromeApp(),
         new ChromeSci(),
         new ChromeRuntime(),
         new Codec(),
@@ -46,13 +26,6 @@ public class StealthPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     ];
 
     public async Task OnPageCreated(IPage page) {
-        // Load Utils script first before any evasion scripts run
         await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Utils);
-
-        // Now load all the evasion scripts that depend on utils
-        //TODO: Replace logic
-        // foreach (var evasion in _standardEvasions) {
-        //     await evasion.OnPageCreated(page);
-        // }
     }
 }
