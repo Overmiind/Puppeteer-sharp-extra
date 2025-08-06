@@ -1,30 +1,24 @@
-﻿using System.Linq;
-
-using PuppeteerSharp;
+﻿using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
-public class Languages : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
-    public override string Name => nameof(Languages);
+public class LanguagesPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
+    public override string Name => nameof(LanguagesPlugin);
 
-    public StealthLanguagesOptions Options { get; }
+    private readonly string[] _languages;
 
-    public Languages(StealthLanguagesOptions? options = null) : base() {
-        Options = options ?? new StealthLanguagesOptions("en-US", "en");
+    public ReadOnlyCollection<string> Languages => _languages.AsReadOnly();
+
+    public LanguagesPlugin() : this("en-US", "en") {}
+
+    public LanguagesPlugin(params string[] languages) {
+        _languages = languages;
     }
 
     // StealthPlugin injects utils.js
     protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
 
     public Task OnPageCreated(IPage page) {
-        return page.EvaluateFunctionOnNewDocumentAsync(Scripts.Language, [Options.Languages]);
-    }
-}
-
-public class StealthLanguagesOptions : IPuppeteerExtraPluginOptions {
-    public object[] Languages { get; }
-
-    public StealthLanguagesOptions(params string[] languages) {
-        Languages = languages.Cast<object>().ToArray();
+        return page.EvaluateFunctionOnNewDocumentAsync(Scripts.Language, [_languages]);
     }
 }

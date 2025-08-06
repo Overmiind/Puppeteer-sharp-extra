@@ -8,7 +8,7 @@ public partial class StealthPluginTests {
     [Fact]
     public async Task Languages_Plugin_Test() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new StealthPlugin()).Register(new Languages());
+        pluginManager.Register(new StealthPlugin()).Register(new LanguagesPlugin());
 
         await using var browser = await pluginManager.LaunchAsync();
         using var page = await browser.NewPageAsync();
@@ -32,7 +32,7 @@ public partial class StealthPluginTests {
     [Fact]
     public async Task Languages_Plugin_Should_WorkWithCustomSettings() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new StealthPlugin()).Register(new Languages(new StealthLanguagesOptions("fr-FR")));
+        pluginManager.Register(new StealthPlugin()).Register(new LanguagesPlugin("fr-FR"));
 
         await using var browser = await pluginManager.LaunchAsync();
         using var page = await browser.NewPageAsync();

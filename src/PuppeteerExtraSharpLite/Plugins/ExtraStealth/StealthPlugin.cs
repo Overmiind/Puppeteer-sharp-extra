@@ -13,7 +13,7 @@ public class StealthPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
         new ChromeSci(),
         new ChromeRuntime(),
         new Codec(),
-        new Languages(),
+        new LanguagesPlugin(),
         new OutDimensions(),
         new Permissions(),
         new UserAgent(),
