@@ -22,7 +22,7 @@ public class StealthPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
         new PluginEvasion(),
         new StackTrace(),
         new HardwareConcurrency(),
-        new ContentWindow(),
+        new ContentWindow(), // Keep last
     ];
 
     public async Task OnPageCreated(IPage page) {

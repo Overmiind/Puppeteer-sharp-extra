@@ -2,6 +2,12 @@
 
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
+/// <summary>
+/// 
+/// </summary>
+/// <remarks>
+/// Make sure ContentWindow is the last registered stealth plugin
+/// </remarks>
 public class ContentWindow : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(ContentWindow);
 
