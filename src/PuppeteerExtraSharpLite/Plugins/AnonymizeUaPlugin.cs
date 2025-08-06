@@ -2,7 +2,7 @@
 
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins.AnonymizeUa;
+namespace PuppeteerExtraSharpLite.Plugins;
 
 public partial class AnonymizeUaPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(AnonymizeUaPlugin);
