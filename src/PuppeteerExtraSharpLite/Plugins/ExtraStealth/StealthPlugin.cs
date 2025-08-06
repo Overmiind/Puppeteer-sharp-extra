@@ -17,7 +17,7 @@ public class StealthPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
         new OutDimensions(),
         new Permissions(),
         new UserAgent(),
-        new Vendor(),
+        new VendorPlugin(),
         new WebGl(),
         new PluginEvasion(),
         new StackTrace(),

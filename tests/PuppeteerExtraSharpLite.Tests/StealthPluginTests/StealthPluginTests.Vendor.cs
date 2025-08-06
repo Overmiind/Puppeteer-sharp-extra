@@ -7,7 +7,7 @@ public partial class StealthPluginTests {
     [Fact]
     public async Task Vendor_Plugin_Test() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new StealthPlugin()).Register(new Vendor());
+        pluginManager.Register(new StealthPlugin()).Register(new VendorPlugin());
 
         await using var browser = await pluginManager.LaunchAsync();
         using var page = await browser.NewPageAsync();

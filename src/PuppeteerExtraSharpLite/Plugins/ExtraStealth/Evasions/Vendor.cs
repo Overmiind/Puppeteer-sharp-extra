@@ -2,27 +2,21 @@
 
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
-public class Vendor : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
-    public override string Name => nameof(Vendor);
+public class VendorPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
+    public override string Name => nameof(VendorPlugin);
 
-    private readonly StealthVendorSettings _settings;
+    public readonly string Vendor;
 
-    public Vendor(StealthVendorSettings? settings = null) : base() {
-        _settings = settings ?? new StealthVendorSettings("Google Inc.");
+    public VendorPlugin(string vendor = "") {
+        Vendor = vendor.Length > 0
+                ? vendor
+                : "Google Inc.";
     }
 
     // StealthPlugin injects utils.js
     protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
 
     public async Task OnPageCreated(IPage page) {
-        await page.EvaluateFunctionOnNewDocumentAsync(Scripts.Vendor, _settings.Vendor);
-    }
-}
-
-public class StealthVendorSettings : IPuppeteerExtraPluginOptions {
-    public string Vendor { get; }
-
-    public StealthVendorSettings(string vendor) {
-        Vendor = vendor;
+        await page.EvaluateFunctionOnNewDocumentAsync(Scripts.Vendor, [Vendor]);
     }
 }
