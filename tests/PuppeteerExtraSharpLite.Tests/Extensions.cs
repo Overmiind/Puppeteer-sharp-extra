@@ -1,4 +1,6 @@
-﻿using PuppeteerSharp;
+﻿using System.Text.Json;
+
+using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Tests;
 
@@ -7,7 +9,7 @@ public static class Extensions {
         await EnsureBrowserDownloadedAsync();
 
         var options = new LaunchOptions() {
-            Headless = Constants.Headless
+            Headless = true
         };
 
         // Check if we should use a system Chrome installation as fallback
@@ -71,5 +73,19 @@ public static class Extensions {
         } finally {
             BrowserFetchSemaphore.Release();
         }
+    }
+
+    /// <summary>
+    /// https://antoinevastel.com/bots/
+    /// </summary>
+    /// <param name="page"></param>
+    /// <returns></returns>
+    public static async Task<JsonElement> GetFingerPrint(this IPage page) {
+        await page.EvaluateExpressionAsync(Constants.FpCollect);
+
+        var fingerPrint =
+            await page.EvaluateFunctionAsync<JsonElement>("async () => await fpCollect().generateFingerprint()");
+
+        return fingerPrint;
     }
 }
