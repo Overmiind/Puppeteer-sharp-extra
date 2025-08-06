@@ -1,17 +1,14 @@
 using PuppeteerExtraSharpLite.Plugins.Recaptcha;
-using PuppeteerExtraSharpLite.Tests.Utils;
 
-namespace PuppeteerExtraSharpLite.Tests.Recaptcha.TwoCaptcha;
+namespace PuppeteerExtraSharpLite.Tests.Recaptcha;
 
-[Collection("Captcha")]
-public class TwoCaptchaProviderTest {
+public partial class RecaptchaPluginTests {
     [Fact]
-    public async Task ShouldResolveCaptchaInGooglePage() {
-        Assert.SkipUnless(Helper.TryGetEnvironmentVariable("TwoCaptchaProvider", out var antiCaptchaKey),
-            "TwoCaptchaProvider environment variable is not set. Skipping test.");
+    public async Task TwoCaptcha_Plugin_Should_ResolveCaptchaInGooglePage() {
+        Assert.SkipWhen(_twoCaptchaKey.Length == 0, TwoCaptchaReason);
 
         using var client = new HttpClient();
-        var provider = new Plugins.Recaptcha.Provider._2Captcha.TwoCaptcha(client, antiCaptchaKey);
+        var provider = new Plugins.Recaptcha.Provider._2Captcha.TwoCaptcha(client, _twoCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
         var pluginManager = new PluginManager();
@@ -32,12 +29,11 @@ public class TwoCaptchaProviderTest {
     }
 
     [Fact]
-    public async Task ShouldSolveInvisibleCaptcha() {
-        Assert.SkipUnless(Helper.TryGetEnvironmentVariable("TwoCaptchaProvider", out var antiCaptchaKey),
-            "TwoCaptchaProvider environment variable is not set. Skipping test.");
+    public async Task TwoCaptcha_Plugin_Should_SolveInvisibleCaptcha() {
+        Assert.SkipWhen(_twoCaptchaKey.Length == 0, TwoCaptchaReason);
 
         using var client = new HttpClient();
-        var provider = new Plugins.Recaptcha.Provider._2Captcha.TwoCaptcha(client, antiCaptchaKey);
+        var provider = new Plugins.Recaptcha.Provider._2Captcha.TwoCaptcha(client, _twoCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
         var pluginManager = new PluginManager();
@@ -58,6 +54,5 @@ public class TwoCaptchaProviderTest {
 
         var elementProperty = await (await elements[1].GetPropertyAsync("textContent")).JsonValueAsync<string>();
         Assert.Equal("Success!", elementProperty);
-
     }
 }

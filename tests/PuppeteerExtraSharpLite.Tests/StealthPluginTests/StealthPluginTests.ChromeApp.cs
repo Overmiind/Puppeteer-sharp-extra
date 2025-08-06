@@ -6,11 +6,11 @@ using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
+namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests;
 
-public class ChromeAppTest {
+public partial class StealthPluginTests {
     [Fact]
-    public async Task ShouldWork() {
+    public async Task ChromeApp_Plugin_Test() {
         var pluginManager = new PluginManager();
         pluginManager.Register(new StealthPlugin()).Register(new ChromeApp());
 

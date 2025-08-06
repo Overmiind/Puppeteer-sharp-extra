@@ -1,10 +1,12 @@
 ﻿using PuppeteerExtraSharpLite.Plugins.ExtraStealth;
 
+using PuppeteerSharp;
+
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests;
 
-public class StealthPluginTests {
+public partial class StealthPluginTests {
     [Fact]
-    public async Task ShouldBeNotDetected() {
+    public async Task Stealth_Plugin_PlugStandardEvasions_ShouldNot_BeDetected() {
         var pluginManager = new PluginManager();
         pluginManager.Register(new StealthPlugin()).Register(StealthPlugin.GetStandardEvasions());
 
@@ -26,5 +28,20 @@ public class StealthPluginTests {
 
         var plugins = await page.EvaluateExpressionAsync<int>("navigator.plugins.length");
         Assert.NotEqual(0, plugins);
+    }
+
+    [Fact]
+    public async Task Stealth_Plugin_LaunchTest() {
+        var pluginManager = new PluginManager();
+        pluginManager.Register(new StealthPlugin());
+
+        await using var browser = await pluginManager.LaunchAsync();
+        using var page = await browser.NewPageAsync();
+
+        await page.GoToAsync("https://bot.sannysoft.com");
+        await page.ScreenshotAsync("Stealth.png", new ScreenshotOptions() {
+            FullPage = true,
+            Type = ScreenshotType.Png,
+        });
     }
 }

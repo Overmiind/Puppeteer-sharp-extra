@@ -1,13 +1,11 @@
-﻿using PuppeteerExtraSharpLite.Tests.Utils;
-
-using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
+﻿using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 using PuppeteerExtraSharpLite.Plugins.ExtraStealth;
 
-namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
+namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests;
 
-public class CodecTest {
+public partial class StealthPluginTests {
     [Fact]
-    public async Task SupportsCodec() {
+    public async Task Codec_Plugin_SupportsCodec() {
         var pluginManager = new PluginManager();
         pluginManager.Register(new StealthPlugin()).Register(new Codec());
 
@@ -15,7 +13,7 @@ public class CodecTest {
         using var page = await browser.NewPageAsync();
 
         await page.GoToAsync("https://google.com");
-        var fingerPrint = await FingerPrint.GetFingerPrint(page);
+        var fingerPrint = await page.GetFingerPrint();
 
         var text = fingerPrint.GetRawText();
 
@@ -31,7 +29,7 @@ public class CodecTest {
     }
 
     [Fact]
-    public async Task NotLeakModifications() {
+    public async Task Codec_Plugin_ShouldNot_LeakModifications() {
         var pluginManager = new PluginManager();
         pluginManager.Register(new StealthPlugin()).Register(new Codec());
 

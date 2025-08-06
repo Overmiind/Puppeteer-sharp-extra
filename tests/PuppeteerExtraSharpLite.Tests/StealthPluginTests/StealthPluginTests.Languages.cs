@@ -1,14 +1,12 @@
-﻿using PuppeteerExtraSharpLite.Tests.Utils;
-
-using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
+﻿using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 using System.Text.Json;
 using PuppeteerExtraSharpLite.Plugins.ExtraStealth;
 
-namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
+namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests;
 
-public class LanguagesTest {
+public partial class StealthPluginTests {
     [Fact]
-    public async Task ShouldWork() {
+    public async Task Languages_Plugin_Test() {
         var pluginManager = new PluginManager();
         pluginManager.Register(new StealthPlugin()).Register(new Languages());
 
@@ -17,7 +15,7 @@ public class LanguagesTest {
 
         await page.GoToAsync("https://google.com");
 
-        var fingerPrint = await FingerPrint.GetFingerPrint(page);
+        var fingerPrint = await page.GetFingerPrint();
 
         var text = fingerPrint.GetRawText(); // for debug
 
@@ -32,7 +30,7 @@ public class LanguagesTest {
 
 
     [Fact]
-    public async Task ShouldWorkWithCustomSettings() {
+    public async Task Languages_Plugin_Should_WorkWithCustomSettings() {
         var pluginManager = new PluginManager();
         pluginManager.Register(new StealthPlugin()).Register(new Languages(new StealthLanguagesOptions("fr-FR")));
 
@@ -41,7 +39,7 @@ public class LanguagesTest {
 
         await page.GoToAsync("https://google.com");
 
-        var fingerPrint = await FingerPrint.GetFingerPrint(page);
+        var fingerPrint = await page.GetFingerPrint();
 
         var text = fingerPrint.GetRawText(); // for debug
 

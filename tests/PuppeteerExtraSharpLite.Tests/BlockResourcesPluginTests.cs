@@ -2,12 +2,11 @@
 
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Tests.BlockResourcesTests;
+namespace PuppeteerExtraSharpLite.Tests;
 
 public class BlockResourcesPluginTests {
-
     [Fact]
-    public void ShouldAddsToListOfRules() {
+    public void BlockResources_Plugin_Should_AddToListOfRules() {
         var plugin = new BlockResourcesPlugin();
         var rule = plugin.AddRule(builder => builder.BlockedResources(ResourceType.Document));
         Assert.NotEmpty(plugin.BlockResources);
@@ -15,7 +14,7 @@ public class BlockResourcesPluginTests {
     }
 
     [Fact]
-    public void RuleForResource() {
+    public void BlockResources_Plugin_RuleForResource() {
         var plugin = new BlockResourcesPlugin();
         var rule = plugin.AddRule(builder => builder.BlockedResources(ResourceType.Document));
         Assert.True(rule.IsResourcesBlocked(ResourceType.Document));
@@ -23,7 +22,7 @@ public class BlockResourcesPluginTests {
 
 
     [Fact]
-    public async Task RuleForPage() {
+    public async Task BlockResources_Plugin_RuleForPage() {
         var plugin = new BlockResourcesPlugin();
 
         var pluginManager = new PluginManager();
@@ -43,16 +42,15 @@ public class BlockResourcesPluginTests {
     [InlineData("http://google.kz")]
     [InlineData("https://googleeee.com")]
     [Theory]
-    public void RuleForUrl(string site) {
+    public void BlockedResources_Plugin_RuleForUrl(string site) {
         var plugin = new BlockResourcesPlugin();
         var rule = plugin.AddRule(builder => builder.ForUrl("google"));
 
         Assert.True(rule.IsSiteBlocked(site));
     }
 
-
     [Fact]
-    public void ShouldRemoveRule() {
+    public void BlockedResources_Plugin_Should_RemoveRule() {
         var plugin = new BlockResourcesPlugin();
 
         var actualRule = plugin.AddRule(builder => builder.BlockedResources(ResourceType.Font));

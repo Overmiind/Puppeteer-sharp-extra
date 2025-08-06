@@ -1,7 +1,5 @@
 using System.Text.RegularExpressions;
 
-using PuppeteerExtraSharpLite.Tests.Utils;
-
 namespace PuppeteerExtraSharpLite.Tests;
 
 public partial class EmbeddedScriptsTests {

@@ -4,11 +4,11 @@ using PuppeteerExtraSharpLite.Plugins.ExtraStealth;
 
 using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
-namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
+namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests;
 
-public class LoadTimesTest {
+public partial class StealthPluginTests {
     [Fact]
-    public async Task ShouldWork() {
+    public async Task LoadTimes_Plugin_Test() {
         var pluginManager = new PluginManager();
         pluginManager.Register(new StealthPlugin()).Register(new LoadTimes());
 

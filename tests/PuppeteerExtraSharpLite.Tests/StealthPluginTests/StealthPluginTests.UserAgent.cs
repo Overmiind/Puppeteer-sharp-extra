@@ -1,11 +1,10 @@
 ﻿using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
-using PuppeteerExtraSharpLite.Tests.Utils;
 
-namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
+namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests;
 
-public class UserAgentTest {
+public partial class StealthPluginTests {
     [Fact]
-    public async Task ShouldWork() {
+    public async Task UserAgent_Plugin_Test() {
         var pluginManager = new PluginManager();
         pluginManager.Register(new UserAgent());
 
@@ -15,7 +14,7 @@ public class UserAgentTest {
         await page.GoToAsync("https://google.com");
         var userAgent = await page.Browser.GetUserAgentAsync();
 
-        var finger = await FingerPrint.GetFingerPrint(page);
+        var finger = await page.GetFingerPrint();
         Assert.DoesNotContain("HeadlessChrome", finger.GetProperty("userAgent").GetString());
     }
 }

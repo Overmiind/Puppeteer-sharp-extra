@@ -1,19 +1,16 @@
 using PuppeteerExtraSharpLite.Plugins.Recaptcha;
-using PuppeteerExtraSharpLite.Tests.Utils;
 
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Tests.Recaptcha.AntiCaptcha;
+namespace PuppeteerExtraSharpLite.Tests.Recaptcha;
 
-[Collection("Captcha")]
-public class AntiCaptchaTests {
+public partial class RecaptchaPluginTests {
     [Fact]
-    public async Task ShouldThrowCaptchaExceptionWhenCaptchaNotFound() {
-        Assert.SkipUnless(Helper.TryGetEnvironmentVariable("AntiCaptchaKey", out var antiCaptchaKey),
-            "AntiCaptchaKey environment variable is not set. Skipping test.");
+    public async Task AntiCaptcha_Plugin_Should_ThrowCaptchaException_When_CaptchaNotFound() {
+        Assert.SkipWhen(_antiCaptchaKey.Length == 0, AntiCaptchaReason);
 
         using var client = new HttpClient();
-        var provider = new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(client, antiCaptchaKey);
+        var provider = new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(client, _antiCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
         var pluginManager = new PluginManager();
@@ -29,12 +26,11 @@ public class AntiCaptchaTests {
     }
 
     [Fact]
-    public async Task ShouldSolveCaptchaWithSubmitButton() {
-        Assert.SkipUnless(Helper.TryGetEnvironmentVariable("AntiCaptchaKey", out var antiCaptchaKey),
-            "AntiCaptchaKey environment variable is not set. Skipping test.");
+    public async Task AntiCaptcha_Plugin_Should_SolveCaptchaWithSubmitButton() {
+        Assert.SkipWhen(_antiCaptchaKey.Length == 0, AntiCaptchaReason);
 
         using var client = new HttpClient();
-        var provider = new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(client, antiCaptchaKey);
+        var provider = new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(client, _antiCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
         var pluginManager = new PluginManager();
@@ -57,12 +53,11 @@ public class AntiCaptchaTests {
     }
 
     [Fact]
-    public async Task ShouldSolveCaptchaWithCallback() {
-        Assert.SkipUnless(Helper.TryGetEnvironmentVariable("AntiCaptchaKey", out var antiCaptchaKey),
-            "AntiCaptchaKey environment variable is not set. Skipping test.");
+    public async Task AntiCaptcha_Plugin_ShouldSolve_CaptchaWithCallback() {
+        Assert.SkipWhen(_antiCaptchaKey.Length == 0, AntiCaptchaReason);
 
         using var client = new HttpClient();
-        var provider = new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(client, antiCaptchaKey);
+        var provider = new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(client, _antiCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
         var pluginManager = new PluginManager();

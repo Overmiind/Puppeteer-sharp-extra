@@ -1,10 +1,10 @@
 ﻿using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
-namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
+namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests;
 
-public class WebDriverTest {
+public partial class StealthPluginTests {
     [Fact]
-    public async Task ShouldWork() {
+    public async Task WebDriver_Plugin_Test() {
         var pluginManager = new PluginManager();
         pluginManager.Register(new WebDriver());
 
@@ -18,7 +18,7 @@ public class WebDriverTest {
     }
 
     [Fact]
-    public async Task WontKillOtherMethods() {
+    public async Task WebDriver_Plugin_ShouldNot_KillOtherMethods() {
         var pluginManager = new PluginManager();
         pluginManager.Register(new WebDriver());
 
