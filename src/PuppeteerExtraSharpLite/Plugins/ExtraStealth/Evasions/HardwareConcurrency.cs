@@ -5,17 +5,17 @@ namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 public class HardwareConcurrency : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(HardwareConcurrency);
 
-    public StealthHardwareConcurrencyOptions Options { get; }
+    public readonly int ConcurrencyLevel;
 
-    public HardwareConcurrency(StealthHardwareConcurrencyOptions? options = null) : base() {
-        Options = options ?? new StealthHardwareConcurrencyOptions(4);
+    public HardwareConcurrency(int concurrencyLevel = 4) : base() {
+        ConcurrencyLevel = concurrencyLevel;
     }
 
     // StealthPlugin injects utils.js
     protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
 
     public Task OnPageCreated(IPage page) {
-        return page.EvaluateFunctionAsync(Scripts.HardwareConcurrency, [Options.Concurrency]);
+        return page.EvaluateFunctionAsync(Scripts.HardwareConcurrency, [ConcurrencyLevel]);
     }
 }
 
