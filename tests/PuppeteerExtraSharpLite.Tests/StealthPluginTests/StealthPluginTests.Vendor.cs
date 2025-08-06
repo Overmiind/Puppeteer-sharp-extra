@@ -1,11 +1,11 @@
 ﻿using PuppeteerExtraSharpLite.Plugins.ExtraStealth;
 using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
-namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
+namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests;
 
-public class VendorTest {
+public partial class StealthPluginTests {
     [Fact]
-    public async Task ShouldWork() {
+    public async Task Vendor_Plugin_Test() {
         var pluginManager = new PluginManager();
         pluginManager.Register(new StealthPlugin()).Register(new Vendor());
 

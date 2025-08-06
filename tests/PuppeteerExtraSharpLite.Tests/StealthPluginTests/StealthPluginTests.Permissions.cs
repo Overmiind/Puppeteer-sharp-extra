@@ -3,11 +3,11 @@
 using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 using PuppeteerExtraSharpLite.Plugins.ExtraStealth;
 
-namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
+namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests;
 
-public class PermissionsTest {
+public partial class StealthPluginTests {
     [Fact]
-    public async Task ShouldBeDeniedInHttpSite() {
+    public async Task Permissions_Plugin_ShouldBe_DeniedInHttpSite() {
         var pluginManager = new PluginManager();
         pluginManager.Register(new StealthPlugin()).Register(new Permissions());
 
@@ -16,7 +16,7 @@ public class PermissionsTest {
 
         await page.GoToAsync("http://info.cern.ch/");
 
-        var finger = await FingerPrint.GetFingerPrint(page);
+        var finger = await page.GetFingerPrint();
         var s = finger.ToString(); // for debug
 
         Assert.Equal("prompt", finger.GetProperty("permissions").GetProperty("state").GetString());

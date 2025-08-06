@@ -5,11 +5,11 @@ using PuppeteerExtraSharpLite.Plugins.ExtraStealth;
 using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 using PuppeteerExtraSharpLite.Tests.Utils;
 
-namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests.EvasionsTests;
+namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests;
 
-public class ContentWindowTest {
+public partial class StealthPluginTests {
     [Fact]
-    public async Task IFrameShouldBeObject() {
+    public async Task ContentWindow_Plugin_IFrame_Should_BeObject() {
         var pluginManager = new PluginManager();
         pluginManager.Register(new StealthPlugin()).Register(new ContentWindow());
 
@@ -18,13 +18,13 @@ public class ContentWindowTest {
 
         await page.GoToAsync("https://google.com");
 
-        var finger = await FingerPrint.GetFingerPrint(page);
+        var finger = await page.GetFingerPrint();
 
         Assert.Equal("object", finger.GetProperty("iframeChrome").GetString());
     }
 
     [Fact]
-    public async Task ShouldNotBreakIFrames() {
+    public async Task ContentWindow_Plugin_ShouldNot_BreakIFrames() {
         var pluginManager = new PluginManager();
         pluginManager.Register(new StealthPlugin()).Register(new ContentWindow());
 
@@ -65,7 +65,7 @@ public class ContentWindowTest {
     }
 
     [Fact]
-    public async Task ShouldCoverAllFrames() {
+    public async Task ContentWindow_Plugin_Should_CoverAllFrames() {
         var pluginManager = new PluginManager();
         pluginManager.Register(new StealthPlugin()).Register(new ContentWindow());
 
@@ -109,7 +109,7 @@ public class ContentWindowTest {
 
 
     [Fact]
-    public async Task ShouldEmulateFeatures() {
+    public async Task ContentWindow_Plugin_Should_EmulateFeatures() {
         var pluginManager = new PluginManager();
         pluginManager.Register(new StealthPlugin()).Register(new ContentWindow());
 
