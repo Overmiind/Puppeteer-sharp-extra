@@ -1,13 +1,13 @@
 ﻿using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
+namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 
-public class HardwareConcurrency : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
-    public override string Name => nameof(HardwareConcurrency);
+public class HardwareConcurrencyPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
+    public override string Name => nameof(HardwareConcurrencyPlugin);
 
     public readonly int ConcurrencyLevel;
 
-    public HardwareConcurrency(int concurrencyLevel = 4) : base() {
+    public HardwareConcurrencyPlugin(int concurrencyLevel = 4) : base() {
         ConcurrencyLevel = concurrencyLevel;
     }
 

@@ -1,9 +1,9 @@
 ﻿using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
+namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 
-public class ChromeRuntime : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
-    public override string Name => nameof(ChromeRuntime);
+public class ChromeRuntimePlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
+    public override string Name => nameof(ChromeRuntimePlugin);
 
     // StealthPlugin injects utils.js
     protected override string[] RequiredPlugins => [nameof(StealthPlugin)];

@@ -1,5 +1,4 @@
-﻿using PuppeteerExtraSharpLite.Plugins.ExtraStealth;
-using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
+﻿using PuppeteerExtraSharpLite.Plugins.Stealth;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests;
 

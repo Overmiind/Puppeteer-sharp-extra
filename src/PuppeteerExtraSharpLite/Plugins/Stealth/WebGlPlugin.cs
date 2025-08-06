@@ -1,6 +1,6 @@
 ﻿using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
+namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 
 public class WebGlPlugin : PuppeteerExtraPlugin {
     public override string Name => nameof(WebGlPlugin);

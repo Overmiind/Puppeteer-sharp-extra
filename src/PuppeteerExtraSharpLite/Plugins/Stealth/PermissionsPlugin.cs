@@ -1,9 +1,9 @@
 ﻿using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
+namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 
-public class Permissions : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
-    public override string Name => nameof(Permissions);
+public class PermissionsPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
+    public override string Name => nameof(PermissionsPlugin);
 
     // StealthPlugin injects utils.js
     protected override string[] RequiredPlugins => [nameof(StealthPlugin)];

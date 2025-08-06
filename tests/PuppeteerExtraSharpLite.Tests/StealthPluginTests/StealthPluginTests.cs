@@ -1,4 +1,4 @@
-﻿using PuppeteerExtraSharpLite.Plugins.ExtraStealth;
+﻿using PuppeteerExtraSharpLite.Plugins.Stealth;
 
 using PuppeteerSharp;
 
