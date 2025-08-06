@@ -2,13 +2,15 @@
 
 namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
 
-public class WebGl : PuppeteerExtraPlugin {
-    public override string Name => nameof(WebGl);
+public class WebGlPlugin : PuppeteerExtraPlugin {
+    public override string Name => nameof(WebGlPlugin);
 
     private readonly StealthWebGLOptions _options;
 
-    public WebGl(StealthWebGLOptions? options = null) : base() {
-        _options = options ?? new StealthWebGLOptions("Intel Inc.", "Intel Iris OpenGL Engine");
+    public WebGlPlugin() : this(new StealthWebGLOptions("Intel Inc.", "Intel Iris OpenGL Engine")) { }
+
+    public WebGlPlugin(StealthWebGLOptions options) {
+        _options = options;
     }
 
     // StealthPlugin injects utils.js
@@ -19,12 +21,4 @@ public class WebGl : PuppeteerExtraPlugin {
     }
 }
 
-public class StealthWebGLOptions : IPuppeteerExtraPluginOptions {
-    public string Vendor { get; }
-    public string Renderer { get; }
-
-    public StealthWebGLOptions(string vendor, string renderer) {
-        Vendor = vendor;
-        Renderer = renderer;
-    }
-}
+public record StealthWebGLOptions(string Vendor, string Renderer);
