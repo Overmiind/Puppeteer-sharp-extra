@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace PuppeteerExtraSharpLite.Tests.Utils;
+namespace PuppeteerExtraSharpLite.Tests;
 
 public static class Helper {
 	public static string GetScriptContent(string filename) {

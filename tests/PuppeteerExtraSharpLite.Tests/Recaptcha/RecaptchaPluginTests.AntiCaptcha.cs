@@ -1,14 +1,12 @@
 using PuppeteerExtraSharpLite.Plugins.Recaptcha;
-using PuppeteerExtraSharpLite.Tests.Utils;
 
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Tests.Recaptcha.AntiCaptcha;
+namespace PuppeteerExtraSharpLite.Tests.Recaptcha;
 
-[Collection("Captcha")]
-public class AntiCaptchaTests {
+public partial class RecaptchaPluginTests {
     [Fact]
-    public async Task ShouldThrowCaptchaExceptionWhenCaptchaNotFound() {
+    public async Task AntiCaptcha_Plugin_Should_ThrowCaptchaException_When_CaptchaNotFound() {
         Assert.SkipUnless(Helper.TryGetEnvironmentVariable("AntiCaptchaKey", out var antiCaptchaKey),
             "AntiCaptchaKey environment variable is not set. Skipping test.");
 
@@ -29,7 +27,7 @@ public class AntiCaptchaTests {
     }
 
     [Fact]
-    public async Task ShouldSolveCaptchaWithSubmitButton() {
+    public async Task AntiCaptcha_Plugin_Should_SolveCaptchaWithSubmitButton() {
         Assert.SkipUnless(Helper.TryGetEnvironmentVariable("AntiCaptchaKey", out var antiCaptchaKey),
             "AntiCaptchaKey environment variable is not set. Skipping test.");
 
@@ -57,7 +55,7 @@ public class AntiCaptchaTests {
     }
 
     [Fact]
-    public async Task ShouldSolveCaptchaWithCallback() {
+    public async Task AntiCaptcha_Plugin_ShouldSolve_CaptchaWithCallback() {
         Assert.SkipUnless(Helper.TryGetEnvironmentVariable("AntiCaptchaKey", out var antiCaptchaKey),
             "AntiCaptchaKey environment variable is not set. Skipping test.");
 

@@ -1,9 +1,7 @@
 ﻿using System.Text.Json;
 
 using PuppeteerExtraSharpLite.Plugins.ExtraStealth;
-
 using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
-using PuppeteerExtraSharpLite.Tests.Utils;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests;
 

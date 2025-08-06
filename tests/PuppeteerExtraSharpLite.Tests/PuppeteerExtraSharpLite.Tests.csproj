@@ -11,14 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="StealthPluginTests\Script\fpCollect.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="StealthPluginTests\Script\fpCollect.js" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 

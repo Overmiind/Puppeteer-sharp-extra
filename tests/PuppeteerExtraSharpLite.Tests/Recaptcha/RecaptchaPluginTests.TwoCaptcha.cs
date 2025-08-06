@@ -1,12 +1,10 @@
 using PuppeteerExtraSharpLite.Plugins.Recaptcha;
-using PuppeteerExtraSharpLite.Tests.Utils;
 
-namespace PuppeteerExtraSharpLite.Tests.Recaptcha.TwoCaptcha;
+namespace PuppeteerExtraSharpLite.Tests.Recaptcha;
 
-[Collection("Captcha")]
-public class TwoCaptchaProviderTest {
+public partial class RecaptchaPluginTests {
     [Fact]
-    public async Task ShouldResolveCaptchaInGooglePage() {
+    public async Task TwoCaptcha_Plugin_Should_ResolveCaptchaInGooglePage() {
         Assert.SkipUnless(Helper.TryGetEnvironmentVariable("TwoCaptchaProvider", out var antiCaptchaKey),
             "TwoCaptchaProvider environment variable is not set. Skipping test.");
 
@@ -32,7 +30,7 @@ public class TwoCaptchaProviderTest {
     }
 
     [Fact]
-    public async Task ShouldSolveInvisibleCaptcha() {
+    public async Task TwoCaptcha_Plugin_Should_SolveInvisibleCaptcha() {
         Assert.SkipUnless(Helper.TryGetEnvironmentVariable("TwoCaptchaProvider", out var antiCaptchaKey),
             "TwoCaptchaProvider environment variable is not set. Skipping test.");
 
@@ -58,6 +56,5 @@ public class TwoCaptchaProviderTest {
 
         var elementProperty = await (await elements[1].GetPropertyAsync("textContent")).JsonValueAsync<string>();
         Assert.Equal("Success!", elementProperty);
-
     }
 }
