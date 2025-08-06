@@ -1,8 +1,6 @@
 ﻿using System.Text.Json;
 
-using PuppeteerExtraSharpLite.Plugins.ExtraStealth;
-
-using PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
+using PuppeteerExtraSharpLite.Plugins.Stealth;
 
 using PuppeteerSharp;
 
@@ -12,7 +10,7 @@ public partial class StealthPluginTests {
     [Fact]
     public async Task ChromeApp_Plugin_Test() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new StealthPlugin()).Register(new ChromeApp());
+        pluginManager.Register(new StealthPlugin()).Register(new ChromeAppPlugin());
 
         await using var browser = await pluginManager.LaunchAsync();
         using var page = await browser.NewPageAsync();

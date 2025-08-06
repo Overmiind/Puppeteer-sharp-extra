@@ -2,10 +2,10 @@
 
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
+namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 
-public partial class UserAgent : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
-    public override string Name => nameof(UserAgent);
+public partial class UserAgentPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
+    public override string Name => nameof(UserAgentPlugin);
 
     public async Task OnPageCreated(IPage page) {
         var ua = await page.Browser.GetUserAgentAsync();

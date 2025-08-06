@@ -1,4 +1,5 @@
-﻿using PuppeteerExtraSharpLite.Plugins.BlockResources;
+﻿using PuppeteerExtraSharpLite.Plugins;
+using System.Text.RegularExpressions;
 
 using PuppeteerSharp;
 
@@ -8,15 +9,19 @@ public class BlockResourcesPluginTests {
     [Fact]
     public void BlockResources_Plugin_Should_AddToListOfRules() {
         var plugin = new BlockResourcesPlugin();
-        var rule = plugin.AddRule(builder => builder.BlockedResources(ResourceType.Document));
-        Assert.NotEmpty(plugin.BlockResources);
-        Assert.Contains(ResourceType.Document, plugin.BlockResources[0].ResourceType);
+        _ = plugin.AddRule(new BlockRule() {
+            ResourceType = ResourceType.Document
+        });
+        Assert.NotEmpty(plugin.Rules);
+        Assert.Equal(ResourceType.Document, plugin.Rules[0].ResourceType);
     }
 
     [Fact]
     public void BlockResources_Plugin_RuleForResource() {
         var plugin = new BlockResourcesPlugin();
-        var rule = plugin.AddRule(builder => builder.BlockedResources(ResourceType.Document));
+        var rule = plugin.AddRule(new BlockRule() {
+            ResourceType = ResourceType.Document
+        });
         Assert.True(rule.IsResourcesBlocked(ResourceType.Document));
     }
 
@@ -32,7 +37,10 @@ public class BlockResourcesPluginTests {
         using var actualPage = await browser.NewPageAsync();
         using var otherPage = await browser.NewPageAsync();
 
-        var rule = plugin.AddRule(builder => builder.BlockedResources(ResourceType.Document).OnlyForPage(actualPage));
+        var rule = plugin.AddRule(new BlockRule() {
+            ResourceType = ResourceType.Document,
+            IPage = actualPage
+        });
 
         Assert.True(rule.IsPageBlocked(actualPage));
         Assert.False(rule.IsPageBlocked(otherPage));
@@ -44,7 +52,9 @@ public class BlockResourcesPluginTests {
     [Theory]
     public void BlockedResources_Plugin_RuleForUrl(string site) {
         var plugin = new BlockResourcesPlugin();
-        var rule = plugin.AddRule(builder => builder.ForUrl("google"));
+        var rule = plugin.AddRule(new BlockRule() {
+            SitePattern = new Regex("google")
+        });
 
         Assert.True(rule.IsSiteBlocked(site));
     }
@@ -53,12 +63,16 @@ public class BlockResourcesPluginTests {
     public void BlockedResources_Plugin_Should_RemoveRule() {
         var plugin = new BlockResourcesPlugin();
 
-        var actualRule = plugin.AddRule(builder => builder.BlockedResources(ResourceType.Font));
-        var otherRule = plugin.AddRule(builder => builder.BlockedResources(ResourceType.Document));
+        var actualRule = plugin.AddRule(new BlockRule() {
+            ResourceType = ResourceType.Font
+        });
+        var otherRule = plugin.AddRule(new BlockRule() {
+            ResourceType = ResourceType.Document
+        });
 
-        plugin.RemoveRule(actualRule);
+        plugin.RemoveRules(r => r.ResourceType == ResourceType.Font);
 
-        Assert.DoesNotContain(actualRule, plugin.BlockResources);
-        Assert.Contains(otherRule, plugin.BlockResources);
+        Assert.DoesNotContain(actualRule, plugin.Rules);
+        Assert.Contains(otherRule, plugin.Rules);
     }
 }

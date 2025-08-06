@@ -1,9 +1,9 @@
 ﻿using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
+namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 
-public class LoadTimes : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
-    public override string Name => nameof(LoadTimes);
+public class LoadTimesPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
+    public override string Name => nameof(LoadTimesPlugin);
 
     // StealthPlugin injects utils.js
     protected override string[] RequiredPlugins => [nameof(StealthPlugin)];

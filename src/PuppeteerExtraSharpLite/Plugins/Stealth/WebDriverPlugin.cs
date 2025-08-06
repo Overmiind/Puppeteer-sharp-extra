@@ -1,11 +1,11 @@
 ﻿using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins.ExtraStealth.Evasions;
+namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 
-public class WebDriver : PuppeteerExtraPlugin, IOnPageCreatedPlugin, IBeforeLaunchPlugin {
-    public override string Name => nameof(WebDriver);
+public class WebDriverPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin, IBeforeLaunchPlugin {
+    public override string Name => nameof(WebDriverPlugin);
 
-    public WebDriver() : base() { }
+    public WebDriverPlugin() : base() { }
 
     public Task OnPageCreated(IPage page) {
         return page.EvaluateExpressionOnNewDocumentAsync(Scripts.WebDriver);

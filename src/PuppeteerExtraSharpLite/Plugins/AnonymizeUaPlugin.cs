@@ -2,19 +2,12 @@
 
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins.AnonymizeUa;
+namespace PuppeteerExtraSharpLite.Plugins;
 
 public partial class AnonymizeUaPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(AnonymizeUaPlugin);
 
-    public AnonymizeUaPlugin() : base() {
-    }
-
-    private Func<string, string>? _customAction;
-
-    public void CustomizeUa(Func<string, string> uaAction) {
-        _customAction = uaAction;
-    }
+    public Func<string, string> UserAgentTransformer = static (s) => s;
 
     public async Task OnPageCreated(IPage page) {
         string ua = await page.Browser.GetUserAgentAsync();
@@ -22,9 +15,7 @@ public partial class AnonymizeUaPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlu
 
         ua = UserAgentRegex().Replace(ua, "(Windows NT 10.0; Win64; x64)");
 
-        if (_customAction != null) {
-            ua = _customAction(ua);
-        }
+        ua = UserAgentTransformer(ua);
 
         await page.SetUserAgentAsync(ua);
     }
