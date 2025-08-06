@@ -5,11 +5,10 @@ namespace PuppeteerExtraSharpLite.Tests.Recaptcha;
 public partial class RecaptchaPluginTests {
     [Fact]
     public async Task TwoCaptcha_Plugin_Should_ResolveCaptchaInGooglePage() {
-        Assert.SkipUnless(Helper.TryGetEnvironmentVariable("TwoCaptchaProvider", out var antiCaptchaKey),
-            "TwoCaptchaProvider environment variable is not set. Skipping test.");
+        Assert.SkipWhen(_twoCaptchaKey.Length == 0, TwoCaptchaReason);
 
         using var client = new HttpClient();
-        var provider = new Plugins.Recaptcha.Provider._2Captcha.TwoCaptcha(client, antiCaptchaKey);
+        var provider = new Plugins.Recaptcha.Provider._2Captcha.TwoCaptcha(client, _twoCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
         var pluginManager = new PluginManager();
@@ -31,11 +30,10 @@ public partial class RecaptchaPluginTests {
 
     [Fact]
     public async Task TwoCaptcha_Plugin_Should_SolveInvisibleCaptcha() {
-        Assert.SkipUnless(Helper.TryGetEnvironmentVariable("TwoCaptchaProvider", out var antiCaptchaKey),
-            "TwoCaptchaProvider environment variable is not set. Skipping test.");
+        Assert.SkipWhen(_twoCaptchaKey.Length == 0, TwoCaptchaReason);
 
         using var client = new HttpClient();
-        var provider = new Plugins.Recaptcha.Provider._2Captcha.TwoCaptcha(client, antiCaptchaKey);
+        var provider = new Plugins.Recaptcha.Provider._2Captcha.TwoCaptcha(client, _twoCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
         var pluginManager = new PluginManager();

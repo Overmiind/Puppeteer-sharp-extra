@@ -7,11 +7,10 @@ namespace PuppeteerExtraSharpLite.Tests.Recaptcha;
 public partial class RecaptchaPluginTests {
     [Fact]
     public async Task AntiCaptcha_Plugin_Should_ThrowCaptchaException_When_CaptchaNotFound() {
-        Assert.SkipUnless(Helper.TryGetEnvironmentVariable("AntiCaptchaKey", out var antiCaptchaKey),
-            "AntiCaptchaKey environment variable is not set. Skipping test.");
+        Assert.SkipWhen(_antiCaptchaKey.Length == 0, AntiCaptchaReason);
 
         using var client = new HttpClient();
-        var provider = new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(client, antiCaptchaKey);
+        var provider = new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(client, _antiCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
         var pluginManager = new PluginManager();
@@ -28,11 +27,10 @@ public partial class RecaptchaPluginTests {
 
     [Fact]
     public async Task AntiCaptcha_Plugin_Should_SolveCaptchaWithSubmitButton() {
-        Assert.SkipUnless(Helper.TryGetEnvironmentVariable("AntiCaptchaKey", out var antiCaptchaKey),
-            "AntiCaptchaKey environment variable is not set. Skipping test.");
+        Assert.SkipWhen(_antiCaptchaKey.Length == 0, AntiCaptchaReason);
 
         using var client = new HttpClient();
-        var provider = new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(client, antiCaptchaKey);
+        var provider = new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(client, _antiCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
         var pluginManager = new PluginManager();
@@ -56,11 +54,10 @@ public partial class RecaptchaPluginTests {
 
     [Fact]
     public async Task AntiCaptcha_Plugin_ShouldSolve_CaptchaWithCallback() {
-        Assert.SkipUnless(Helper.TryGetEnvironmentVariable("AntiCaptchaKey", out var antiCaptchaKey),
-            "AntiCaptchaKey environment variable is not set. Skipping test.");
+        Assert.SkipWhen(_antiCaptchaKey.Length == 0, AntiCaptchaReason);
 
         using var client = new HttpClient();
-        var provider = new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(client, antiCaptchaKey);
+        var provider = new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(client, _antiCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
         var pluginManager = new PluginManager();
