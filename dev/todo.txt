@@ -1,2 +1,3 @@
 TODO: Remove unused code
 TODO: Update docs
+TODO: More user friendly way to register standard evasion plugins with configurable options
