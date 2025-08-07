@@ -9,7 +9,7 @@ namespace PuppeteerExtraSharpLite.Plugins.Recaptcha;
 public class Recaptcha {
     private readonly IRecaptchaProvider _provider;
 
-    public Recaptcha(IRecaptchaProvider provider, CaptchaOptions options) {
+    public Recaptcha(IRecaptchaProvider provider) {
         _provider = provider;
     }
 
