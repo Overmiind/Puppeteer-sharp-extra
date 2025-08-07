@@ -1,4 +1,5 @@
 using PuppeteerExtraSharpLite.Plugins.Recaptcha;
+using PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.TwoCaptcha;
 
 namespace PuppeteerExtraSharpLite.Tests.Recaptcha;
 
@@ -8,7 +9,7 @@ public partial class RecaptchaPluginTests {
         Assert.SkipWhen(_twoCaptchaKey.Length == 0, TwoCaptchaReason);
 
         using var client = new HttpClient();
-        var provider = new Plugins.Recaptcha.Provider._2Captcha.TwoCaptcha(client, _twoCaptchaKey);
+        var provider = new TwoCaptchaProvider(client, _twoCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
         var pluginManager = new PluginManager();
@@ -19,7 +20,7 @@ public partial class RecaptchaPluginTests {
 
         await page.GoToAsync("https://www.google.com/recaptcha/api2/demo");
 
-        await plugin.SolveCaptchaAsync(page);
+        await plugin.SolveCaptchaAsync(page, token: TestContext.Current.CancellationToken);
         var button = await page.QuerySelectorAsync("input[id='recaptcha-demo-submit']");
         await button.ClickAsync();
         await page.WaitForNavigationAsync();
@@ -33,7 +34,7 @@ public partial class RecaptchaPluginTests {
         Assert.SkipWhen(_twoCaptchaKey.Length == 0, TwoCaptchaReason);
 
         using var client = new HttpClient();
-        var provider = new Plugins.Recaptcha.Provider._2Captcha.TwoCaptcha(client, _twoCaptchaKey);
+        var provider = new TwoCaptchaProvider(client, _twoCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
         var pluginManager = new PluginManager();
@@ -44,7 +45,7 @@ public partial class RecaptchaPluginTests {
 
         await page.GoToAsync("https://recaptcha-demo.appspot.com/recaptcha-v2-invisible.php");
 
-        var result = await plugin.SolveCaptchaAsync(page);
+        var result = await plugin.SolveCaptchaAsync(page, token: TestContext.Current.CancellationToken);
 
         Assert.Null(result.Exception);
         await page.WaitForNavigationAsync();

@@ -2,7 +2,7 @@
 
 namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 
-public class ChromeRuntimePlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
+public class ChromeRuntimePlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(ChromeRuntimePlugin);
 
     // StealthPlugin injects utils.js

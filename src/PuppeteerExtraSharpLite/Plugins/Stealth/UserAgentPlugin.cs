@@ -4,7 +4,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 
-public partial class UserAgentPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
+public partial class UserAgentPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(UserAgentPlugin);
 
     public async Task OnPageCreated(IPage page) {

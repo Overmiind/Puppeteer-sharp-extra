@@ -8,7 +8,7 @@ namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 /// <remarks>
 /// Make sure ContentWindow is the last registered stealth plugin
 /// </remarks>
-public class ContentWindowPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
+public class ContentWindowPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(ContentWindowPlugin);
 
     // StealthPlugin injects utils.js

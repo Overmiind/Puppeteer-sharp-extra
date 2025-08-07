@@ -2,7 +2,7 @@
 
 namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 
-public class OutDimensionsPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
+public class OutDimensionsPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(OutDimensionsPlugin);
 
     public OutDimensionsPlugin() : base() { }

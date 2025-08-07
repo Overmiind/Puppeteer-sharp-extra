@@ -5,12 +5,12 @@ using PuppeteerSharp;
 namespace PuppeteerExtraSharpLite;
 
 public class PluginManager {
-    private readonly List<PuppeteerExtraPlugin> _plugins = [];
+    private readonly List<PuppeteerPlugin> _plugins = [];
     private readonly HashSet<string> _registeredPlugins = [];
 
-    public PluginManager Register(PuppeteerExtraPlugin plugin) => Register([plugin]);
+    public PluginManager Register(PuppeteerPlugin plugin) => Register([plugin]);
 
-    public PluginManager Register(PuppeteerExtraPlugin[] plugins) {
+    public PluginManager Register(PuppeteerPlugin[] plugins) {
         foreach (var plugin in plugins) {
             string name = plugin.Name;
 
@@ -74,8 +74,6 @@ public class PluginManager {
             }
         }
 
-        // TODO: check plugin limitations
-
         foreach (var plugin in _plugins) {
             switch (plugin) {
                 case IOnPageCreatedPlugin p: {
@@ -110,21 +108,4 @@ public class PluginManager {
             }
         }
     }
-
-    // private void CheckPluginRequirements(BrowserStartContext context) {
-    //     foreach (var puppeteerExtraPlugin in _plugins) {
-    //         if (puppeteerExtraPlugin.Requirements is null)
-    //             continue;
-    //         foreach (var requirement in puppeteerExtraPlugin.Requirements) {
-    //             switch (context.StartType) {
-    //                 case StartType.Launch when requirement == PluginRequirements.HeadFul && context.IsHeadless:
-    //                     throw new NotSupportedException(
-    //                         $"Plugin - {puppeteerExtraPlugin.Name} is not supported in headless mode");
-    //                 case StartType.Connect when requirement == PluginRequirements.Launch:
-    //                     throw new NotSupportedException(
-    //                         $"Plugin - {puppeteerExtraPlugin.Name} doesn't support connect");
-    //             }
-    //         }
-    //     }
-    // }
 }

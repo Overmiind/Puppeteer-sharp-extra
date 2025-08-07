@@ -2,7 +2,7 @@
 
 namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 
-public class CodecPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
+public class CodecPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(CodecPlugin);
 
     // StealthPlugin injects utils.js

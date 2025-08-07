@@ -1,4 +1,5 @@
 using PuppeteerExtraSharpLite.Plugins.Recaptcha;
+using PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha;
 
 using PuppeteerSharp;
 
@@ -10,7 +11,7 @@ public partial class RecaptchaPluginTests {
         Assert.SkipWhen(_antiCaptchaKey.Length == 0, AntiCaptchaReason);
 
         using var client = new HttpClient();
-        var provider = new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(client, _antiCaptchaKey);
+        var provider = new AntiCaptchaProvider(client, _antiCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
         var pluginManager = new PluginManager();
@@ -20,7 +21,7 @@ public partial class RecaptchaPluginTests {
         using var page = await browser.NewPageAsync();
 
         await page.GoToAsync("https://lessons.zennolab.com/ru/index");
-        var result = await plugin.SolveCaptchaAsync(page);
+        var result = await plugin.SolveCaptchaAsync(page, token: TestContext.Current.CancellationToken);
         Assert.NotNull(result.Exception);
         Assert.False(result.IsSuccess);
     }
@@ -30,7 +31,7 @@ public partial class RecaptchaPluginTests {
         Assert.SkipWhen(_antiCaptchaKey.Length == 0, AntiCaptchaReason);
 
         using var client = new HttpClient();
-        var provider = new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(client, _antiCaptchaKey);
+        var provider = new AntiCaptchaProvider(client, _antiCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
         var pluginManager = new PluginManager();
@@ -40,7 +41,7 @@ public partial class RecaptchaPluginTests {
         using var page = await browser.NewPageAsync();
 
         await page.GoToAsync("https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=low");
-        var result = await plugin.SolveCaptchaAsync(page);
+        var result = await plugin.SolveCaptchaAsync(page, token: TestContext.Current.CancellationToken);
 
         Assert.Null(result.Exception);
 
@@ -57,7 +58,7 @@ public partial class RecaptchaPluginTests {
         Assert.SkipWhen(_antiCaptchaKey.Length == 0, AntiCaptchaReason);
 
         using var client = new HttpClient();
-        var provider = new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(client, _antiCaptchaKey);
+        var provider = new AntiCaptchaProvider(client, _antiCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
         var pluginManager = new PluginManager();
@@ -67,7 +68,7 @@ public partial class RecaptchaPluginTests {
         using var page = await browser.NewPageAsync();
 
         await page.GoToAsync("https://lessons.zennolab.com/captchas/recaptcha/v2_nosubmit.php?level=low");
-        var result = await plugin.SolveCaptchaAsync(page);
+        var result = await plugin.SolveCaptchaAsync(page, token: TestContext.Current.CancellationToken);
 
         Assert.Null(result.Exception);
 

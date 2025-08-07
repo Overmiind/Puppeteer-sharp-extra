@@ -2,7 +2,7 @@
 
 namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 
-public class HardwareConcurrencyPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
+public class HardwareConcurrencyPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(HardwareConcurrencyPlugin);
 
     public readonly int ConcurrencyLevel;
@@ -16,13 +16,5 @@ public class HardwareConcurrencyPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlu
 
     public Task OnPageCreated(IPage page) {
         return page.EvaluateFunctionAsync(Scripts.HardwareConcurrency, [ConcurrencyLevel]);
-    }
-}
-
-public class StealthHardwareConcurrencyOptions : IPuppeteerExtraPluginOptions {
-    public int Concurrency { get; }
-
-    public StealthHardwareConcurrencyOptions(int concurrency) {
-        Concurrency = concurrency;
     }
 }

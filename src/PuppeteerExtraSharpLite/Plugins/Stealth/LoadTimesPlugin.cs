@@ -2,7 +2,7 @@
 
 namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 
-public class LoadTimesPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
+public class LoadTimesPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(LoadTimesPlugin);
 
     // StealthPlugin injects utils.js

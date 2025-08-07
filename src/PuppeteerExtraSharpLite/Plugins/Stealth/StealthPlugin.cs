@@ -2,10 +2,10 @@
 
 namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 
-public class StealthPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
+public class StealthPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(StealthPlugin);
 
-    public static PuppeteerExtraPlugin[] GetStandardEvasions() =>
+    public static PuppeteerPlugin[] GetStandardEvasions() =>
     [
         new WebDriverPlugin(),
         new ChromeSciPlugin(),

@@ -2,7 +2,7 @@
 
 namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 
-public class WebDriverPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin, IBeforeLaunchPlugin {
+public class WebDriverPlugin : PuppeteerPlugin, IOnPageCreatedPlugin, IBeforeLaunchPlugin {
     public override string Name => nameof(WebDriverPlugin);
 
     public WebDriverPlugin() : base() { }

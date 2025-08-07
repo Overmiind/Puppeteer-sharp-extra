@@ -2,7 +2,7 @@
 
 namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 
-public class ChromeSciPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
+public class ChromeSciPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(ChromeSciPlugin);
 
     // StealthPlugin injects utils.js
