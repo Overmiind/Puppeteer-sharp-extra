@@ -23,11 +23,11 @@ public class AntiCaptcha : IRecaptchaProvider {
         await Task.Delay(_options.StartTimeoutSeconds * 1000);
         var result = await Api.PendingForResult(_client, _userKey, task.TaskId, _options);
 
-        if (result.status != "ready" || result.solution is null || result.errorId != 0) {
-            throw new HttpRequestException($"AntiCaptcha request ends with error - {result.errorId}");
+        if (result.Status != "ready" || result.Solution is null || result.ErrorId != 0) {
+            throw new HttpRequestException($"AntiCaptcha request ends with error - {result.ErrorId}");
         }
 
-        return result.solution.gRecaptchaResponse;
+        return result.Solution.GRecaptchaResponse;
     }
 
     public static class Api {
@@ -82,7 +82,7 @@ public class AntiCaptcha : IRecaptchaProvider {
                             return true;
                         }
 
-                        if (result.status == "ready" || result.errorId != 0) {
+                        if (result.Status == "ready" || result.ErrorId != 0) {
                             outerResult = result;
                             return false;
                         }

@@ -1,21 +1,42 @@
-﻿namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha.Models;
 
 public class TaskResultModel {
-    public int errorId { get; set; }
-    public string status { get; set; } = string.Empty;
-    public Solution? solution { get; set; }
-    public string cost { get; set; } = string.Empty;
-    public string ip { get; set; } = string.Empty;
-    public int createTime { get; set; }
-    public int endTime { get; set; }
-    public int solveCount { get; set; }
+    [JsonPropertyName("errorId")]
+    public int ErrorId { get; set; }
+
+    [JsonPropertyName("status")]
+    public string Status { get; set; } = string.Empty;
+
+    [JsonPropertyName("solution")]
+    public Solution? Solution { get; set; }
+
+    [JsonPropertyName("cost")]
+    public string Cost { get; set; } = string.Empty;
+
+    [JsonPropertyName("ip")]
+    public string Ip { get; set; } = string.Empty;
+
+    [JsonPropertyName("createTime")]
+    public int CreateTime { get; set; }
+
+    [JsonPropertyName("endTime")]
+    public int EndTime { get; set; }
+
+    [JsonPropertyName("solveCount")]
+    public int SolveCount { get; set; }
 }
 
 public class Solution {
-    public string gRecaptchaResponse { get; set; } = string.Empty;
-    public Cookies? cookies { get; set; }
+    [JsonPropertyName("gRecaptchaResponse")]
+    public string GRecaptchaResponse { get; set; } = string.Empty;
+
+    [JsonPropertyName("cookies")]
+    public Cookies? Cookies { get; set; }
 }
 
 public class Cookies {
-    public string empty { get; set; } = string.Empty;
+    [JsonPropertyName("empty")]
+    public string Empty { get; set; } = string.Empty;
 }
