@@ -14,27 +14,25 @@ public class RecaptchaPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
         _provider = provider;
     }
 
-    public async Task<RecaptchaResult> SolveCaptchaAsync(IPage page) {
-        return await Solve(page);
-    }
-
-    public async Task OnPageCreated(IPage page) {
-        await page.SetBypassCSPAsync(true);
-    }
-
-    public async Task<RecaptchaResult> Solve(IPage page) {
+    public async Task<RecaptchaResult> SolveCaptchaAsync(IPage page, string proxyStr = "", CancellationToken token = default) {
         var recaptchaKeyResult = await GetKeyAsync(page);
 
         if (!recaptchaKeyResult.IsSuccess) {
             return recaptchaKeyResult;
         }
 
-        var solution = await GetSolutionAsync(recaptchaKeyResult.Value, page.Url);
+        var key = recaptchaKeyResult.Value; // for success - value=key
+        var url = page.Url;
+        var solution = await _provider.GetSolutionAsync(key, url, proxyStr, token);
         await WriteToInput(page, solution);
 
         return new RecaptchaResult() {
             IsSuccess = true
         };
+    }
+
+    public async Task OnPageCreated(IPage page) {
+        await page.SetBypassCSPAsync(true);
     }
 
     public static async Task<RecaptchaResult> GetKeyAsync(IPage page) {
@@ -63,10 +61,6 @@ public class RecaptchaPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
         return new() {
             Value = key
         };
-    }
-
-    public async Task<string> GetSolutionAsync(string key, string urlPage) {
-        return await _provider.GetSolution(key, urlPage);
     }
 
     public static async Task WriteToInput(IPage page, string value) {
