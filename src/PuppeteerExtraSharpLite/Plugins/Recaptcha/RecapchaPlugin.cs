@@ -73,9 +73,10 @@ public class RecaptchaPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
               $"() => {{document.getElementById('g-recaptcha-response').innerHTML='{value}'}}");
 
         var script = Scripts.EnterRecaptchaCallBack;
+        // TODO: check unused script
 
         try {
-            await page.EvaluateFunctionAsync($@"(value) => {{{script}}}", value);
+            await page.EvaluateFunctionAsync($@"(value) => {{script}}", value);
         } catch {
             // ignored
         }

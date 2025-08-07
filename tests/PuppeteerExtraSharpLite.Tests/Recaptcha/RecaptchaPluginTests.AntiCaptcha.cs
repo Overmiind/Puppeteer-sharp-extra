@@ -1,4 +1,5 @@
 using PuppeteerExtraSharpLite.Plugins.Recaptcha;
+using PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha;
 
 using PuppeteerSharp;
 
@@ -10,7 +11,7 @@ public partial class RecaptchaPluginTests {
         Assert.SkipWhen(_antiCaptchaKey.Length == 0, AntiCaptchaReason);
 
         using var client = new HttpClient();
-        var provider = new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(client, _antiCaptchaKey);
+        var provider = new AntiCaptchaProvider(client, _antiCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
         var pluginManager = new PluginManager();
@@ -30,7 +31,7 @@ public partial class RecaptchaPluginTests {
         Assert.SkipWhen(_antiCaptchaKey.Length == 0, AntiCaptchaReason);
 
         using var client = new HttpClient();
-        var provider = new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(client, _antiCaptchaKey);
+        var provider = new AntiCaptchaProvider(client, _antiCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
         var pluginManager = new PluginManager();
@@ -57,7 +58,7 @@ public partial class RecaptchaPluginTests {
         Assert.SkipWhen(_antiCaptchaKey.Length == 0, AntiCaptchaReason);
 
         using var client = new HttpClient();
-        var provider = new Plugins.Recaptcha.Provider.AntiCaptcha.AntiCaptcha(client, _antiCaptchaKey);
+        var provider = new AntiCaptchaProvider(client, _antiCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
         var pluginManager = new PluginManager();

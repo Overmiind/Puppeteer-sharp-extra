@@ -3,14 +3,14 @@ using System.Net.Http.Json;
 
 namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha;
 
-public class AntiCaptcha : IRecaptchaProvider {
+public class AntiCaptchaProvider : IRecaptchaProvider {
     private readonly HttpClient _client;
     private readonly string _userKey;
     private readonly ProviderOptions _options;
 
-    public AntiCaptcha(HttpClient client, string userKey) : this(client, userKey, ProviderOptions.Default) { }
+    public AntiCaptchaProvider(HttpClient client, string userKey) : this(client, userKey, ProviderOptions.Default) { }
 
-    public AntiCaptcha(HttpClient client, string userKey, ProviderOptions options) {
+    public AntiCaptchaProvider(HttpClient client, string userKey, ProviderOptions options) {
         _client = client;
         _userKey = userKey;
         _options = options;
