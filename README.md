@@ -60,6 +60,28 @@ await page.ScreenshotAsync("extra.png");
 
 //TODO: Add specific plugin readmes
 
+### `StealthPlugin`
+
+
+
+### `AnonymizeUaPlugin`
+
+AnonymizeUaPlugin is used to transform the user agent on any page as soon as it launches.
+
+```csharp
+// Initialize the plugin manager
+var manager = new PluginManager();
+// Initialize the plugin
+var plugin = new AnonymizeUaPlugin();
+// Register the plugin
+manager.Register(plugin);
+// by default it will replace headless with regular chrome
+// and set platform to windows
+// you can also add your own custom transformation at any time by changing the function
+plugin.UserAgentTransformer = ua => "whatever"
+// Initialize browser and page + continue with whatever else
+```
+
 ### `RecaptchaPlugin`
 
 RecaptchaPlugin is used in conjunction with Recaptcha solving providers, at this state [AntiCaptcha](https://anti-captcha.com/mainpage) and [2captcha](https://2captcha.com/ru) are supported, but this is extensible so you add your own.
@@ -98,9 +120,9 @@ This plugin is used to blocks page resources in Puppeteer requests (img, documen
 // Initialize the plugin manager
 var manager = new PluginManager();
 // Initialize the plugin
-var blockResourcesPlugin = new BlockResourcesPlugin();
+var plugin = new BlockResourcesPlugin();
 // Register the plugin
-manager.Register(blockResourcesPlugin);
+manager.Register(plugin);
 // Initialize browser and page
 await using var browser = manager.LaunchAsync();
 using var page = browser.NewPageAsync();
@@ -112,7 +134,7 @@ var blockGoogle = new BlockRule() {
     ResourceType = ResourceType.Scripts // Block scripts
 };
 // Add rule
-blockResourcesPlugin.AddRule(blockGoogle);
+plugin.AddRule(blockGoogle);
 ```
 
 You can also inspect rules on the plugin, as well as add or remove rules at any point. removing rules uses a `Func<BlockRule, bool>` predicate to select the rules to remove.
