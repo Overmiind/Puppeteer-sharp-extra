@@ -1,13 +1,9 @@
 ﻿namespace PuppeteerExtraSharpLite.Plugins.Recaptcha;
 
-/// <summary>
-/// 
-/// </summary>
-/// <param name="IsSuccess"></param>
-/// <param name="Exception"></param>
-public record RecaptchaResult(bool IsSuccess = true, CaptchaException? Exception = default);
+public record RecaptchaResult {
+    public bool IsSuccess { get; init; } = true;
 
-public class CaptchaException : Exception {
-    public required string PageUrl { get; init; }
-    public required string Content { get; init; }
+    public string Value { get; init; } = string.Empty;
+
+    public string Exception { get; init; } = string.Empty;
 }

@@ -23,44 +23,46 @@ public class RecaptchaPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     }
 
     public async Task<RecaptchaResult> Solve(IPage page) {
-        try {
-            var key = await GetKeyAsync(page);
-            var solution = await GetSolutionAsync(key, page.Url);
-            await WriteToInput(page, solution);
+        var recaptchaKeyResult = await GetKeyAsync(page);
 
-            return new RecaptchaResult() {
-                IsSuccess = true
-            };
-        } catch (CaptchaException ex) {
-            return new RecaptchaResult() {
-                Exception = ex,
-                IsSuccess = false
-            };
+        if (!recaptchaKeyResult.IsSuccess) {
+            return recaptchaKeyResult;
         }
+
+        var solution = await GetSolutionAsync(recaptchaKeyResult.Value, page.Url);
+        await WriteToInput(page, solution);
+
+        return new RecaptchaResult() {
+            IsSuccess = true
+        };
     }
 
-    public static async Task<string> GetKeyAsync(IPage page) {
+    public static async Task<RecaptchaResult> GetKeyAsync(IPage page) {
         var element =
             await page.QuerySelectorAsync("iframe[src^='https://www.google.com/recaptcha/api2/anchor'][name^=\"a-\"]");
 
         if (element is null) {
-            throw new CaptchaException {
-                PageUrl = page.Url,
-                Content = "Recaptcha key not found!"
+            return new() {
+                IsSuccess = false,
+                Value = page.Url,
+                Exception = "Recaptcha key not found!"
             };
         }
 
         var src = await element.GetPropertyAsync("src");
 
         if (src is null) {
-            throw new CaptchaException {
-                PageUrl = page.Url,
-                Content = "Recaptcha key not found!"
+            return new() {
+                IsSuccess = false,
+                Value = page.Url,
+                Exception = "Recaptcha key not found!"
             };
         }
 
         var key = HttpUtility.ParseQueryString(src!.ToString()!).Get("k")!;
-        return key;
+        return new() {
+            Value = key
+        };
     }
 
     public async Task<string> GetSolutionAsync(string key, string urlPage) {
