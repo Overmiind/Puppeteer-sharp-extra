@@ -9,8 +9,8 @@ PuppeteerExtraSharpLite is a high-performance, modern rewrite and lighter drop-i
 - **Updated core**: Bumps PuppeteerSharp dependencies to a more modern stack.
 - **.NET 9 support**: Targets .NET 9, unlocking ahead-of-time (AOT) compilation and aggressive trimming for small, fast binaries.
 - **Performance-first design**: Rewritten internals to avoid reflection and embedded DLL tricks; optimized for minimal allocations and startup cost.
-- **Dropped RestSharp**: No longer depends on RestSharp; any HTTP client logic uses lighter/custom wrappers or `HttpClient` directly.
-- **Trimming & AOT friendly**: Designed to work well with publish-time trimming and native-compilation scenarios.
+- **Dropped RestSharp**: No longer depends on RestSharp.
+- **Dropped NewtonSoftJson**: No longer uses NewtonSoft - `System.Text.Json` is the new king.
 
 ## Quickstart
 
@@ -57,6 +57,35 @@ await page.ScreenshotAsync("extra.png");
 - **Block Resources Plugin** – Blocks images, documents, and other resource types to speed up navigation.
 
 ## API
+
+//TODO: Add specific plugin readmes
+
+### `BlockResourcesPlugin`
+
+This plugin is used to blocks page resources in Puppeteer requests (img, documents etc.)
+
+```csharp
+// Initialize the plugin manager
+var manager = new PluginManager();
+// Initialize the plugin
+var blockResourcesPlugin = new BlockResourcesPlugin();
+// Register the plugin
+manager.Register(blockResourcesPlugin);
+// Initialize browser and page
+await using var browser = manager.LaunchAsync();
+using var page = browser.NewPageAsync();
+// Create a rule
+var blockGoogle = new BlockRule() {
+    SitePattern = new Regex("google"), // SitePattern applies only to specific urls by pattern
+                                       // You can also point it to a GeneratedRegex
+    IPage = page, // it will affect this instance of the page
+    ResourceType = ResourceType.Scripts // Block scripts
+};
+// Add rule
+blockResourcesPlugin.AddRule(blockGoogle);
+```
+
+You can also inspect rules on the plugin, as well as add or remove rules at any point. removing rules uses a `Func<BlockRule, bool>` predicate to select the rules to remove.
 
 ### Use(IPuppeteerExtraPlugin plugin)
 
