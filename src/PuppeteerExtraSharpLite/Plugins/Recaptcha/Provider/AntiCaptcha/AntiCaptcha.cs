@@ -7,8 +7,10 @@ public class AntiCaptcha : IRecaptchaProvider {
 
     private readonly AntiCaptchaApi _api;
 
-    public AntiCaptcha(HttpClient client, string userKey, ProviderOptions? options = null) {
-        _options = options ?? ProviderOptions.CreateDefaultOptions();
+    public AntiCaptcha(HttpClient client, string userKey) : this(client, userKey, ProviderOptions.Default) { }
+
+    public AntiCaptcha(HttpClient client, string userKey, ProviderOptions options) {
+        _options = options;
         _api = new AntiCaptchaApi(client, userKey, _options);
     }
 

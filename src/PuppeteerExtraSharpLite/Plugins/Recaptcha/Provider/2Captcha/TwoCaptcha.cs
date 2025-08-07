@@ -8,8 +8,10 @@ public class TwoCaptcha : IRecaptchaProvider {
     private readonly ProviderOptions _options;
     private readonly TwoCaptchaApi _api;
 
-    public TwoCaptcha(HttpClient client, string key, ProviderOptions? options = null) {
-        _options = options ?? ProviderOptions.CreateDefaultOptions();
+    public TwoCaptcha(HttpClient client, string key) : this(client, key, ProviderOptions.Default) { }
+
+    public TwoCaptcha(HttpClient client, string key, ProviderOptions options) {
+        _options = options;
         _api = new TwoCaptchaApi(client, key, _options);
     }
 
