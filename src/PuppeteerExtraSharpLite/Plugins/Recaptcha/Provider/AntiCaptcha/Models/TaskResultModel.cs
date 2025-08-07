@@ -1,7 +1,6 @@
 ﻿namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha.Models;
 
-public class TaskResultModel
-{
+public class TaskResultModel {
     public int errorId { get; set; }
     public string status { get; set; } = string.Empty;
     public Solution? solution { get; set; }
@@ -12,13 +11,11 @@ public class TaskResultModel
     public int solveCount { get; set; }
 }
 
-public class Solution
-{
+public class Solution {
     public string gRecaptchaResponse { get; set; } = string.Empty;
     public Cookies? cookies { get; set; }
 }
 
-public class Cookies
-{
+public class Cookies {
     public string empty { get; set; } = string.Empty;
 }

@@ -1,7 +1,12 @@
-﻿namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider._2Captcha.Models;
+﻿using System.Text.Json.Serialization;
 
-internal class TwoCaptchaResponse
+namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider._2Captcha.Models;
+
+public class TwoCaptchaResponse
 {
-    public int status { get; set; }
-    public string request { get; set; } = string.Empty;
+    [JsonPropertyName("status")]
+    public int Status { get; set; }
+
+    [JsonPropertyName("request")]
+    public string Request { get; set; } = string.Empty;
 }

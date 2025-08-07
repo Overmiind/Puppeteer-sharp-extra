@@ -1,19 +1,27 @@
-﻿namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider._2Captcha.Models;
+﻿using System.Text.Json.Serialization;
 
-internal class TwoCaptchaRequest
-{
-    public string key { get; set; } = string.Empty;
+namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider._2Captcha.Models;
+
+public class TwoCaptchaRequest {
+    [JsonPropertyName("key")]
+    public string Key { get; set; } = string.Empty;
 }
 
-internal class TwoCaptchaTask: TwoCaptchaRequest
-{
-    public string method { get; set; } = "userrecaptcha";
-    public string googlekey { get; set; } = string.Empty;
-    public string pageurl { get; set; } = string.Empty;
+public class TwoCaptchaTask : TwoCaptchaRequest {
+    [JsonPropertyName("method")]
+    public string Method { get; set; } = "userrecaptcha";
+
+    [JsonPropertyName("googlekey")]
+    public string GoogleKey { get; set; } = string.Empty;
+
+    [JsonPropertyName("pageurl")]
+    public string PageUrl { get; set; } = string.Empty;
 }
 
-internal class TwoCaptchaRequestForResult: TwoCaptchaRequest
-{
-    public string action { get; set; } = "get";
-    public string id { get; set; } = string.Empty;
+public class TwoCaptchaRequestForResult : TwoCaptchaRequest {
+    [JsonPropertyName("action")]
+    public string Action { get; set; } = "get";
+
+    [JsonPropertyName("id")]
+    public string Id { get; set; } = string.Empty;
 }

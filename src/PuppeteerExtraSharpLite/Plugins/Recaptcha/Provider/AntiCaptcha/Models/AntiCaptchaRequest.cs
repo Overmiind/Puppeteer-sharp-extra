@@ -1,27 +1,39 @@
-﻿namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha.Models;
+﻿using System.Text.Json.Serialization;
 
-public class AntiCaptchaRequest
-{
-    public string clientKey { get; set; } = string.Empty;
-    public AntiCaptchaTask? task { get; set; }
+namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha.Models;
+
+public class AntiCaptchaRequest {
+    [JsonPropertyName("clientKey")]
+    public string ClientKey { get; set; } = string.Empty;
+
+    [JsonPropertyName("task")]
+    public AntiCaptchaTask? Task { get; set; }
 }
 
-public class RequestForResultTask
-{
-    public string clientKey { get; set; } = string.Empty;
-    public int taskId { get; set; }
+public class RequestForResultTask {
+    [JsonPropertyName("clientKey")]
+    public string ClientKey { get; set; } = string.Empty;
+
+    [JsonPropertyName("taskId")]
+    public int TaskId { get; set; }
 }
 
-public struct AntiCaptchaTaskResult
-{
-    public int errorId { get; set; }
-    public int taskId { get; set; }
+public struct AntiCaptchaTaskResult {
+    [JsonPropertyName("errorId")]
+    public int ErrorId { get; set; }
+
+    [JsonPropertyName("taskId")]
+    public int TaskId { get; set; }
 }
 
 
-public class AntiCaptchaTask
-{
-    public string type { get; set; } = string.Empty;
-    public string websiteURL { get; set; } = string.Empty;
-    public string websiteKey { get; set; } = string.Empty;
+public class AntiCaptchaTask {
+    [JsonPropertyName("type")]
+    public string Type { get; set; } = string.Empty;
+
+    [JsonPropertyName("websiteURL")]
+    public string WebsiteURL { get; set; } = string.Empty;
+
+    [JsonPropertyName("websiteKey")]
+    public string WebsiteKey { get; set; } = string.Empty;
 }
