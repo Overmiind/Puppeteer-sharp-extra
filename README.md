@@ -58,11 +58,33 @@ await page.ScreenshotAsync("extra.png");
 
 ## API
 
-//TODO: Add specific plugin readmes
-
 ### `StealthPlugin`
 
+StealthPlugin and the related plugins are made for evading detection, usually by injecting scripts at specific times at which websites try to detect bots.
 
+`StealthPlugin` specifically doesn't do much by itself but is a requirement for most other related plugins as it injects utility functions that the other plugins use. As such it should be registered first (A runtime exception will be thrown if a plugin requiring `StealthPlugin` is registered before `StealthPlugin`)
+
+The available evasion plugins are the following: `ChromeAppPlugin`, `ChromeRuntimePlugin`, `ChromeSciPlugin`, `CodecPlugin`, `ContentWindowPlugin`, `EvasionPlugin`, `HardwareConcurrencyPlugin`, `LanguagesPlugin`, `LoadTimesPlugin`, `OutDimensionsPlugin`, `PermissionsPlugin`, `StackTracePlugin`, `UserAgentPlugin`, `VendorPlugin`, `WebDriverPlugin`, `WebGLPlugin`.
+
+To keep this relatively short, the following example will use `ChromeRuntimePlugin` which is used to mock the properties of a full chrome browser, this plugin also requires `StealthPlugin` as a dependency.
+
+```csharp
+// Initialize the plugin manager
+var manager = new PluginManager();
+// Register the plugins, the dependencies first
+manager.Register(new StealthPlugin()).Register(new ChromeRuntimePlugin());
+// Now create browser context and page and use as usual.
+```
+
+To make life a bit easier, `StealthPlugin` has a method that creates instances of most related plugins, which you can use to registered all of them:
+
+```csharp
+// initialize manager as usual
+// get related plugins
+var plugins = StealthPlugin.GetStandardEvasions();
+// register
+manager.Register(new StealthPlugin()).Register(plugins);
+```
 
 ### `AnonymizeUaPlugin`
 
