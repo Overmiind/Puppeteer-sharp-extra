@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha.Models;
+namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha;
 
 public class AntiCaptchaRequest {
     [JsonPropertyName("clientKey")]
@@ -10,7 +10,7 @@ public class AntiCaptchaRequest {
     public AntiCaptchaTask? Task { get; set; }
 }
 
-public class RequestForResultTask {
+public class AntiCaptchaRequestForResultTask {
     [JsonPropertyName("clientKey")]
     public string ClientKey { get; set; } = string.Empty;
 
@@ -18,7 +18,7 @@ public class RequestForResultTask {
     public int TaskId { get; set; }
 }
 
-public struct AntiCaptchaTaskResult {
+public class AntiCaptchaTaskResult {
     [JsonPropertyName("errorId")]
     public int ErrorId { get; set; }
 

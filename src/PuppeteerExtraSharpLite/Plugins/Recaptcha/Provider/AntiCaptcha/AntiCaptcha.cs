@@ -1,8 +1,6 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Json;
 
-using PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha.Models;
-
 namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha;
 
 public class AntiCaptcha : IRecaptchaProvider {
@@ -51,24 +49,24 @@ public class AntiCaptcha : IRecaptchaProvider {
             using var response = await client.SendAsync(message, token);
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadFromJsonAsync(JsonContext.Default.AntiCaptchaTaskResult, cancellationToken: token);
+            return await response.Content.ReadFromJsonAsync(JsonContext.Default.AntiCaptchaTaskResult, cancellationToken: token) ?? new();
         }
 
-        public static async Task<TaskResultModel> PendingForResult(HttpClient client, string userKey, int taskId, ProviderOptions options, CancellationToken token = default) {
-            var content = new RequestForResultTask() {
+        public static async Task<AntiCaptchaTaskResultModel> PendingForResult(HttpClient client, string userKey, int taskId, ProviderOptions options, CancellationToken token = default) {
+            var content = new AntiCaptchaRequestForResultTask() {
                 ClientKey = userKey,
                 TaskId = taskId
             };
 
             Uri uri = new(Host, "getTaskResult");
 
-            TaskResultModel? outerResult = null;
+            AntiCaptchaTaskResultModel outerResult = new();
 
             await client.SendPollingAsync(
                     () => {
                         var message = new HttpRequestMessage(HttpMethod.Post, uri);
                         message.Headers.Add("Accept", "application/json");
-                        message.Content = JsonContent.Create(content, JsonContext.Default.RequestForResultTask);
+                        message.Content = JsonContent.Create(content, JsonContext.Default.AntiCaptchaRequestForResultTask);
                         return message;
                     },
                     async response => {
@@ -76,7 +74,7 @@ public class AntiCaptcha : IRecaptchaProvider {
                             return true;
                         }
 
-                        var result = await response.Content.ReadFromJsonAsync(JsonContext.Default.TaskResultModel);
+                        var result = await response.Content.ReadFromJsonAsync(JsonContext.Default.AntiCaptchaTaskResultModel);
 
                         if (result is null) {
                             return true;
@@ -92,7 +90,7 @@ public class AntiCaptcha : IRecaptchaProvider {
                     options.PendingCount,
                     options.StartTimeoutSeconds * 1000);
 
-            return outerResult ?? new();
+            return outerResult;
         }
     }
 }

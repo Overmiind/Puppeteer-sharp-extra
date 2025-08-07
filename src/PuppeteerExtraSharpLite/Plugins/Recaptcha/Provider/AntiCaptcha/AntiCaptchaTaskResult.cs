@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha.Models;
+namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha;
 
-public class TaskResultModel {
+public class AntiCaptchaTaskResultModel {
     [JsonPropertyName("errorId")]
     public int ErrorId { get; set; }
 
@@ -10,7 +10,7 @@ public class TaskResultModel {
     public string Status { get; set; } = string.Empty;
 
     [JsonPropertyName("solution")]
-    public Solution? Solution { get; set; }
+    public AntiCaptchaSolution? Solution { get; set; }
 
     [JsonPropertyName("cost")]
     public string Cost { get; set; } = string.Empty;
@@ -28,15 +28,15 @@ public class TaskResultModel {
     public int SolveCount { get; set; }
 }
 
-public class Solution {
+public class AntiCaptchaSolution {
     [JsonPropertyName("gRecaptchaResponse")]
     public string GRecaptchaResponse { get; set; } = string.Empty;
 
     [JsonPropertyName("cookies")]
-    public Cookies? Cookies { get; set; }
+    public AntiCaptchaCookies? Cookies { get; set; }
 }
 
-public class Cookies {
+public class AntiCaptchaCookies {
     [JsonPropertyName("empty")]
     public string Empty { get; set; } = string.Empty;
 }
