@@ -4,7 +4,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Plugins;
 
-public partial class AnonymizeUaPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
+public partial class AnonymizeUaPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(AnonymizeUaPlugin);
 
     public Func<string, string> UserAgentTransformer = static (s) => s;

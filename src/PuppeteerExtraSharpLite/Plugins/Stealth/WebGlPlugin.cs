@@ -2,7 +2,7 @@
 
 namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 
-public class WebGlPlugin : PuppeteerExtraPlugin {
+public class WebGlPlugin : PuppeteerPlugin {
     public override string Name => nameof(WebGlPlugin);
 
     private readonly StealthWebGLOptions _options;

@@ -2,7 +2,7 @@
 
 namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 
-public class VendorPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
+public class VendorPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(VendorPlugin);
 
     public readonly string Vendor;

@@ -2,7 +2,7 @@
 
 namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 
-public class LanguagesPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
+public class LanguagesPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(LanguagesPlugin);
 
     private readonly string[] _languages;

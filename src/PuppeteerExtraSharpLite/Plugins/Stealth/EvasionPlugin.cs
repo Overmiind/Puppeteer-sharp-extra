@@ -2,7 +2,7 @@
 
 namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 
-public class EvasionPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
+public class EvasionPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(EvasionPlugin);
 
     // StealthPlugin injects utils.js

@@ -4,7 +4,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Plugins.Recaptcha;
 
-public class RecaptchaPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin {
+public class RecaptchaPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(RecaptchaPlugin);
     private readonly Recaptcha _recaptcha;
 

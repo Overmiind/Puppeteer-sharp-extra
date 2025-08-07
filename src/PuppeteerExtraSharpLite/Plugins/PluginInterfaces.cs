@@ -45,7 +45,3 @@ public interface IOnDisconnectedPlugin {
 public interface IOnClosePlugin {
     void OnClose();
 }
-
-public interface IOnPluginRegisteredPlugin {
-
-}

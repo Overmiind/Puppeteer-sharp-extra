@@ -5,7 +5,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Plugins;
 
-public class BlockResourcesPlugin : PuppeteerExtraPlugin, IOnPageCreatedPlugin, IBeforeLaunchPlugin {
+public class BlockResourcesPlugin : PuppeteerPlugin, IOnPageCreatedPlugin, IBeforeLaunchPlugin {
     public override string Name => nameof(BlockResourcesPlugin);
 
     private readonly List<BlockRule> _blockResources;
