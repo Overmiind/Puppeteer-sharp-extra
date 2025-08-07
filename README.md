@@ -9,8 +9,8 @@ PuppeteerExtraSharpLite is a high-performance, modern rewrite and lighter drop-i
 - **Updated core**: Bumps PuppeteerSharp dependencies to a more modern stack.
 - **.NET 9 support**: Targets .NET 9, unlocking ahead-of-time (AOT) compilation and aggressive trimming for small, fast binaries.
 - **Performance-first design**: Rewritten internals to avoid reflection and embedded DLL tricks; optimized for minimal allocations and startup cost.
-- **Dropped RestSharp**: No longer depends on RestSharp; any HTTP client logic uses lighter/custom wrappers or `HttpClient` directly.
-- **Trimming & AOT friendly**: Designed to work well with publish-time trimming and native-compilation scenarios.
+- **Dropped RestSharp**: No longer depends on RestSharp.
+- **Dropped NewtonSoftJson**: No longer uses NewtonSoft - `System.Text.Json` is the new king.
 
 ## Quickstart
 
@@ -57,6 +57,109 @@ await page.ScreenshotAsync("extra.png");
 - **Block Resources Plugin** – Blocks images, documents, and other resource types to speed up navigation.
 
 ## API
+
+### `StealthPlugin`
+
+StealthPlugin and the related plugins are made for evading detection, usually by injecting scripts at specific times at which websites try to detect bots.
+
+`StealthPlugin` specifically doesn't do much by itself but is a requirement for most other related plugins as it injects utility functions that the other plugins use. As such it should be registered first (A runtime exception will be thrown if a plugin requiring `StealthPlugin` is registered before `StealthPlugin`)
+
+The available evasion plugins are the following: `ChromeAppPlugin`, `ChromeRuntimePlugin`, `ChromeSciPlugin`, `CodecPlugin`, `ContentWindowPlugin`, `EvasionPlugin`, `HardwareConcurrencyPlugin`, `LanguagesPlugin`, `LoadTimesPlugin`, `OutDimensionsPlugin`, `PermissionsPlugin`, `StackTracePlugin`, `UserAgentPlugin`, `VendorPlugin`, `WebDriverPlugin`, `WebGLPlugin`.
+
+To keep this relatively short, the following example will use `ChromeRuntimePlugin` which is used to mock the properties of a full chrome browser, this plugin also requires `StealthPlugin` as a dependency.
+
+```csharp
+// Initialize the plugin manager
+var manager = new PluginManager();
+// Register the plugins, the dependencies first
+manager.Register(new StealthPlugin()).Register(new ChromeRuntimePlugin());
+// Now create browser context and page and use as usual.
+```
+
+To make life a bit easier, `StealthPlugin` has a method that creates instances of most related plugins, which you can use to registered all of them:
+
+```csharp
+// initialize manager as usual
+// get related plugins
+var plugins = StealthPlugin.GetStandardEvasions();
+// register
+manager.Register(new StealthPlugin()).Register(plugins);
+```
+
+### `AnonymizeUaPlugin`
+
+AnonymizeUaPlugin is used to transform the user agent on any page as soon as it launches.
+
+```csharp
+// Initialize the plugin manager
+var manager = new PluginManager();
+// Initialize the plugin
+var plugin = new AnonymizeUaPlugin();
+// Register the plugin
+manager.Register(plugin);
+// by default it will replace headless with regular chrome
+// and set platform to windows
+// you can also add your own custom transformation at any time by changing the function
+plugin.UserAgentTransformer = ua => "whatever"
+// Initialize browser and page + continue with whatever else
+```
+
+### `RecaptchaPlugin`
+
+RecaptchaPlugin is used in conjunction with Recaptcha solving providers, at this state [AntiCaptcha](https://anti-captcha.com/mainpage) and [2captcha](https://2captcha.com/ru) are supported, but this is extensible so you add your own.
+
+The following is an example with `AntiCaptcha`
+
+```csharp
+// have HttpClient instance ready (it is used to send the requests)
+using var client = new HttpClient(); // initialization as example
+                                     // best practices will use a factory/singleton
+// Initialize the plugin manager
+var manager = new PluginManager();
+// Initialize the provider (HttpClient, userKey, ProviderOptions)
+var provider = new AntiCaptchaProvider(client, "sampleKey", ProviderOptions.Default);
+// Default provider options can be used or inferred if omitted.
+// Initialize plugin
+var plugin = new RecaptchaPlugin(provider);
+// Register the plugin
+manager.Register(plugin);
+// Initialize browser and page
+await using var browser = manager.LaunchAsync();
+using var page = browser.NewPageAsync();
+// go to page with captcha
+await page.GoToAsync("https://patrickhlauke.github.io/recaptcha/");
+// now solve captcha at page
+await plugin.SolveCaptchaAsync(page); // Also accepts proxyStr and cancellationToken.
+```
+
+For [2captcha](https://2captcha.com/ru) simply use the `TwoCaptchaProvider` instead.
+
+### `BlockResourcesPlugin`
+
+This plugin is used to blocks page resources in Puppeteer requests (img, documents etc.)
+
+```csharp
+// Initialize the plugin manager
+var manager = new PluginManager();
+// Initialize the plugin
+var plugin = new BlockResourcesPlugin();
+// Register the plugin
+manager.Register(plugin);
+// Initialize browser and page
+await using var browser = manager.LaunchAsync();
+using var page = browser.NewPageAsync();
+// Create a rule
+var blockGoogle = new BlockRule() {
+    SitePattern = new Regex("google"), // SitePattern applies only to specific urls by pattern
+                                       // You can also point it to a GeneratedRegex
+    IPage = page, // it will affect this instance of the page
+    ResourceType = ResourceType.Scripts // Block scripts
+};
+// Add rule
+plugin.AddRule(blockGoogle);
+```
+
+You can also inspect rules on the plugin, as well as add or remove rules at any point. removing rules uses a `Func<BlockRule, bool>` predicate to select the rules to remove.
 
 ### Use(IPuppeteerExtraPlugin plugin)
 

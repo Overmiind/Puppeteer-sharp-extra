@@ -17,7 +17,6 @@ public static class Helper {
 		}
 
 		return File.ReadAllText(filePath);
-
 	}
 
 	public static string FindRepositoryRoot(string startPath) {
