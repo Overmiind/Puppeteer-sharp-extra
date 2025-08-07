@@ -60,6 +60,36 @@ await page.ScreenshotAsync("extra.png");
 
 //TODO: Add specific plugin readmes
 
+### `RecaptchaPlugin`
+
+RecaptchaPlugin is used in conjunction with Recaptcha solving providers, at this state [AntiCaptcha](https://anti-captcha.com/mainpage) and [2captcha](https://2captcha.com/ru) are supported, but this is extensible so you add your own.
+
+The following is an example with `AntiCaptcha`
+
+```csharp
+// have HttpClient instance ready (it is used to send the requests)
+using var client = new HttpClient(); // initialization as example
+                                     // best practices will use a factory/singleton
+// Initialize the plugin manager
+var manager = new PluginManager();
+// Initialize the provider (HttpClient, userKey, ProviderOptions)
+var provider = new AntiCaptchaProvider(client, "sampleKey", ProviderOptions.Default);
+// Default provider options can be used or inferred if omitted.
+// Initialize plugin
+var plugin = new RecaptchaPlugin(provider);
+// Register the plugin
+manager.Register(plugin);
+// Initialize browser and page
+await using var browser = manager.LaunchAsync();
+using var page = browser.NewPageAsync();
+// go to page with captcha
+await page.GoToAsync("https://patrickhlauke.github.io/recaptcha/");
+// now solve captcha at page
+await plugin.SolveCaptchaAsync(page); // Also accepts proxyStr and cancellationToken.
+```
+
+For [2captcha](https://2captcha.com/ru) simply use the `TwoCaptchaProvider` instead.
+
 ### `BlockResourcesPlugin`
 
 This plugin is used to blocks page resources in Puppeteer requests (img, documents etc.)
