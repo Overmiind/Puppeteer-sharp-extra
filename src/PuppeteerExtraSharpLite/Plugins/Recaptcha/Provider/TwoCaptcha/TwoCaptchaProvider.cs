@@ -3,18 +3,16 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 
-using PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider._2Captcha.Models;
+namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.TwoCaptcha;
 
-namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider._2Captcha;
-
-public class TwoCaptcha : IRecaptchaProvider {
+public class TwoCaptchaProvider : IRecaptchaProvider {
     private readonly HttpClient _client;
     private readonly string _userKey;
     private readonly ProviderOptions _options;
 
-    public TwoCaptcha(HttpClient client, string userKey) : this(client, userKey, ProviderOptions.Default) { }
+    public TwoCaptchaProvider(HttpClient client, string userKey) : this(client, userKey, ProviderOptions.Default) { }
 
-    public TwoCaptcha(HttpClient client, string userKey, ProviderOptions options) {
+    public TwoCaptchaProvider(HttpClient client, string userKey, ProviderOptions options) {
         _client = client;
         _userKey = userKey;
         _options = options;

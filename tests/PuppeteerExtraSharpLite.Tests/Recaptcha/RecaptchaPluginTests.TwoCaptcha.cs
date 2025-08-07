@@ -1,4 +1,5 @@
 using PuppeteerExtraSharpLite.Plugins.Recaptcha;
+using PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.TwoCaptcha;
 
 namespace PuppeteerExtraSharpLite.Tests.Recaptcha;
 
@@ -8,7 +9,7 @@ public partial class RecaptchaPluginTests {
         Assert.SkipWhen(_twoCaptchaKey.Length == 0, TwoCaptchaReason);
 
         using var client = new HttpClient();
-        var provider = new Plugins.Recaptcha.Provider._2Captcha.TwoCaptcha(client, _twoCaptchaKey);
+        var provider = new TwoCaptchaProvider(client, _twoCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
         var pluginManager = new PluginManager();
@@ -33,7 +34,7 @@ public partial class RecaptchaPluginTests {
         Assert.SkipWhen(_twoCaptchaKey.Length == 0, TwoCaptchaReason);
 
         using var client = new HttpClient();
-        var provider = new Plugins.Recaptcha.Provider._2Captcha.TwoCaptcha(client, _twoCaptchaKey);
+        var provider = new TwoCaptchaProvider(client, _twoCaptchaKey);
         var plugin = new RecaptchaPlugin(provider);
 
         var pluginManager = new PluginManager();

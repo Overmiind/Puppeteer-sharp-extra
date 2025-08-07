@@ -1,4 +1,3 @@
 TODO: Remove unused code
 TODO: Renamed plugins appropriately
-TODO: Rename weird _2 in TwoCaptcha service
 TODO: Update docs

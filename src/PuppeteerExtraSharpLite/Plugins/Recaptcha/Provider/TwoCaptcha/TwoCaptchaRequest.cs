@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider._2Captcha.Models;
+namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.TwoCaptcha;
 
 public class TwoCaptchaRequest {
     [JsonPropertyName("key")]

@@ -1,9 +1,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider._2Captcha.Models;
-
 using PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha.Models;
+using PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.TwoCaptcha;
 
 namespace PuppeteerExtraSharpLite;
 
