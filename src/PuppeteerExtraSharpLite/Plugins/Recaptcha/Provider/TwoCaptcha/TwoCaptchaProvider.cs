@@ -18,14 +18,14 @@ public class TwoCaptchaProvider : IRecaptchaProvider {
         _options = options;
     }
 
-    public async Task<string> GetSolution(string key, string pageUrl, string proxyStr = "") {
-        var task = await Api.CreateTaskAsync(_client, _userKey, key, pageUrl);
+    public async Task<string> GetSolutionAsync(string key, string pageUrl, string proxyStr = "", CancellationToken token = default) {
+        var task = await Api.CreateTaskAsync(_client, _userKey, key, pageUrl, token);
 
         ThrowErrorIfBadStatus(task);
 
-        await Task.Delay(_options.StartTimeoutSeconds * 1000);
+        await Task.Delay(_options.StartTimeoutSeconds * 1000, token);
 
-        var result = await Api.GetSolution(_client, _userKey, task.Request, _options);
+        var result = await Api.GetSolution(_client, _userKey, task.Request, _options, token);
 
         ThrowErrorIfBadStatus(result);
 

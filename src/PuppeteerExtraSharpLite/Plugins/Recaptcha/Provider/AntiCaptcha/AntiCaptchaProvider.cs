@@ -16,10 +16,10 @@ public class AntiCaptchaProvider : IRecaptchaProvider {
         _options = options;
     }
 
-    public async Task<string> GetSolution(string key, string pageUrl, string proxyStr = "") {
-        var task = await Api.CreateTaskAsync(_client, _userKey, pageUrl, key);
-        await Task.Delay(_options.StartTimeoutSeconds * 1000);
-        var result = await Api.PendingForResult(_client, _userKey, task.TaskId, _options);
+    public async Task<string> GetSolutionAsync(string key, string pageUrl, string proxyStr = "", CancellationToken token = default) {
+        var task = await Api.CreateTaskAsync(_client, _userKey, pageUrl, key, token);
+        await Task.Delay(_options.StartTimeoutSeconds * 1000, token);
+        var result = await Api.PendingForResult(_client, _userKey, task.TaskId, _options, token);
 
         if (result.Status != "ready" || result.Solution is null || result.ErrorId != 0) {
             throw new HttpRequestException($"AntiCaptcha request ends with error - {result.ErrorId}");
