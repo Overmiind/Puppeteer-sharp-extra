@@ -35,13 +35,20 @@ public class Recaptcha {
         var element =
             await page.QuerySelectorAsync("iframe[src^='https://www.google.com/recaptcha/api2/anchor'][name^=\"a-\"]");
 
-        if (element == null)
-            throw new CaptchaException(page.Url, "Recaptcha key not found!");
+        if (element == null) {
+            throw new CaptchaException {
+                PageUrl = page.Url,
+                Content = "Recaptcha key not found!"
+            };
+        }
 
         var src = await element.GetPropertyAsync("src");
 
         if (src is null) {
-            throw new CaptchaException(page.Url, "Recaptcha key not found!");
+            throw new CaptchaException {
+                PageUrl = page.Url,
+                Content = "Recaptcha key not found!"
+            };
         }
 
         var key = HttpUtility.ParseQueryString(src!.ToString()!).Get("k")!;
