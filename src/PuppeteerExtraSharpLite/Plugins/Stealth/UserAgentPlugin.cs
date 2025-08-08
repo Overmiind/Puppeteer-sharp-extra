@@ -4,9 +4,14 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 
+/// <summary>
+/// Overrides user agent and related UA-CH metadata to remove headless markers and better match real devices.
+/// </summary>
 public partial class UserAgentPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
+    /// <inheritdoc />
     public override string Name => nameof(UserAgentPlugin);
 
+    /// <inheritdoc />
     public async Task OnPageCreated(IPage page) {
         var ua = await page.Browser.GetUserAgentAsync();
         ua = ua.Replace("HeadlessChrome/", "Chrome/");
@@ -36,13 +41,6 @@ public partial class UserAgentPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
                 Mobile = isMobile
             }
         };
-        //
-        // if (this._isHeadless)
-        // {
-        //     var dynamicObject = overrideObject as dynamic;
-        //     dynamicObject.AcceptLanguage = "en-US, en";
-        //     overrideObject = dynamicObject;
-        // }
 
         await page.Client.SendAsync("Network.setUserAgentOverride", overrideObject);
     }

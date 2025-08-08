@@ -2,11 +2,18 @@
 
 namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 
+/// <summary>
+/// Configures navigator.languages to a specified set of language codes.
+/// </summary>
 public class LanguagesPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
+    /// <inheritdoc />
     public override string Name => nameof(LanguagesPlugin);
 
     private readonly string[] _languages;
 
+    /// <summary>
+    /// Gets the languages configured for this plugin.
+    /// </summary>
     public ReadOnlyCollection<string> Languages => _languages.AsReadOnly();
 
     public LanguagesPlugin() : this("en-US", "en") {}
@@ -16,8 +23,10 @@ public class LanguagesPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     }
 
     // StealthPlugin injects utils.js
+    /// <inheritdoc />
     protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
 
+    /// <inheritdoc />
     public Task OnPageCreated(IPage page) {
         return page.EvaluateFunctionOnNewDocumentAsync(Scripts.Language, [_languages]);
     }
