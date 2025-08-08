@@ -1,6 +1,10 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
+    /// <summary>
+    /// Mocks chrome.runtime APIs (sendMessage, connect, id, enums) to align headless behavior
+    /// with headful Chrome, including argument validation and realistic return values.
+    /// </summary>
     public const string Runtime =
     """
     (() => {

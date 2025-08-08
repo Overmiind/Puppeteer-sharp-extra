@@ -1,6 +1,10 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
+    /// <summary>
+    /// Normalizes Notifications and Permissions APIs to reflect headful differences on secure
+    /// and insecure origins (e.g., Notification.permission and permissions.query results).
+    /// </summary>
     public const string Permissions =
     """
     (() => {

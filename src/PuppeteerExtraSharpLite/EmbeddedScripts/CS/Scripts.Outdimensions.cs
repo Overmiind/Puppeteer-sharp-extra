@@ -1,6 +1,10 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
+    /// <summary>
+    /// Ensures window.outerWidth and window.outerHeight are present by deriving sensible values
+    /// from inner dimensions to avoid headless-only fingerprints.
+    /// </summary>
     public const string Outdimensions =
     """
     (() => {

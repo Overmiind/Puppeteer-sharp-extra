@@ -1,6 +1,10 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
+    /// <summary>
+    /// Locates the active reCAPTCHA client on the page and invokes its callback with a provided
+    /// value, supporting both V2 and V3 configurations.
+    /// </summary>
     public const string EnterRecaptchaCallBack =
     """
     const result = (function () {

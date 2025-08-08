@@ -1,6 +1,10 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
+    /// <summary>
+    /// Shared utility functions used by other scripts to stealthily modify native browser APIs
+    /// without leaving traces (e.g., proxy helpers, toString patching, property replacement).
+    /// </summary>
     public const string Utils =
     """
     /**

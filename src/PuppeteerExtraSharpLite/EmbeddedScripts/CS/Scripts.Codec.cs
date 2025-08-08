@@ -2,6 +2,10 @@ namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts
 {
+    /// <summary>
+    /// Intercepts HTMLMediaElement.canPlayType to report support for specific codecs/mime types
+    /// that Chromium headless lacks by default (e.g., certain MP4 and AAC variations).
+    /// </summary>
     public const string Codec =
     """
     (() => {

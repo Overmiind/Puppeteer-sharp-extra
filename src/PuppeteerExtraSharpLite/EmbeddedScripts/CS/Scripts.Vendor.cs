@@ -1,6 +1,9 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
+    /// <summary>
+    /// Overrides navigator.vendor to return a custom vendor string via a getter proxy.
+    /// </summary>
     public const string Vendor =
     """
     (vendor) => {

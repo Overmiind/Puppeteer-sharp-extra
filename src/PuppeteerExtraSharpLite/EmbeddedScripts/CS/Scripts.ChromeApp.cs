@@ -1,6 +1,10 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
+    /// <summary>
+    /// Mocks chrome.app with realistic structure and behavior (isInstalled, getDetails,
+    /// getIsInstalled, runningState) to emulate headful Chrome on pages where it is absent.
+    /// </summary>
     public const string ChromeApp =
     """
     (() => {

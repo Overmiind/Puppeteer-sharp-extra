@@ -1,6 +1,10 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
+    /// <summary>
+    /// Patches navigator.webdriver to match headful Chrome behavior, removing the webdriver flag
+    /// where applicable so automation is harder to detect.
+    /// </summary>
     public const string WebDriver =
     """
     (() => {

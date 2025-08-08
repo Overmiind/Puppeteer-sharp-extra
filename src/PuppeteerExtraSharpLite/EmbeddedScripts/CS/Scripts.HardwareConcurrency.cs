@@ -1,6 +1,9 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
+    /// <summary>
+    /// Overrides navigator.hardwareConcurrency with a custom value via a getter proxy.
+    /// </summary>
     public const string HardwareConcurrency =
     """
     (concurrency) => {

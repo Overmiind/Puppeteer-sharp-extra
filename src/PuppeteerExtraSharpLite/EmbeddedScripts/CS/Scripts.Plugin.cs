@@ -1,6 +1,10 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
+    /// <summary>
+    /// Mocks navigator.plugins and navigator.mimeTypes with realistic data and behavior, including
+    /// item/namedItem accessors and cross-references, to mirror headful Chrome.
+    /// </summary>
     public const string Plugin =
     """
     (() => {

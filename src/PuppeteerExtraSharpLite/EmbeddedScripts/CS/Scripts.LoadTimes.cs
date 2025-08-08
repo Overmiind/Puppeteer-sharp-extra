@@ -1,6 +1,10 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
+    /// <summary>
+    /// Implements chrome.loadTimes with protocol and navigation timing details derived from
+    /// Performance APIs, matching headful Chrome behaviors and shapes.
+    /// </summary>
     public const string LoadTimes =
     """
     (() => {

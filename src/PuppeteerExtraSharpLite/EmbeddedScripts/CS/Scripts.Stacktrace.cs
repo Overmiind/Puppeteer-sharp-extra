@@ -1,6 +1,10 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
+    /// <summary>
+    /// Sanitizes error stack traces to remove frames that would reveal automation/proxy layers,
+    /// aligning thrown error stacks with those from a non-automated environment.
+    /// </summary>
     public const string Stacktrace =
     """
     (() => {

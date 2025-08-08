@@ -1,6 +1,10 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
+    /// <summary>
+    /// Implements chrome.csi with timing information derived from PerformanceTiming to emulate
+    /// headful Chrome's legacy CSI API.
+    /// </summary>
     public const string SCI =
     """
     (() => {

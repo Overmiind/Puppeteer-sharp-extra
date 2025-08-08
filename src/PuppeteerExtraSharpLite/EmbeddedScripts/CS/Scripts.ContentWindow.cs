@@ -1,6 +1,10 @@
 namespace PuppeteerExtraSharpLite;
 
 public static partial class Scripts {
+    /// <summary>
+    /// Ensures iframe.contentWindow exists and behaves like headful Chrome by proxying selected
+    /// properties and handling srcdoc-created iframes to avoid detection quirks.
+    /// </summary>
     public const string ContentWindow =
     """
     () => {
