@@ -9,7 +9,7 @@ public class BlockResourcesPluginTests {
     [Fact]
     public void BlockResources_Plugin_Should_AddToListOfRules() {
         var plugin = new BlockResourcesPlugin();
-        _ = plugin.AddRule(new BlockRule() {
+        _ = plugin.AddRule(new BlockRule {
             ResourceType = ResourceType.Document
         });
         Assert.NotEmpty(plugin.Rules);
@@ -19,7 +19,7 @@ public class BlockResourcesPluginTests {
     [Fact]
     public void BlockResources_Plugin_RuleForResource() {
         var plugin = new BlockResourcesPlugin();
-        var rule = plugin.AddRule(new BlockRule() {
+        var rule = plugin.AddRule(new BlockRule {
             ResourceType = ResourceType.Document
         });
         Assert.True(rule.IsResourcesBlocked(ResourceType.Document));
@@ -37,9 +37,9 @@ public class BlockResourcesPluginTests {
         using var actualPage = await browser.NewPageAsync();
         using var otherPage = await browser.NewPageAsync();
 
-        var rule = plugin.AddRule(new BlockRule() {
+        var rule = plugin.AddRule(new BlockRule {
             ResourceType = ResourceType.Document,
-            IPage = actualPage
+            Page = actualPage
         });
 
         Assert.True(rule.IsPageBlocked(actualPage));
@@ -52,7 +52,7 @@ public class BlockResourcesPluginTests {
     [Theory]
     public void BlockedResources_Plugin_RuleForUrl(string site) {
         var plugin = new BlockResourcesPlugin();
-        var rule = plugin.AddRule(new BlockRule() {
+        var rule = plugin.AddRule(new BlockRule {
             SitePattern = new Regex("google")
         });
 
@@ -63,10 +63,10 @@ public class BlockResourcesPluginTests {
     public void BlockedResources_Plugin_Should_RemoveRule() {
         var plugin = new BlockResourcesPlugin();
 
-        var actualRule = plugin.AddRule(new BlockRule() {
+        var actualRule = plugin.AddRule(new BlockRule {
             ResourceType = ResourceType.Font
         });
-        var otherRule = plugin.AddRule(new BlockRule() {
+        var otherRule = plugin.AddRule(new BlockRule {
             ResourceType = ResourceType.Document
         });
 
