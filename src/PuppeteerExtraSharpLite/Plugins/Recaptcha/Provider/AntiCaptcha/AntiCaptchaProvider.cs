@@ -3,19 +3,43 @@ using System.Net.Http.Json;
 
 namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha;
 
+/// <summary>
+/// Anti-Captcha provider implementation that requests and polls for reCAPTCHA tokens
+/// using the Anti-Captcha public HTTP API.
+/// </summary>
 public class AntiCaptchaProvider : IRecaptchaProvider {
     private readonly HttpClient _client;
     private readonly string _userKey;
     private readonly ProviderOptions _options;
 
+    /// <summary>
+    /// Initializes the provider with default polling options.
+    /// </summary>
+    /// <param name="client">HTTP client used for API calls.</param>
+    /// <param name="userKey">Anti-Captcha account client key.</param>
     public AntiCaptchaProvider(HttpClient client, string userKey) : this(client, userKey, ProviderOptions.Default) { }
 
+    /// <summary>
+    /// Initializes the provider with custom options.
+    /// </summary>
+    /// <param name="client">HTTP client used for API calls.</param>
+    /// <param name="userKey">Anti-Captcha account client key.</param>
+    /// <param name="options">Polling options.</param>
     public AntiCaptchaProvider(HttpClient client, string userKey, ProviderOptions options) {
         _client = client;
         _userKey = userKey;
         _options = options;
     }
 
+    /// <summary>
+    /// Creates a task for the target page and polls Anti-Captcha until a token is ready.
+    /// </summary>
+    /// <param name="key">Site key of the reCAPTCHA widget.</param>
+    /// <param name="pageUrl">URL containing the widget.</param>
+    /// <param name="proxyStr">Optional proxy string (unused in proxyless task).</param>
+    /// <param name="token">Cancellation token.</param>
+    /// <returns>Solution token received from Anti-Captcha.</returns>
+    /// <exception cref="HttpRequestException">Thrown when the API returns an error or invalid result.</exception>
     public async Task<string> GetSolutionAsync(string key, string pageUrl, string proxyStr = "", CancellationToken token = default) {
         var task = await Api.CreateTaskAsync(_client, _userKey, pageUrl, key, token);
         await Task.Delay(_options.StartTimeoutSeconds * 1000, token);
@@ -28,9 +52,21 @@ public class AntiCaptchaProvider : IRecaptchaProvider {
         return result.Solution.GRecaptchaResponse;
     }
 
+    /// <summary>
+    /// Internal Anti-Captcha API wrappers.
+    /// </summary>
     public static class Api {
         private static readonly Uri Host = new("http://api.anti-captcha.com");
 
+        /// <summary>
+        /// Creates a new Anti-Captcha task for the specified page and site key.
+        /// </summary>
+        /// <param name="client">HTTP client.</param>
+        /// <param name="userKey">Client key for Anti-Captcha.</param>
+        /// <param name="pageUrl">Target page URL.</param>
+        /// <param name="key">reCAPTCHA site key.</param>
+        /// <param name="token">Cancellation token.</param>
+        /// <returns>Task creation response.</returns>
         public static async Task<AntiCaptchaTaskResult> CreateTaskAsync(HttpClient client, string userKey, string pageUrl, string key, CancellationToken token = default) {
             var content = new AntiCaptchaRequest() {
                 ClientKey = userKey,
@@ -52,6 +88,15 @@ public class AntiCaptchaProvider : IRecaptchaProvider {
             return await response.Content.ReadFromJsonAsync(JsonContext.Default.AntiCaptchaTaskResult, cancellationToken: token) ?? new();
         }
 
+        /// <summary>
+        /// Polls Anti-Captcha for task completion and returns the final result or error.
+        /// </summary>
+        /// <param name="client">HTTP client.</param>
+        /// <param name="userKey">Client key for Anti-Captcha.</param>
+        /// <param name="taskId">Identifier of the created task.</param>
+        /// <param name="options">Polling options.</param>
+        /// <param name="token">Cancellation token.</param>
+        /// <returns>Task result model; <c>Status</c> is <c>ready</c> when solved.</returns>
         public static async Task<AntiCaptchaTaskResultModel> PendingForResult(HttpClient client, string userKey, int taskId, ProviderOptions options, CancellationToken token = default) {
             var content = new AntiCaptchaRequestForResultTask() {
                 ClientKey = userKey,

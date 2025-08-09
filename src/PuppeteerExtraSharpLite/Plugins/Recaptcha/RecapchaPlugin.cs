@@ -6,8 +6,16 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Plugins.Recaptcha;
 
+/// <summary>
+/// Puppeteer plugin that solves reCAPTCHA challenges by using a configured
+/// <see cref="IRecaptchaProvider"/> and injecting the received token into the page.
+/// </summary>
 public class RecaptchaPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
+    /// <summary>
+    /// Gets the unique plugin name.
+    /// </summary>
     public override string Name => nameof(RecaptchaPlugin);
+
     private readonly IRecaptchaProvider _provider;
 
     /// <summary>
@@ -15,10 +23,22 @@ public class RecaptchaPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     /// </summary>
     internal RecaptchaPlugin() : this(new InvalidRecaptchaProvider()) { }
 
+    /// <summary>
+    /// Creates a new <see cref="RecaptchaPlugin"/> with a specific captcha provider.
+    /// </summary>
+    /// <param name="provider">Provider used to request captcha solutions.</param>
     public RecaptchaPlugin(IRecaptchaProvider provider) {
         _provider = provider;
     }
 
+    /// <summary>
+    /// Solves a reCAPTCHA on the current <paramref name="page"/>, writing the solution token
+    /// to the <c>g-recaptcha-response</c> field and invoking callbacks when possible.
+    /// </summary>
+    /// <param name="page">Puppeteer page containing the reCAPTCHA widget.</param>
+    /// <param name="proxyStr">Optional proxy description used by some providers.</param>
+    /// <param name="token">Cancellation token.</param>
+    /// <returns>Operation result. On success, <see cref="RecaptchaResult.IsSuccess"/> is true.</returns>
     public async Task<RecaptchaResult> SolveCaptchaAsync(IPage page, string proxyStr = "", CancellationToken token = default) {
         var recaptchaKeyResult = await GetKeyAsync(page);
 
@@ -36,10 +56,19 @@ public class RecaptchaPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
         };
     }
 
+    /// <summary>
+    /// Enables bypassing CSP on new pages to allow script injection used by this plugin.
+    /// </summary>
+    /// <param name="page">The created page.</param>
     public async Task OnPageCreated(IPage page) {
         await page.SetBypassCSPAsync(true);
     }
 
+    /// <summary>
+    /// Attempts to extract the site key (<c>k</c>) from the reCAPTCHA anchor iframe on the page.
+    /// </summary>
+    /// <param name="page">Puppeteer page containing the reCAPTCHA widget.</param>
+    /// <returns>Result with <see cref="RecaptchaResult.Value"/> set to the site key when found.</returns>
     public static async Task<RecaptchaResult> GetKeyAsync(IPage page) {
         var element =
             await page.QuerySelectorAsync("iframe[src^='https://www.google.com/recaptcha/api2/anchor'][name^=\"a-\"]");
@@ -68,6 +97,12 @@ public class RecaptchaPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
         };
     }
 
+    /// <summary>
+    /// Injects the provided token into the hidden <c>g-recaptcha-response</c> element and
+    /// tries to invoke the page callback, if available.
+    /// </summary>
+    /// <param name="page">Target page.</param>
+    /// <param name="value">Solution token to inject.</param>
     public static async Task WriteToInput(IPage page, string value) {
         await page.EvaluateFunctionAsync(
               $"() => {{document.getElementById('g-recaptcha-response').innerHTML='{value}'}}");
