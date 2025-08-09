@@ -63,7 +63,7 @@ public partial class UserAgentPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
 
     public static string GetPlatformVersion(string ua) {
         if (ua.Contains("Mac OS X ")) {
-            return MacOSXVersionRegex().Match(ua).Groups[1].Value;
+            return MacOsxVersionRegex().Match(ua).Groups[1].Value;
         }
 
         if (ua.Contains("Android ")) {
@@ -107,18 +107,15 @@ public partial class UserAgentPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
         var greasyBrand = $"{escapedChars[order[0]]}Not{escapedChars[order[1]]}A{escapedChars[order[2]]}Brand";
 
         var brands = new UserAgentBrand[3];
-        brands[order[0]] = new UserAgentBrand()
-        {
+        brands[order[0]] = new UserAgentBrand {
             Brand = greasyBrand,
             Version = "99"
         };
-        brands[order[1]] = new UserAgentBrand()
-        {
+        brands[order[1]] = new UserAgentBrand {
             Brand = "Chromium",
             Version = seed.ToString()
         };
-        brands[order[2]] = new UserAgentBrand()
-        {
+        brands[order[2]] = new UserAgentBrand {
             Brand = "Google Chrome",
             Version = seed.ToString()
         };
@@ -133,7 +130,7 @@ public partial class UserAgentPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     }
 
     private class UserAgentMetadata {
-        public UserAgentBrand[] Brands { get; set; } = Array.Empty<UserAgentBrand>();
+        public UserAgentBrand[] Brands { get; set; } = [];
         public string FullVersion { get; set; } = string.Empty;
         public string Platform { get; set; } = string.Empty;
         public string PlatformVersion { get; set; } = string.Empty;
@@ -148,7 +145,7 @@ public partial class UserAgentPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     }
 
     [GeneratedRegex("Mac OS X ([^)]+)")]
-    private static partial Regex MacOSXVersionRegex();
+    private static partial Regex MacOsxVersionRegex();
 
     [GeneratedRegex("Android ([^;]+)")]
     private static partial Regex AndroidVersionRegex();

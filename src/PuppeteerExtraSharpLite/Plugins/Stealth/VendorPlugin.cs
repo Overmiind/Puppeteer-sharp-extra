@@ -26,6 +26,6 @@ public class VendorPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
 
     /// <inheritdoc />
     public async Task OnPageCreated(IPage page) {
-        await page.EvaluateFunctionOnNewDocumentAsync(Scripts.Vendor, [Vendor]);
+        await page.EvaluateFunctionOnNewDocumentAsync(Scripts.Vendor, Vendor);
     }
 }

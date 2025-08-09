@@ -68,7 +68,7 @@ public class AntiCaptchaTask {
     /// Target page URL that hosts the widget.
     /// </summary>
     [JsonPropertyName("websiteURL")]
-    public string WebsiteURL { get; set; } = string.Empty;
+    public string WebsiteUrl { get; set; } = string.Empty;
 
     /// <summary>
     /// reCAPTCHA site key.

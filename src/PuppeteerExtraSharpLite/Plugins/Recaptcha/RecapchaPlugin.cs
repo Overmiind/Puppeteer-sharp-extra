@@ -51,7 +51,7 @@ public class RecaptchaPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
         var solution = await _provider.GetSolutionAsync(key, url, proxyStr, token);
         await WriteToInput(page, solution);
 
-        return new RecaptchaResult() {
+        return new RecaptchaResult {
             IsSuccess = true
         };
     }
@@ -74,7 +74,7 @@ public class RecaptchaPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
             await page.QuerySelectorAsync("iframe[src^='https://www.google.com/recaptcha/api2/anchor'][name^=\"a-\"]");
 
         if (element is null) {
-            return new() {
+            return new RecaptchaResult {
                 IsSuccess = false,
                 Value = page.Url,
                 Exception = "Recaptcha key not found!"
@@ -84,7 +84,7 @@ public class RecaptchaPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
         var src = await element.GetPropertyAsync("src");
 
         if (src is null) {
-            return new() {
+            return new RecaptchaResult {
                 IsSuccess = false,
                 Value = page.Url,
                 Exception = "Recaptcha key not found!"
@@ -92,7 +92,7 @@ public class RecaptchaPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
         }
 
         var key = HttpUtility.ParseQueryString(src!.ToString()!).Get("k")!;
-        return new() {
+        return new RecaptchaResult {
             Value = key
         };
     }
