@@ -13,4 +13,4 @@ namespace PuppeteerExtraSharpLite;
 [JsonSerializable(typeof(AntiCaptchaRequestForResultTask))]
 [JsonSerializable(typeof(Dictionary<string, string>))]
 [JsonSerializable(typeof(JsonElement))]
-internal partial class JsonContext : JsonSerializerContext { }
+internal partial class JsonContext : JsonSerializerContext;
