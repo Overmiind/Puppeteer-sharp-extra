@@ -14,7 +14,7 @@ public class StealthPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     /// Contracts for creating the standard evasion plugins
     /// </summary>
     /// <returns></returns>
-    private static readonly PluginContract[] StandardEvasionsContracts =
+    internal static readonly PluginContract[] StandardEvasionsContracts =
     [
         new(nameof(WebDriverPlugin), () => new WebDriverPlugin()),
         new(nameof(ChromeSciPlugin), () => new ChromeSciPlugin()),
@@ -88,5 +88,5 @@ public class StealthPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
         await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Utils);
     }
 
-    private readonly record struct PluginContract(string PluginName, Func<PuppeteerPlugin> Factory);
+    internal readonly record struct PluginContract(string PluginName, Func<PuppeteerPlugin> Factory);
 }
