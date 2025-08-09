@@ -10,6 +10,11 @@ public class RecaptchaPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(RecaptchaPlugin);
     private readonly IRecaptchaProvider _provider;
 
+    /// <summary>
+    /// Used for testing purposes only
+    /// </summary>
+    internal RecaptchaPlugin() : this(new InvalidRecaptchaProvider()) { }
+
     public RecaptchaPlugin(IRecaptchaProvider provider) {
         _provider = provider;
     }
