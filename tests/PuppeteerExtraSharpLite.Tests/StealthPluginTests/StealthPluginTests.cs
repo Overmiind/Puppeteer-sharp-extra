@@ -5,6 +5,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests;
 
+[Collection("StealthPlugins")]
 public partial class StealthPluginTests {
     [Fact]
     public async Task Stealth_Plugin_PlugStandardEvasions_ShouldNot_BeDetected() {
