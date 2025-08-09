@@ -33,6 +33,8 @@ public class BlockResourcesPlugin : PuppeteerPlugin, IOnPageCreatedPlugin, IBefo
             if (predicate(_blockResources[i])) {
                 _blockResources.RemoveAt(i);
             }
+
+            i++;
         }
         return this;
     }
@@ -64,7 +66,7 @@ public class BlockResourcesPlugin : PuppeteerPlugin, IOnPageCreatedPlugin, IBefo
 
 public partial class BlockRule {
     public Regex SitePattern { get; set; } = EmptyRegex();
-    public IPage? IPage { get; set; }
+    public IPage? Page { get; set; }
     public ResourceType ResourceType { get; set; } = ResourceType.Unknown;
 
     public bool IsRequestBlocked(IPage fromPage, IRequest request) {
@@ -75,7 +77,7 @@ public partial class BlockRule {
     }
 
     public bool IsPageBlocked(IPage page) {
-        return IPage != null && page.Equals(IPage);
+        return Page != null && page.Equals(Page);
     }
 
     public bool IsSiteBlocked(string siteUrl) => SitePattern.IsMatch(siteUrl);
