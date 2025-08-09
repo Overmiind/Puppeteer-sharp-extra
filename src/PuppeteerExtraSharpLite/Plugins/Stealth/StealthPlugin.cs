@@ -37,29 +37,30 @@ public class StealthPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     /// </summary>
     public static PuppeteerPlugin[] GetStandardEvasions(params PuppeteerPlugin[] pluginOverride) {
         var standardEvasions = StandardEvasionsContracts;
-        // Initialize list with 0 capacity to avoid allocation since expected unrelated plugins is 0
-        List<PuppeteerPlugin> unrelated = new(0);
+        Span<bool> relationMap = stackalloc bool[pluginOverride.Length];
+        int unrelated = 0;
         // Add unrelated plugins to list
-        foreach (var plugin in pluginOverride) {
-            bool isRelated = false;
+        for (int i = 0; i < pluginOverride.Length; i++) {
+            var plugin = pluginOverride[i];
             foreach (var s in standardEvasions) {
                 if (plugin.Name == s.PluginName) {
-                    isRelated = true;
+                    relationMap[i] = true;
+                    break;
                 }
             }
-            if (!isRelated) {
-                unrelated.Add(plugin);
+            if (!relationMap[i]) {
+                unrelated++;
             }
         }
         // create array with enough capacity for unrelated plugins
-        var outputs = new PuppeteerPlugin[standardEvasions.Length + unrelated.Count];
+        var outputs = new PuppeteerPlugin[standardEvasions.Length + unrelated];
         for (int i = 0; i < standardEvasions.Length; i++) {
             var currentEvasion = standardEvasions[i];
             bool overridden = false;
             // override exists - set using override & break
-            foreach (var plugin in pluginOverride) {
-                if (currentEvasion.PluginName == plugin.Name) {
-                    outputs[i] = plugin;
+            for (int j = 0; j < relationMap.Length; j++) {
+                if (relationMap[j] && currentEvasion.PluginName == pluginOverride[j].Name) {
+                    outputs[i] = pluginOverride[j];
                     overridden = true;
                     break;
                 }
@@ -69,8 +70,15 @@ public class StealthPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
                 outputs[i] = currentEvasion.Factory();
             }
         }
-        if (unrelated.Count > 0) {
-            unrelated.CopyTo(outputs.AsSpan(standardEvasions.Length));
+        // Add unrelated
+        if (unrelated > 0) {
+            var extraSpan = outputs.AsSpan(standardEvasions.Length);
+            int extraIndex = 0;
+            for (int i = 0; i < relationMap.Length; i++) {
+                if (!relationMap[i]) {
+                    extraSpan[extraIndex++] = pluginOverride[i];
+                }
+            }
         }
         return outputs;
     }
