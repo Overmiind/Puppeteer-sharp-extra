@@ -12,7 +12,7 @@ public partial class StealthPluginTests {
         pluginManager.Register(new StealthPlugin()).Register(StealthPlugin.GetStandardEvasions());
 
         await using var browser = await pluginManager.LaunchAsync();
-        using var page = await browser.NewPageAsync();
+        await using var page = await browser.NewPageAsync();
 
         await page.GoToAsync("https://google.com");
 
@@ -37,7 +37,7 @@ public partial class StealthPluginTests {
         pluginManager.Register(new StealthPlugin());
 
         await using var browser = await pluginManager.LaunchAsync();
-        using var page = await browser.NewPageAsync();
+        await using var page = await browser.NewPageAsync();
 
         await page.GoToAsync("https://bot.sannysoft.com");
         await page.ScreenshotAsync("Stealth.png", new ScreenshotOptions() {

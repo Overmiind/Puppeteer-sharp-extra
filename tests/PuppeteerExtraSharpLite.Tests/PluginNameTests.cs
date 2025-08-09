@@ -14,8 +14,7 @@ public class PluginNameTests {
 		var pluginTypes = assembly
 			.GetTypes()
 			.Where(t => baseType.IsAssignableFrom(t)
-						&& t.IsClass
-						&& !t.IsAbstract)
+                        && t is { IsClass: true, IsAbstract: false })
 			.ToArray();
 
 		Assert.NotEmpty(pluginTypes);
@@ -28,7 +27,7 @@ public class PluginNameTests {
 
 			var instance = ctor.Invoke(null) as PuppeteerPlugin;
 			Assert.NotNull(instance);
-			Assert.Equal(t.Name, instance!.Name);
+			Assert.Equal(t.Name, instance.Name);
 		}
     }
 }

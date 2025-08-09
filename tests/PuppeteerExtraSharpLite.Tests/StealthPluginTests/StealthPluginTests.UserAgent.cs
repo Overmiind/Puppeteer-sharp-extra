@@ -9,10 +9,9 @@ public partial class StealthPluginTests {
         pluginManager.Register(new UserAgentPlugin());
 
         await using var browser = await pluginManager.LaunchAsync();
-        using var page = await browser.NewPageAsync();
+        await using var page = await browser.NewPageAsync();
 
         await page.GoToAsync("https://google.com");
-        var userAgent = await page.Browser.GetUserAgentAsync();
 
         var finger = await page.GetFingerPrint();
         Assert.DoesNotContain("HeadlessChrome", finger.GetProperty("userAgent").GetString());

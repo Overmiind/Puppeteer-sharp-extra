@@ -9,7 +9,7 @@ public partial class StealthPluginTests {
         pluginManager.Register(new StealthPlugin()).Register(new CodecPlugin());
 
         await using var browser = await pluginManager.LaunchAsync();
-        using var page = await browser.NewPageAsync();
+        await using var page = await browser.NewPageAsync();
 
         await page.GoToAsync("https://google.com");
         var fingerPrint = await page.GetFingerPrint();
@@ -32,8 +32,8 @@ public partial class StealthPluginTests {
         var pluginManager = new PluginManager();
         pluginManager.Register(new StealthPlugin()).Register(new CodecPlugin());
 
-        using var browser = await pluginManager.LaunchAsync();
-        using var page = await browser.NewPageAsync();
+        await using var browser = await pluginManager.LaunchAsync();
+        await using var page = await browser.NewPageAsync();
 
         var canPlay =
             await page.EvaluateFunctionAsync<string>(

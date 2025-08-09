@@ -8,7 +8,7 @@ public static class Extensions {
     public static async Task<IBrowser> LaunchAsync(this PluginManager manager) {
         await EnsureBrowserDownloadedAsync();
 
-        var options = new LaunchOptions() {
+        var options = new LaunchOptions {
             Headless = true
         };
 
@@ -24,7 +24,7 @@ public static class Extensions {
     }
 
     private static readonly SemaphoreSlim BrowserFetchSemaphore = new(1, 1);
-    private static bool s_browserDownloaded = false;
+    private static bool s_browserDownloaded;
 
     private static string? GetSystemChromePath() {
         // macOS Chrome paths

@@ -18,7 +18,7 @@ public partial class RecaptchaPluginTests {
         pluginManager.Register(plugin);
 
         await using var browser = await pluginManager.LaunchAsync();
-        using var page = await browser.NewPageAsync();
+        await using var page = await browser.NewPageAsync();
 
         await page.GoToAsync("https://lessons.zennolab.com/ru/index");
         var result = await plugin.SolveCaptchaAsync(page, token: TestContext.Current.CancellationToken);
@@ -38,7 +38,7 @@ public partial class RecaptchaPluginTests {
         pluginManager.Register(plugin);
 
         await using var browser = await pluginManager.LaunchAsync();
-        using var page = await browser.NewPageAsync();
+        await using var page = await browser.NewPageAsync();
 
         await page.GoToAsync("https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=low");
         var result = await plugin.SolveCaptchaAsync(page, token: TestContext.Current.CancellationToken);
@@ -65,7 +65,7 @@ public partial class RecaptchaPluginTests {
         pluginManager.Register(plugin);
 
         await using var browser = await pluginManager.LaunchAsync();
-        using var page = await browser.NewPageAsync();
+        await using var page = await browser.NewPageAsync();
 
         await page.GoToAsync("https://lessons.zennolab.com/captchas/recaptcha/v2_nosubmit.php?level=low");
         var result = await plugin.SolveCaptchaAsync(page, token: TestContext.Current.CancellationToken);
