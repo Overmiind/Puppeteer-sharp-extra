@@ -14,10 +14,10 @@ public class VendorPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     /// </summary>
     public readonly string Vendor;
 
-    public VendorPlugin(string vendor = "") {
-        Vendor = vendor.Length > 0
-                ? vendor
-                : "Google Inc.";
+    public VendorPlugin() : this("Google Inc.") { }
+
+    public VendorPlugin(string vendor) {
+        Vendor = vendor;
     }
 
     // StealthPlugin injects utils.js

@@ -9,6 +9,8 @@ public partial class AnonymizeUaPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
 
     public Func<string, string> UserAgentTransformer { get; set; } = static (s) => s;
 
+    public AnonymizeUaPlugin() { }
+
     public async Task OnPageCreated(IPage page) {
         string ua = await page.Browser.GetUserAgentAsync();
         ua = ua.Replace("HeadlessChrome", "Chrome");

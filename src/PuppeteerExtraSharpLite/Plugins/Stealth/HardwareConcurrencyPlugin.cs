@@ -14,7 +14,9 @@ public class HardwareConcurrencyPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     /// </summary>
     public readonly int ConcurrencyLevel;
 
-    public HardwareConcurrencyPlugin(int concurrencyLevel = 4) : base() {
+    public HardwareConcurrencyPlugin() : this(4) { }
+
+    public HardwareConcurrencyPlugin(int concurrencyLevel) {
         ConcurrencyLevel = concurrencyLevel;
     }
 

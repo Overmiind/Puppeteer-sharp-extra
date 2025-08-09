@@ -12,6 +12,8 @@ public class BlockResourcesPlugin : PuppeteerPlugin, IOnPageCreatedPlugin, IBefo
 
     public ReadOnlyCollection<BlockRule> Rules => _blockResources.AsReadOnly();
 
+    public BlockResourcesPlugin() : this(ReadOnlySpan<BlockRule>.Empty) { }
+
     public BlockResourcesPlugin(params ReadOnlySpan<BlockRule> blockRules) {
         _blockResources = [];
         foreach (var rule in blockRules) {
