@@ -34,8 +34,9 @@ public class BlockResourcesPluginTests {
         pluginManager.Register(plugin);
 
         await using var browser = await pluginManager.LaunchAsync();
-        using var actualPage = await browser.NewPageAsync();
-        using var otherPage = await browser.NewPageAsync();
+        var context = await browser.CreateBrowserContextAsync();
+        await using var actualPage = await context.NewPageAsync();
+        await using var otherPage = await context.NewPageAsync();
 
         var rule = plugin.AddRule(new BlockRule {
             ResourceType = ResourceType.Document,

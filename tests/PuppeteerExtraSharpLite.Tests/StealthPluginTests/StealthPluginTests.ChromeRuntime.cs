@@ -1,12 +1,12 @@
-﻿using System.Text.Json;
-
-using PuppeteerExtraSharpLite.Plugins.Stealth;
+﻿using PuppeteerExtraSharpLite.Plugins.Stealth;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests;
 
 public partial class StealthPluginTests {
+    private static readonly string[] Collection = ["function", "object"];
+
     [Fact]
-    public async Task ChromeRuntime_Plugin_Should_AddConnectToChrome() {
+    public async Task ChromeRuntime_Plugin_Should_AddChromeRuntime() {
         var pluginManager = new PluginManager();
         pluginManager.Register(new StealthPlugin()).Register(new ChromeRuntimePlugin());
 
@@ -29,7 +29,7 @@ public partial class StealthPluginTests {
         // accept both "function" and "object" (null has typeof 'object').
         var connectType = await page.EvaluateExpressionAsync<string>("typeof chrome.runtime.connect");
         var sendMessageType = await page.EvaluateExpressionAsync<string>("typeof chrome.runtime.sendMessage");
-        Assert.Contains(connectType, new[] { "function", "object" });
-        Assert.Contains(sendMessageType, new[] { "function", "object" });
+        Assert.Contains(connectType, Collection);
+        Assert.Contains(sendMessageType, Collection);
     }
 }

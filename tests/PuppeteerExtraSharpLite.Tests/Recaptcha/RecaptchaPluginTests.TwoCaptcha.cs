@@ -16,7 +16,8 @@ public partial class RecaptchaPluginTests {
         pluginManager.Register(plugin);
 
         await using var browser = await pluginManager.LaunchAsync();
-        await using var page = await browser.NewPageAsync();
+        var context = await browser.CreateBrowserContextAsync();
+        await using var page = await context.NewPageAsync();
 
         await page.GoToAsync("https://www.google.com/recaptcha/api2/demo");
 
@@ -41,7 +42,8 @@ public partial class RecaptchaPluginTests {
         pluginManager.Register(plugin);
 
         await using var browser = await pluginManager.LaunchAsync();
-        await using var page = await browser.NewPageAsync();
+        var context = await browser.CreateBrowserContextAsync();
+        await using var page = await context.NewPageAsync();
 
         await page.GoToAsync("https://recaptcha-demo.appspot.com/recaptcha-v2-invisible.php");
 

@@ -5,7 +5,6 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests;
 
-[Collection("StealthPlugins")]
 public partial class StealthPluginTests {
     [Fact]
     public async Task Stealth_Plugin_PlugStandardEvasions_ShouldNot_BeDetected() {
@@ -13,7 +12,8 @@ public partial class StealthPluginTests {
         pluginManager.Register(new StealthPlugin()).Register(StealthPlugin.GetStandardEvasions());
 
         await using var browser = await pluginManager.LaunchAsync();
-        await using var page = await browser.NewPageAsync();
+        var context = await browser.CreateBrowserContextAsync();
+        await using var page = await context.NewPageAsync();
 
         await page.GoToAsync("https://google.com");
 
@@ -38,7 +38,8 @@ public partial class StealthPluginTests {
         pluginManager.Register(new StealthPlugin());
 
         await using var browser = await pluginManager.LaunchAsync();
-        await using var page = await browser.NewPageAsync();
+        var context = await browser.CreateBrowserContextAsync();
+        await using var page = await context.NewPageAsync();
 
         await page.GoToAsync("https://bot.sannysoft.com");
         await page.ScreenshotAsync("Stealth.png", new ScreenshotOptions() {

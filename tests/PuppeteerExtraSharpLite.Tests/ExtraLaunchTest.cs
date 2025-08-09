@@ -8,7 +8,8 @@ public class ExtraLaunchTest {
         var pluginManager = new PluginManager();
 
         await using var browser = await pluginManager.LaunchAsync();
-        await using var page = await browser.NewPageAsync();
+        var context = await browser.CreateBrowserContextAsync();
+        await using var page = await context.NewPageAsync();
 
         var response = await page.GoToAsync("http://google.com");
         Assert.Equal(HttpStatusCode.OK, response.Status);

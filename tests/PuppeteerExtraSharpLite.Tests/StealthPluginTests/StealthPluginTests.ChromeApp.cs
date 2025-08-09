@@ -13,7 +13,8 @@ public partial class StealthPluginTests {
         pluginManager.Register(new StealthPlugin()).Register(new ChromeAppPlugin());
 
         await using var browser = await pluginManager.LaunchAsync();
-        await using var page = await browser.NewPageAsync();
+        var context = await browser.CreateBrowserContextAsync();
+        await using var page = await context.NewPageAsync();
 
         await page.GoToAsync("https://google.com");
 
