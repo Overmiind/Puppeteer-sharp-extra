@@ -1,3 +1,3 @@
-TODO: Remove unused code
 TODO: Update docs
-TODO: More user friendly way to register standard evasion plugins with configurable options
+TODO: PluginManager should have invocation for page creation for immediate script hook.
+	  Current method doesn't properly (orderly) apply scripts, failure in concurrency.
