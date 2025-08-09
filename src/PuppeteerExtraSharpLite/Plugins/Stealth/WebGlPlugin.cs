@@ -5,7 +5,7 @@ namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 /// <summary>
 /// Mocks WebGL vendor and renderer strings to align with typical hardware configurations.
 /// </summary>
-public class WebGlPlugin : PuppeteerPlugin {
+public class WebGlPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     /// <inheritdoc />
     public override string Name => nameof(WebGlPlugin);
 
