@@ -133,7 +133,7 @@ public class TwoCaptchaProvider : IRecaptchaProvider {
                         return true;
                     }
 
-                    var result = await response.Content.ReadFromJsonAsync(JsonContext.Default.TwoCaptchaResponse);
+                    var result = await response.Content.ReadFromJsonAsync(JsonContext.Default.TwoCaptchaResponse, cancellationToken: token);
 
                     if (result == null) {
                         return true;
@@ -149,7 +149,7 @@ public class TwoCaptchaProvider : IRecaptchaProvider {
                 options.PendingCount,
                 options.StartTimeoutSeconds * 1000);
 
-            return outerResult ?? new();
+            return outerResult ?? new TwoCaptchaResponse();
         }
     }
 }

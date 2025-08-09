@@ -68,11 +68,11 @@ public class AntiCaptchaProvider : IRecaptchaProvider {
         /// <param name="token">Cancellation token.</param>
         /// <returns>Task creation response.</returns>
         public static async Task<AntiCaptchaTaskResult> CreateTaskAsync(HttpClient client, string userKey, string pageUrl, string key, CancellationToken token = default) {
-            var content = new AntiCaptchaRequest() {
+            var content = new AntiCaptchaRequest {
                 ClientKey = userKey,
-                Task = new AntiCaptchaTask() {
+                Task = new AntiCaptchaTask {
                     Type = "NoCaptchaTaskProxyless",
-                    WebsiteURL = pageUrl,
+                    WebsiteUrl = pageUrl,
                     WebsiteKey = key
                 }
             };
@@ -85,7 +85,8 @@ public class AntiCaptchaProvider : IRecaptchaProvider {
             using var response = await client.SendAsync(message, token);
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadFromJsonAsync(JsonContext.Default.AntiCaptchaTaskResult, cancellationToken: token) ?? new();
+            return await response.Content.ReadFromJsonAsync(JsonContext.Default.AntiCaptchaTaskResult, cancellationToken: token)
+                   ?? new AntiCaptchaTaskResult();
         }
 
         /// <summary>
@@ -119,7 +120,7 @@ public class AntiCaptchaProvider : IRecaptchaProvider {
                             return true;
                         }
 
-                        var result = await response.Content.ReadFromJsonAsync(JsonContext.Default.AntiCaptchaTaskResultModel);
+                        var result = await response.Content.ReadFromJsonAsync(JsonContext.Default.AntiCaptchaTaskResultModel, cancellationToken: token);
 
                         if (result is null) {
                             return true;
