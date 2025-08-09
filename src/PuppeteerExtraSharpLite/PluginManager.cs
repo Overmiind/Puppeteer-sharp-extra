@@ -62,18 +62,18 @@ public class PluginManager {
 
         var browser = await Puppeteer.ConnectAsync(options);
 
-        RegisterPluginEvents(browser);
-
-        return browser;
-    }
-
-    internal void RegisterPluginEvents(IBrowser browser) {
         foreach (var plugin in _plugins) {
             if (plugin is IAfterConnectPlugin p) {
                 p.AfterConnect(browser);
             }
         }
 
+        RegisterPluginEvents(browser);
+
+        return browser;
+    }
+
+    internal void RegisterPluginEvents(IBrowser browser) {
         foreach (var plugin in _plugins) {
             switch (plugin) {
                 case IOnPageCreatedPlugin p: {
