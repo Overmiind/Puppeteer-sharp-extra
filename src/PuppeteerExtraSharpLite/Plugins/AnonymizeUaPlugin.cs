@@ -7,9 +7,7 @@ namespace PuppeteerExtraSharpLite.Plugins;
 public partial class AnonymizeUaPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(AnonymizeUaPlugin);
 
-    public Func<string, string> UserAgentTransformer { get; set; } = static (s) => s;
-
-    public AnonymizeUaPlugin() { }
+    public Func<string, string> UserAgentTransformer { get; set; } = static s => s;
 
     public async Task OnPageCreated(IPage page) {
         string ua = await page.Browser.GetUserAgentAsync();

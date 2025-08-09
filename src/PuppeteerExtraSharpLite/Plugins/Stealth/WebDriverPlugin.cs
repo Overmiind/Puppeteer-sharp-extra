@@ -9,8 +9,6 @@ public class WebDriverPlugin : PuppeteerPlugin, IOnPageCreatedPlugin, IBeforeLau
     /// <inheritdoc />
     public override string Name => nameof(WebDriverPlugin);
 
-    public WebDriverPlugin() : base() { }
-
     /// <inheritdoc />
     public Task OnPageCreated(IPage page) {
         return page.EvaluateExpressionOnNewDocumentAsync(Scripts.WebDriver);

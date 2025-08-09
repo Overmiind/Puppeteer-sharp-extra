@@ -9,8 +9,6 @@ public class OutDimensionsPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     /// <inheritdoc />
     public override string Name => nameof(OutDimensionsPlugin);
 
-    public OutDimensionsPlugin() : base() { }
-
     /// <inheritdoc />
     public Task OnPageCreated(IPage page) {
         return page.EvaluateExpressionOnNewDocumentAsync(Scripts.Outdimensions);
