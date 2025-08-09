@@ -37,9 +37,11 @@ public static class Extensions {
 				if (!shouldRetryResult) {
 					return;
 				}
-			} catch { }
+			} catch {
+                // ignored
+            }
 
-			response?.Dispose();
+            response?.Dispose();
 
 			if (delay > 0) {
 				await Task.Delay(delay);
