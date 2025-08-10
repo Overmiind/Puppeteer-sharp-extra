@@ -47,9 +47,7 @@ await page.ScreenshotAsync("example.png");
 
 ### StealthPlugin
 
-StealthPlugin and the related plugins are made for evading detection, usually by injecting scripts at specific times at which websites try to detect bots.
-
-`StealthPlugin` specifically doesn't do much by itself but is a requirement for most other related plugins as it injects utility functions that the other plugins use. As such it should be registered first (A runtime exception will be thrown if a plugin requiring `StealthPlugin` is registered before `StealthPlugin`)
+Stealth related plugins are made for evading detection, usually by injecting scripts at specific times at which websites try to detect bots.
 
 The available evasion plugins are the following: `ChromeAppPlugin`, `ChromeSciPlugin`, `CodecPlugin`, `ContentWindowPlugin`, `EvasionPlugin`, `HardwareConcurrencyPlugin`, `LanguagesPlugin`, `LoadTimesPlugin`, `OutDimensionsPlugin`, `PermissionsPlugin`, `StackTracePlugin`, `UserAgentPlugin`, `VendorPlugin`, `WebDriverPlugin`, `WebGLPlugin`.
 
