@@ -2,7 +2,7 @@
 
 [![NuGet Badge](https://buildstats.info/nuget/PuppeteerSharpToolkit)](https://www.nuget.org/packages/PuppeteerSharpToolkit)
 
-PuppeteerSharpToolkit is a high-performance, AOT-friendly plugin toolkit for PuppeteerSharp. It’s a modern reimagining of the [PuppeteerExtraSharp](https://github.com/Overmiind/Puppeteer-sharp-extra) pattern with a new entry point (`PluginManager`), focused on trimming- and AOT-safe code, reduced allocations, and startup speed. It is not a drop-in replacement for `PuppeteerExtraSharp`; APIs and behaviors have been redesigned for performance and clarity.
+PuppeteerSharpToolkit is a high-performance, AOT-friendly plugin toolkit for PuppeteerSharp. It’s a modern reimagining of the [PuppeteerExtraSharp](https://github.com/Overmiind/Puppeteer-sharp-extra) pattern with a new entry point ([PluginManager](src/PuppeteerSharpToolkit/PluginManager.cs)), focused on trimming- and AOT-safe code, reduced allocations, and startup speed. It is not a drop-in replacement for `PuppeteerExtraSharp`; APIs and behaviors have been redesigned for performance and clarity.
 
 ## Why this package exists
 
@@ -31,9 +31,9 @@ await page.ScreenshotAsync("example.png");
 ## Plugin list
 
 - **Stealth Plugins** – Various evasion techniques to make headless detection harder.
-- **Anonymize UA Plugin** – Anonymizes the user-agent on all pages.
-- **ReCAPTCHA Plugin** – Solves reCAPTCHAs automatically.
-- **Block Resources Plugin** – Blocks images, documents, and other resource types to speed up navigation.
+- **[Anonymize UA Plugin](src/PuppeteerSharpToolkit/Plugins/AnonymizeUaPlugin.cs)** – Anonymizes the user-agent on all pages.
+- **[ReCAPTCHA Plugin](src/PuppeteerSharpToolkit/Plugins/Recaptcha/RecapchaPlugin.cs)** – Solves reCAPTCHAs automatically.
+- **[Block Resources Plugin](src/PuppeteerSharpToolkit/Plugins/BlockResourcesPlugin.cs)** – Blocks images, documents, and other resource types to speed up navigation.
 
 ## API
 
@@ -41,9 +41,9 @@ await page.ScreenshotAsync("example.png");
 
 Stealth related plugins are made for evading detection, usually by injecting scripts at specific times at which websites try to detect bots.
 
-The available evasion plugins are the following: `ChromeAppPlugin`, `ChromeSciPlugin`, `CodecPlugin`, `ContentWindowPlugin`, `EvasionPlugin`, `HardwareConcurrencyPlugin`, `LanguagesPlugin`, `LoadTimesPlugin`, `OutDimensionsPlugin`, `PermissionsPlugin`, `StackTracePlugin`, `UserAgentPlugin`, `VendorPlugin`, `WebDriverPlugin`, `WebGLPlugin`.
+The available evasion plugins are the following: [ChromeAppPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/ChromeAppPlugin.cs), [ChromeSciPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/ChromeSciPlugin.cs), [CodecPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/CodecPlugin.cs), [ContentWindowPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/ContentWindowPlugin.cs), [EvasionPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/EvasionPlugin.cs), [HardwareConcurrencyPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/HardwareConcurrencyPlugin.cs), [LanguagesPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/LanguagesPlugin.cs), [LoadTimesPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/LoadTimesPlugin.cs), [OutDimensionsPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/OutDimensionsPlugin.cs), [PermissionsPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/PermissionsPlugin.cs), [StackTracePlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/StackTracePlugin.cs), [UserAgentPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/UserAgentPlugin.cs), [VendorPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/VendorPlugin.cs), [WebDriverPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/WebDriverPlugin.cs), [WebGLPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/WebGlPlugin.cs).
 
-In this example we'll use `ChromeSciPlugin` which patches "chrome.app" and some other chrome APIs that are used by bot detection scripts.
+In this example we'll use [ChromeSciPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/ChromeSciPlugin.cs) which patches "chrome.app" and some other chrome APIs that are used by bot detection scripts.
 
 ```csharp
 var manager = new PluginManager();
@@ -52,7 +52,7 @@ manager.Register(new ChromeSciPlugin());
 // Continue with browser and page
 ```
 
-To make life a bit easier, `Stealth` is a static class that provides some static methods:
+To make life a bit easier, [Stealth](src/PuppeteerSharpToolkit/Plugins/Stealth/Stealth.cs) is a static class that provides some static methods:
 
 ```csharp
 PuppeteerPlugin[] GetStandardEvasions(params PuppeteerPlugin[] pluginOverride);
@@ -73,7 +73,7 @@ var manager = new PluginManager();
 manager.Register(Stealth.GetStandardEvasions());
 ```
 
-### AnonymizeUaPlugin
+### [AnonymizeUaPlugin](src/PuppeteerSharpToolkit/Plugins/AnonymizeUaPlugin.cs)
 
 AnonymizeUaPlugin is used to transform the user agent on any page as soon as it launches.
 
@@ -91,9 +91,9 @@ plugin.UserAgentTransformer = ua => "whatever";
 // Initialize browser and page + continue with whatever else
 ```
 
-### RecaptchaPlugin
+### [RecaptchaPlugin](src/PuppeteerSharpToolkit/Plugins/Recaptcha/RecapchaPlugin.cs)
 
-RecaptchaPlugin is used in conjunction with Recaptcha solving providers, at this state [AntiCaptcha](https://anti-captcha.com/mainpage) and [2captcha](https://2captcha.com/ru) are supported, but this is extensible so you add your own.
+RecaptchaPlugin is used in conjunction with Recaptcha solving providers, at this state [AntiCaptchaProvider](src/PuppeteerSharpToolkit/Plugins/Recaptcha/Provider/AntiCaptcha/AntiCaptchaProvider.cs) and [TwoCaptchaProvider](src/PuppeteerSharpToolkit/Plugins/Recaptcha/Provider/TwoCaptcha/TwoCaptchaProvider.cs) are supported, but this is extensible so you add your own.
 
 The following is an example with `AntiCaptcha`
 
@@ -119,9 +119,9 @@ await page.GoToAsync("https://patrickhlauke.github.io/recaptcha/");
 await plugin.SolveCaptchaAsync(page); // Also accepts proxyStr and cancellationToken.
 ```
 
-For [2captcha](https://2captcha.com/ru) simply use the `TwoCaptchaProvider` instead.
+For [2captcha](https://2captcha.com/ru) simply use the [TwoCaptchaProvider](src/PuppeteerSharpToolkit/Plugins/Recaptcha/Provider/TwoCaptcha/TwoCaptchaProvider.cs) instead.
 
-### BlockResourcesPlugin
+### [BlockResourcesPlugin](src/PuppeteerSharpToolkit/Plugins/BlockResourcesPlugin.cs)
 
 This plugin is used to blocks page resources in Puppeteer requests (img, documents etc.)
 
@@ -150,9 +150,9 @@ You can also inspect rules on the plugin, as well as add or remove rules at any 
 
 ## Core API
 
-- Plugin registration: `PluginManager.Register(params PuppeteerPlugin[] plugins)`
-- Launch: `await PluginManager.LaunchAsync(LaunchOptions options)`
-- Connect: `await PluginManager.ConnectAsync(ConnectOptions options)`
+- Plugin registration: [PluginManager](src/PuppeteerSharpToolkit/PluginManager.cs).Register(params [PuppeteerPlugin](src/PuppeteerSharpToolkit/Plugins/PuppeteerPlugin.cs)[] plugins)
+- Launch: await [PluginManager](src/PuppeteerSharpToolkit/PluginManager.cs).LaunchAsync(LaunchOptions options)
+- Connect: await [PluginManager](src/PuppeteerSharpToolkit/PluginManager.cs).ConnectAsync(ConnectOptions options)
 
 ## Caveats / Testing
 
