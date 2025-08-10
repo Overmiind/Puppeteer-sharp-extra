@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Buffers;
 using System.Text.RegularExpressions;
 
 using PuppeteerSharp;
@@ -13,6 +13,8 @@ public class BlockResourcesPlugin : PuppeteerPlugin, IBeforeLaunchPlugin, IOnTar
     public override string Name => nameof(BlockResourcesPlugin);
 
     private readonly List<BlockRule> _blockResources;
+
+    private readonly SemaphoreSlim _semaphore = new(1, 1);
 
     /// <summary>
     /// Returns a readonly collection of the registered rules
@@ -41,7 +43,12 @@ public class BlockResourcesPlugin : PuppeteerPlugin, IBeforeLaunchPlugin, IOnTar
     /// <param name="rule"></param>
     /// <returns></returns>
     public BlockRule AddRule(BlockRule rule) {
-        _blockResources.Add(rule);
+        try {
+            _semaphore.Wait();
+            _blockResources.Add(rule);
+        } finally {
+            _semaphore.Release();
+        }
         return rule;
     }
 
@@ -50,15 +57,16 @@ public class BlockResourcesPlugin : PuppeteerPlugin, IBeforeLaunchPlugin, IOnTar
     /// </summary>
     /// <param name="predicate"></param>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.NoOptimization)]
     public BlockResourcesPlugin RemoveRules(Func<BlockRule, bool> predicate) {
-        int i = 0;
-        while (i < _blockResources.Count) {
-            if (predicate(_blockResources[i])) {
-                _blockResources.RemoveAt(i);
+        try {
+            _semaphore.Wait();
+            for (int i = _blockResources.Count - 1; i >= 0; i--) {
+                if (predicate(_blockResources[i])) {
+                    _blockResources.RemoveAt(i);
+                }
             }
-
-            i++;
+        } finally {
+            _semaphore.Release();
         }
         return this;
     }
@@ -80,11 +88,28 @@ public class BlockResourcesPlugin : PuppeteerPlugin, IBeforeLaunchPlugin, IOnTar
                     return;
                 }
 
-                foreach (var rule in _blockResources) {
-                    if (rule.IsRequestBlocked(p, args.Request)) {
-                        await args.Request.AbortAsync().ConfigureAwait(false);
-                        return;
+                int length = 0;
+                BlockRule[] array = [];
+                try {
+                    await _semaphore.WaitAsync();
+                    length = _blockResources.Count;
+                    array = ArrayPool<BlockRule>.Shared.Rent(length);
+                    _blockResources.CopyTo(array, 0);
+                } finally {
+                    _semaphore.Release();
+                }
+                try {
+                    if (array.Length >= length) {
+                        for (int i = 0; i < length; i++) {
+                            var rule = array[i];
+                            if (rule.IsRequestBlocked(p, args.Request)) {
+                                await args.Request.AbortAsync().ConfigureAwait(false);
+                                return;
+                            }
+                        }
                     }
+                } finally {
+                    ArrayPool<BlockRule>.Shared.Return(array, true);
                 }
 
                 await args.Request.ContinueAsync().ConfigureAwait(false);
