@@ -1,5 +1,5 @@
 using PuppeteerSharpToolkit.Plugins.Recaptcha;
-using PuppeteerSharpToolkit.Plugins.Recaptcha.Provider.AntiCaptcha;
+using PuppeteerSharpToolkit.Plugins.Recaptcha.AntiCaptcha;
 
 using PuppeteerSharp;
 

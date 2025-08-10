@@ -1,4 +1,4 @@
-﻿namespace PuppeteerSharpToolkit.Plugins.Recaptcha.Provider;
+﻿namespace PuppeteerSharpToolkit.Plugins.Recaptcha;
 
 /// <summary>
 /// Abstraction for services that solve Google reCAPTCHA and return the solution token.

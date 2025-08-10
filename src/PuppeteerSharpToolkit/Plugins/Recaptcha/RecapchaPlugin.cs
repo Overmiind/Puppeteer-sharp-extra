@@ -1,7 +1,5 @@
 ﻿using System.Web;
 
-using PuppeteerSharpToolkit.Plugins.Recaptcha.Provider;
-
 using PuppeteerSharp;
 
 namespace PuppeteerSharpToolkit.Plugins.Recaptcha;
