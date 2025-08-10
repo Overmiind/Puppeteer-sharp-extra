@@ -3,6 +3,9 @@ using System.Text;
 
 namespace PuppeteerExtraSharpLite;
 
+/// <summary>
+/// Extension class
+/// </summary>
 public static class Extensions {
 	/// <summary>
 	/// Sends an HTTP request and retries based on the provided conditions.
@@ -38,10 +41,10 @@ public static class Extensions {
 					return;
 				}
 			} catch {
-                // ignored
-            }
+				// ignored
+			}
 
-            response?.Dispose();
+			response?.Dispose();
 
 			if (delay > 0) {
 				await Task.Delay(delay);
