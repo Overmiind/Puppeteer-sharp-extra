@@ -1,8 +1,0 @@
-<Solution>
-  <Folder Name="/src/">
-    <Project Path="src/PuppeteerExtraSharpLite/PuppeteerExtraSharpLite.csproj" />
-  </Folder>
-  <Folder Name="/tests/">
-    <Project Path="tests/PuppeteerExtraSharpLite.Tests/PuppeteerExtraSharpLite.Tests.csproj" />
-  </Folder>
-</Solution>

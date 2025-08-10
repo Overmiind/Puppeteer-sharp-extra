@@ -1,8 +1,6 @@
-# PuppeteerExtraSharpLite
+# PuppeteerSharpToolkit
 
-[![NuGet Badge](https://buildstats.info/nuget/PuppeteerExtraSharp)](https://www.nuget.org/packages/PuppeteerExtraSharpLite)
-
-PuppeteerExtraSharpLite is a high-performance, modern rewrite and lighter drop-in successor to PuppeteerExtraSharp. Its primary purpose is to upgrade the underlying PuppeteerSharp dependencies, target .NET 9, and enable AOT compilation, trimming, and significantly better runtime performance. Key changes include removing RestSharp, eliminating reliance on reflection and DLL embedding, and numerous internal rewrites to maximize throughput and startup time.
+PuppeteerSharpToolkit is a high-performance, AOT-friendly plugin toolkit for PuppeteerSharp. It’s a modern reimagining of the [PuppeteerExtraSharp](https://github.com/Overmiind/Puppeteer-sharp-extra) pattern with a new entry point ([PluginManager](src/PuppeteerSharpToolkit/PluginManager.cs)), focused on trimming- and AOT-safe code, reduced allocations, and startup speed. It is not a drop-in replacement for `PuppeteerExtraSharp`; APIs and behaviors have been redesigned for performance and clarity.
 
 ## Why this package exists
 
@@ -14,79 +12,66 @@ PuppeteerExtraSharpLite is a high-performance, modern rewrite and lighter drop-i
 
 ## Quickstart
 
-Usage is intentionally very similar to PuppeteerExtraSharp and meant to serve as a drop-in replacement in many cases. Note: some test suites or integrations rely on specific browser/engine APIs, so depending on your environment not all tests may run out of the box.
-
-```csharp
-// Initialize the plugin pipeline (same idiom as before)
-var extra = new PuppeteerExtra();
-
-// Use stealth plugin
-extra.Use(new StealthPlugin());
-
-// Launch the browser with plugins
-var browser = await extra.LaunchAsync(new LaunchOptions()
-{
-    Headless = false
-});
-
-// Create a new page
-var page = await browser.NewPageAsync();
-
-await page.GoToAsync("http://google.com");
-
-// Wait 2 seconds
-await page.WaitForTimeoutAsync(2000);
-
-// Take a screenshot
-await page.ScreenshotAsync("extra.png");
-```
-
-## Major Highlights / Differences from PuppeteerExtraSharp
-
-- Drop-in similar API surface but internally reworked for performance.
-- Native .NET 9 targeting: AOT, trimming, reduced binary size.
-- No RestSharp dependency anymore.
-- Removed reflection-based plumbing and embedded DLL complexity.
-- Internal HTTP clients use `HttpClient` or minimal wrappers, not heavy third-party HTTP libraries.
-
-## Plugin list
-
-- **Stealth Plugin** – Applies various evasion techniques to make headless detection harder.
-- **Anonymize UA Plugin** – Anonymizes the user-agent on all pages.
-- **ReCAPTCHA Plugin** – Solves reCAPTCHAs automatically.
-- **Block Resources Plugin** – Blocks images, documents, and other resource types to speed up navigation.
-
-## API
-
-### `StealthPlugin`
-
-StealthPlugin and the related plugins are made for evading detection, usually by injecting scripts at specific times at which websites try to detect bots.
-
-`StealthPlugin` specifically doesn't do much by itself but is a requirement for most other related plugins as it injects utility functions that the other plugins use. As such it should be registered first (A runtime exception will be thrown if a plugin requiring `StealthPlugin` is registered before `StealthPlugin`)
-
-The available evasion plugins are the following: `ChromeAppPlugin`, `ChromeRuntimePlugin`, `ChromeSciPlugin`, `CodecPlugin`, `ContentWindowPlugin`, `EvasionPlugin`, `HardwareConcurrencyPlugin`, `LanguagesPlugin`, `LoadTimesPlugin`, `OutDimensionsPlugin`, `PermissionsPlugin`, `StackTracePlugin`, `UserAgentPlugin`, `VendorPlugin`, `WebDriverPlugin`, `WebGLPlugin`.
-
-To keep this relatively short, the following example will use `ChromeRuntimePlugin` which is used to mock the properties of a full chrome browser, this plugin also requires `StealthPlugin` as a dependency.
-
 ```csharp
 // Initialize the plugin manager
 var manager = new PluginManager();
-// Register the plugins, the dependencies first
-manager.Register(new StealthPlugin()).Register(new ChromeRuntimePlugin());
-// Now create browser context and page and use as usual.
+
+// Register plugins (dependencies first)
+manager.Register(new AnonymizeUaPlugin());
+
+// Launch the browser with plugins wired
+await using var browser = await manager.LaunchAsync(new LaunchOptions { Headless = true });
+await using var page = await browser.NewPageAsync();
+await page.GoToAsync("https://example.com");
+await page.ScreenshotAsync("example.png");
 ```
 
-To make life a bit easier, `StealthPlugin` has a method that creates instances of most related plugins, which you can use to registered all of them:
+## Plugin list
+
+- **Stealth Plugins** – Various evasion techniques to make headless detection harder.
+- **[Anonymize UA Plugin](src/PuppeteerSharpToolkit/Plugins/AnonymizeUaPlugin.cs)** – Anonymizes the user-agent on all pages.
+- **[ReCAPTCHA Plugin](src/PuppeteerSharpToolkit/Plugins/Recaptcha/RecapchaPlugin.cs)** – Solves reCAPTCHAs automatically.
+- **[Block Resources Plugin](src/PuppeteerSharpToolkit/Plugins/BlockResourcesPlugin.cs)** – Blocks images, documents, and other resource types to speed up navigation.
+
+## API
+
+### Stealth Plugins
+
+Stealth related plugins are made for evading detection, usually by injecting scripts at specific times at which websites try to detect bots.
+
+The available evasion plugins are the following: [ChromeAppPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/ChromeAppPlugin.cs), [ChromeSciPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/ChromeSciPlugin.cs), [CodecPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/CodecPlugin.cs), [ContentWindowPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/ContentWindowPlugin.cs), [EvasionPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/EvasionPlugin.cs), [HardwareConcurrencyPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/HardwareConcurrencyPlugin.cs), [LanguagesPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/LanguagesPlugin.cs), [LoadTimesPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/LoadTimesPlugin.cs), [OutDimensionsPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/OutDimensionsPlugin.cs), [PermissionsPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/PermissionsPlugin.cs), [StackTracePlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/StackTracePlugin.cs), [UserAgentPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/UserAgentPlugin.cs), [VendorPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/VendorPlugin.cs), [WebDriverPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/WebDriverPlugin.cs), [WebGLPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/WebGlPlugin.cs).
+
+In this example we'll use [ChromeSciPlugin](src/PuppeteerSharpToolkit/Plugins/Stealth/ChromeSciPlugin.cs) which patches "chrome.app" and some other chrome APIs that are used by bot detection scripts.
 
 ```csharp
-// initialize manager as usual
-// get related plugins
-var plugins = StealthPlugin.GetStandardEvasions();
-// register
-manager.Register(new StealthPlugin()).Register(plugins);
+var manager = new PluginManager();
+manager.Register(new ChromeSciPlugin());
+
+// Continue with browser and page
 ```
 
-### `AnonymizeUaPlugin`
+To make life a bit easier, [Stealth](src/PuppeteerSharpToolkit/Plugins/Stealth/Stealth.cs) is a static class that provides some static methods:
+
+```csharp
+PuppeteerPlugin[] GetStandardEvasions(params PuppeteerPlugin[] pluginOverride);
+// Which returns an array of most stealth plugins.
+// The override allows you to initialize any that you with custom arguments
+// Any override that you supply will be used instead of calling the default plugin ctor
+
+Task RegisterUtilsAsync(IPage page);
+// This function register `utils.js` on a page, it is required by some scripts
+// You could also use it if you implement your own plugin, which injects a script
+// ... that can rely on `utils.js`
+```
+
+So in essence you could register a suite of stealth plugins in one go:
+
+```csharp
+var manager = new PluginManager();
+manager.Register(Stealth.GetStandardEvasions());
+```
+
+### [AnonymizeUaPlugin](src/PuppeteerSharpToolkit/Plugins/AnonymizeUaPlugin.cs)
 
 AnonymizeUaPlugin is used to transform the user agent on any page as soon as it launches.
 
@@ -100,13 +85,13 @@ manager.Register(plugin);
 // by default it will replace headless with regular chrome
 // and set platform to windows
 // you can also add your own custom transformation at any time by changing the function
-plugin.UserAgentTransformer = ua => "whatever"
+plugin.UserAgentTransformer = ua => "whatever";
 // Initialize browser and page + continue with whatever else
 ```
 
-### `RecaptchaPlugin`
+### [RecaptchaPlugin](src/PuppeteerSharpToolkit/Plugins/Recaptcha/RecapchaPlugin.cs)
 
-RecaptchaPlugin is used in conjunction with Recaptcha solving providers, at this state [AntiCaptcha](https://anti-captcha.com/mainpage) and [2captcha](https://2captcha.com/ru) are supported, but this is extensible so you add your own.
+RecaptchaPlugin is used in conjunction with Recaptcha solving providers, at this state [AntiCaptchaProvider](src/PuppeteerSharpToolkit/Plugins/Recaptcha/Provider/AntiCaptcha/AntiCaptchaProvider.cs) and [TwoCaptchaProvider](src/PuppeteerSharpToolkit/Plugins/Recaptcha/Provider/TwoCaptcha/TwoCaptchaProvider.cs) are supported, but this is extensible so you add your own.
 
 The following is an example with `AntiCaptcha`
 
@@ -124,17 +109,17 @@ var plugin = new RecaptchaPlugin(provider);
 // Register the plugin
 manager.Register(plugin);
 // Initialize browser and page
-await using var browser = manager.LaunchAsync();
-using var page = browser.NewPageAsync();
+await using var browser = await manager.LaunchAsync();
+await using var page = await browser.NewPageAsync();
 // go to page with captcha
 await page.GoToAsync("https://patrickhlauke.github.io/recaptcha/");
 // now solve captcha at page
 await plugin.SolveCaptchaAsync(page); // Also accepts proxyStr and cancellationToken.
 ```
 
-For [2captcha](https://2captcha.com/ru) simply use the `TwoCaptchaProvider` instead.
+For [2captcha](https://2captcha.com/ru) simply use the [TwoCaptchaProvider](src/PuppeteerSharpToolkit/Plugins/Recaptcha/Provider/TwoCaptcha/TwoCaptchaProvider.cs) instead.
 
-### `BlockResourcesPlugin`
+### [BlockResourcesPlugin](src/PuppeteerSharpToolkit/Plugins/BlockResourcesPlugin.cs)
 
 This plugin is used to blocks page resources in Puppeteer requests (img, documents etc.)
 
@@ -146,8 +131,8 @@ var plugin = new BlockResourcesPlugin();
 // Register the plugin
 manager.Register(plugin);
 // Initialize browser and page
-await using var browser = manager.LaunchAsync();
-using var page = browser.NewPageAsync();
+await using var browser = await manager.LaunchAsync();
+await using var page = await browser.NewPageAsync();
 // Create a rule
 var blockGoogle = new BlockRule() {
     SitePattern = new Regex("google"), // SitePattern applies only to specific urls by pattern
@@ -161,39 +146,11 @@ plugin.AddRule(blockGoogle);
 
 You can also inspect rules on the plugin, as well as add or remove rules at any point. removing rules uses a `Func<BlockRule, bool>` predicate to select the rules to remove.
 
-### Use(IPuppeteerExtraPlugin plugin)
+## Core API
 
-Adds a plugin to the pipeline. Returns the same `PuppeteerExtra` instance for chaining.
-
-```csharp
-var puppeteerExtra = new PuppeteerExtra()
-    .Use(new AnonymizeUaPlugin())
-    .Use(new StealthPlugin());
-```
-
-### LaunchAsync(LaunchOptions options)
-
-Launches a new browser with the configured plugins.
-
-```csharp
-var browser = await new PuppeteerExtra().LaunchAsync(new LaunchOptions());
-```
-
-### ConnectAsync(ConnectOptions options)
-
-Connects to an existing browser instance.
-
-```csharp
-var browser = await new PuppeteerExtra().ConnectAsync(new ConnectOptions());
-```
-
-### GetPlugin<T>()
-
-Retrieves a registered plugin by type.
-
-```csharp
-var stealthPlugin = puppeteerExtra.GetPlugin<StealthPlugin>();
-```
+- Plugin registration: [PluginManager](src/PuppeteerSharpToolkit/PluginManager.cs).Register(params [PuppeteerPlugin](src/PuppeteerSharpToolkit/Plugins/PuppeteerPlugin.cs)[] plugins)
+- Launch: await [PluginManager](src/PuppeteerSharpToolkit/PluginManager.cs).LaunchAsync(LaunchOptions options)
+- Connect: await [PluginManager](src/PuppeteerSharpToolkit/PluginManager.cs).ConnectAsync(ConnectOptions options)
 
 ## Caveats / Testing
 

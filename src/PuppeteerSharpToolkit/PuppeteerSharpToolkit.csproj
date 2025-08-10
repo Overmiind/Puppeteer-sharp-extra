@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Version>1.0.0</Version>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Nullable>enable</Nullable>
+
+    <IsAotCompatible>true</IsAotCompatible>
+    <IsTrimmable>true</IsTrimmable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>David Shnayder</Authors>
+    <Copyright>David Shnayder</Copyright>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+
+    <PackageId>PuppeteerSharpToolkit</PackageId>
+    <Title>PuppeteerSharpToolkit</Title>
+    <AssemblyName>PuppeteerSharpToolkit</AssemblyName>
+    <RootNamespace>PuppeteerSharpToolkit</RootNamespace>
+    <Description>High-performance, AOT-friendly plugin toolkit for PuppeteerSharp</Description>
+    <PackageProjectUrl>https://github.com/dusrdev/PuppeteerSharpToolkit</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/dusrdev/PuppeteerSharpToolkit</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>PuppeteerSharp;Puppeteer;CSharp;Plugins;Stealth;Recaptcha;Automation;Headless</PackageTags>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PuppeteerSharp" Version="20.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>PuppeteerSharpToolkit.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+</Project>
