@@ -2,7 +2,7 @@
 
 [![NuGet Badge](https://buildstats.info/nuget/PuppeteerSharpToolkit)](https://www.nuget.org/packages/PuppeteerSharpToolkit)
 
-PuppeteerSharpToolkit is a high-performance, AOT-friendly plugin toolkit for PuppeteerSharp. It’s a modern reimagining of the “extra/plugins” pattern with a new entry point (`PluginManager`), focused on trimming- and AOT-safe code, reduced allocations, and startup speed. It is not a drop-in replacement for PuppeteerExtraSharp; APIs and behaviors have been redesigned for performance and clarity.
+PuppeteerSharpToolkit is a high-performance, AOT-friendly plugin toolkit for PuppeteerSharp. It’s a modern reimagining of the [PuppeteerExtraSharp](https://github.com/Overmiind/Puppeteer-sharp-extra) pattern with a new entry point (`PluginManager`), focused on trimming- and AOT-safe code, reduced allocations, and startup speed. It is not a drop-in replacement for `PuppeteerExtraSharp`; APIs and behaviors have been redesigned for performance and clarity.
 
 ## Why this package exists
 
@@ -19,50 +19,58 @@ PuppeteerSharpToolkit is a high-performance, AOT-friendly plugin toolkit for Pup
 var manager = new PluginManager();
 
 // Register plugins (dependencies first)
-manager.Register(new StealthPlugin());
+manager.Register(new AnonymizeUaPlugin());
 
 // Launch the browser with plugins wired
 await using var browser = await manager.LaunchAsync(new LaunchOptions { Headless = true });
-var page = await browser.NewPageAsync();
+await using var page = await browser.NewPageAsync();
 await page.GoToAsync("https://example.com");
 await page.ScreenshotAsync("example.png");
 ```
 
-## Major Highlights
-
-- New entry point: `PluginManager` replaces legacy “extra” patterns.
-- Native .NET 9 targeting: AOT, trimming, reduced binary size.
-- No RestSharp dependency anymore.
-- Removed reflection-based plumbing and embedded DLL complexity.
-- Internal HTTP clients use `HttpClient` or minimal wrappers, not heavy third-party HTTP libraries.
-
 ## Plugin list
 
-- **Stealth Plugin** – Applies various evasion techniques to make headless detection harder.
+- **Stealth Plugins** – Various evasion techniques to make headless detection harder.
 - **Anonymize UA Plugin** – Anonymizes the user-agent on all pages.
 - **ReCAPTCHA Plugin** – Solves reCAPTCHAs automatically.
 - **Block Resources Plugin** – Blocks images, documents, and other resource types to speed up navigation.
 
 ## API
 
-### StealthPlugin
+### Stealth Plugins
 
 Stealth related plugins are made for evading detection, usually by injecting scripts at specific times at which websites try to detect bots.
 
 The available evasion plugins are the following: `ChromeAppPlugin`, `ChromeSciPlugin`, `CodecPlugin`, `ContentWindowPlugin`, `EvasionPlugin`, `HardwareConcurrencyPlugin`, `LanguagesPlugin`, `LoadTimesPlugin`, `OutDimensionsPlugin`, `PermissionsPlugin`, `StackTracePlugin`, `UserAgentPlugin`, `VendorPlugin`, `WebDriverPlugin`, `WebGLPlugin`.
 
-To keep this relatively short, the following example will use `ChromeRuntimePlugin` which is used to mock the properties of a full chrome browser, this plugin also requires `StealthPlugin` as a dependency.
+In this example we'll use `ChromeSciPlugin` which patches "chrome.app" and some other chrome APIs that are used by bot detection scripts.
 
 ```csharp
 var manager = new PluginManager();
-manager.Register(new StealthPlugin()).Register(new ChromeSciPlugin());
+manager.Register(new ChromeSciPlugin());
+
+// Continue with browser and page
 ```
 
-To make life a bit easier, `Stealth` provides a helper that creates instances of most related plugins, which you can use to register all of them:
+To make life a bit easier, `Stealth` is a static class that provides some static methods:
 
 ```csharp
-var plugins = Stealth.GetStandardEvasions();
-manager.Register(new StealthPlugin()).Register(plugins);
+PuppeteerPlugin[] GetStandardEvasions(params PuppeteerPlugin[] pluginOverride);
+// Which returns an array of most stealth plugins.
+// The override allows you to initialize any that you with custom arguments
+// Any override that you supply will be used instead of calling the default plugin ctor
+
+Task RegisterUtilsAsync(IPage page);
+// This function register `utils.js` on a page, it is required by some scripts
+// You could also use it if you implement your own plugin, which injects a script
+// ... that can rely on `utils.js`
+```
+
+So in essence you could register a suite of stealth plugins in one go:
+
+```csharp
+var manager = new PluginManager();
+manager.Register(Stealth.GetStandardEvasions());
 ```
 
 ### AnonymizeUaPlugin
@@ -79,7 +87,7 @@ manager.Register(plugin);
 // by default it will replace headless with regular chrome
 // and set platform to windows
 // you can also add your own custom transformation at any time by changing the function
-plugin.UserAgentTransformer = ua => "whatever"
+plugin.UserAgentTransformer = ua => "whatever";
 // Initialize browser and page + continue with whatever else
 ```
 
@@ -103,8 +111,8 @@ var plugin = new RecaptchaPlugin(provider);
 // Register the plugin
 manager.Register(plugin);
 // Initialize browser and page
-await using var browser = manager.LaunchAsync();
-using var page = browser.NewPageAsync();
+await using var browser = await manager.LaunchAsync();
+await using var page = await browser.NewPageAsync();
 // go to page with captcha
 await page.GoToAsync("https://patrickhlauke.github.io/recaptcha/");
 // now solve captcha at page
@@ -125,8 +133,8 @@ var plugin = new BlockResourcesPlugin();
 // Register the plugin
 manager.Register(plugin);
 // Initialize browser and page
-await using var browser = manager.LaunchAsync();
-using var page = browser.NewPageAsync();
+await using var browser = await manager.LaunchAsync();
+await using var page = await browser.NewPageAsync();
 // Create a rule
 var blockGoogle = new BlockRule() {
     SitePattern = new Regex("google"), // SitePattern applies only to specific urls by pattern
