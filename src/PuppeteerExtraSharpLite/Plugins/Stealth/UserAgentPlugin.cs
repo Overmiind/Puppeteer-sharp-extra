@@ -13,7 +13,7 @@ public partial class UserAgentPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
 
     /// <inheritdoc />
     public async Task OnPageCreated(IPage page) {
-        var ua = await page.Browser.GetUserAgentAsync();
+        var ua = await page.Browser.GetUserAgentAsync().ConfigureAwait(false);
         ua = ua.Replace("HeadlessChrome/", "Chrome/");
         var uaVersion = ua.Contains("Chrome/")
             ? ChromeRegex().Match(ua).Groups[1].Value
@@ -42,7 +42,7 @@ public partial class UserAgentPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
             }
         };
 
-        await page.Client.SendAsync("Network.setUserAgentOverride", overrideObject);
+        await page.Client.SendAsync("Network.setUserAgentOverride", overrideObject).ConfigureAwait(false);
     }
 
     private static string GetPlatform(string ua) {

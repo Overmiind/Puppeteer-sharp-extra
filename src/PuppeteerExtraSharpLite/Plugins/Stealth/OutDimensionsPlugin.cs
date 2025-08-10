@@ -10,7 +10,7 @@ public class OutDimensionsPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(OutDimensionsPlugin);
 
     /// <inheritdoc />
-    public Task OnPageCreated(IPage page) {
-        return page.EvaluateExpressionOnNewDocumentAsync(Scripts.Outdimensions);
+    public async Task OnPageCreated(IPage page) {
+        await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Outdimensions).ConfigureAwait(false);
     }
 }

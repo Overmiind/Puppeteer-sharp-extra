@@ -14,7 +14,7 @@ public class CodecPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
 
     /// <inheritdoc />
-    public Task OnPageCreated(IPage page) {
-        return page.EvaluateExpressionOnNewDocumentAsync(Scripts.Codec);
+    public async Task OnPageCreated(IPage page) {
+        await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Codec).ConfigureAwait(false);
     }
 }

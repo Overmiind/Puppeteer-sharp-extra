@@ -25,7 +25,7 @@ public class HardwareConcurrencyPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
 
     /// <inheritdoc />
-    public Task OnPageCreated(IPage page) {
-        return page.EvaluateFunctionAsync(Scripts.HardwareConcurrency, [ConcurrencyLevel]);
+    public async Task OnPageCreated(IPage page) {
+        await page.EvaluateFunctionAsync(Scripts.HardwareConcurrency, ConcurrencyLevel).ConfigureAwait(false);
     }
 }

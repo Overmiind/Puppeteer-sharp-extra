@@ -10,14 +10,14 @@ public partial class AnonymizeUaPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     public Func<string, string> UserAgentTransformer { get; set; } = static s => s;
 
     public async Task OnPageCreated(IPage page) {
-        string ua = await page.Browser.GetUserAgentAsync();
+        string ua = await page.Browser.GetUserAgentAsync().ConfigureAwait(false);
         ua = ua.Replace("HeadlessChrome", "Chrome");
 
         ua = UserAgentRegex().Replace(ua, "(Windows NT 10.0; Win64; x64)");
 
         ua = UserAgentTransformer(ua);
 
-        await page.SetUserAgentAsync(ua);
+        await page.SetUserAgentAsync(ua).ConfigureAwait(false);
     }
 
     [GeneratedRegex(@"/\(([^)]+)\)/")]

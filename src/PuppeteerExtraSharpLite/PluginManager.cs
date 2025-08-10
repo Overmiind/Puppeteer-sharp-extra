@@ -40,7 +40,7 @@ public class PluginManager {
                 p.BeforeLaunch(options);
             }
         }
-        var browser = await Puppeteer.LaunchAsync(options);
+        var browser = await Puppeteer.LaunchAsync(options).ConfigureAwait(false);
 
         foreach (var plugin in _plugins) {
             if (plugin is IAfterLaunchPlugin p) {
@@ -60,7 +60,7 @@ public class PluginManager {
             }
         }
 
-        var browser = await Puppeteer.ConnectAsync(options);
+        var browser = await Puppeteer.ConnectAsync(options).ConfigureAwait(false);
 
         foreach (var plugin in _plugins) {
             if (plugin is IAfterConnectPlugin p) {
@@ -79,8 +79,8 @@ public class PluginManager {
                 case IOnPageCreatedPlugin p: {
                         browser.TargetCreated += async (sender, args) => {
                             if (args.Target.Type == TargetType.Page) {
-                                var page = await args.Target.PageAsync();
-                                await p.OnPageCreated(page);
+                                var page = await args.Target.PageAsync().ConfigureAwait(false);
+                                await p.OnPageCreated(page).ConfigureAwait(false);
                             }
                         };
                         break;

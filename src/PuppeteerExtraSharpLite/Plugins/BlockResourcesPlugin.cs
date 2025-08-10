@@ -41,21 +41,21 @@ public class BlockResourcesPlugin : PuppeteerPlugin, IOnPageCreatedPlugin, IBefo
 
 
     public async Task OnPageCreated(IPage page) {
-        await page.SetRequestInterceptionAsync(true);
+        await page.SetRequestInterceptionAsync(true).ConfigureAwait(false);
         page.Request += async (sender, args) => {
             if (sender is not IPage p) {
-                await args.Request.ContinueAsync();
+                await args.Request.ContinueAsync().ConfigureAwait(false);
                 return;
             }
 
             foreach (var rule in _blockResources) {
                 if (rule.IsRequestBlocked(p, args.Request)) {
-                    await args.Request.AbortAsync();
+                    await args.Request.AbortAsync().ConfigureAwait(false);
                     return;
                 }
             }
 
-            await args.Request.ContinueAsync();
+            await args.Request.ContinueAsync().ConfigureAwait(false);
         };
     }
 

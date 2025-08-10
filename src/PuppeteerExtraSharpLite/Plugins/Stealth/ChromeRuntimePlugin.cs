@@ -14,7 +14,7 @@ public class ChromeRuntimePlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
 
     /// <inheritdoc />
-    public Task OnPageCreated(IPage page) {
-        return page.EvaluateExpressionOnNewDocumentAsync(Scripts.Runtime);
+    public async Task OnPageCreated(IPage page) {
+        await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Runtime).ConfigureAwait(false);
     }
 }

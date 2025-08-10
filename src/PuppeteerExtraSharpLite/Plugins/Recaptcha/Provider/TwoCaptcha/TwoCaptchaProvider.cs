@@ -93,11 +93,12 @@ public class TwoCaptchaProvider : IRecaptchaProvider {
             using var message = new HttpRequestMessage(HttpMethod.Post, url);
             message.Headers.Add("Accept", "application/json");
 
-            using var response = await client.SendAsync(message, token);
+            using var response = await client.SendAsync(message, token).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadFromJsonAsync(JsonContext.Default.TwoCaptchaResponse, cancellationToken: token)
+            .ConfigureAwait(false)
             ?? throw new JsonException($"Failed to deserialize content into {nameof(TwoCaptchaResponse)}");
         }
 
@@ -133,7 +134,7 @@ public class TwoCaptchaProvider : IRecaptchaProvider {
                         return true;
                     }
 
-                    var result = await response.Content.ReadFromJsonAsync(JsonContext.Default.TwoCaptchaResponse, cancellationToken: token);
+                    var result = await response.Content.ReadFromJsonAsync(JsonContext.Default.TwoCaptchaResponse, cancellationToken: token).ConfigureAwait(false);
 
                     if (result == null) {
                         return true;

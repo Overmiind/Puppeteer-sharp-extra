@@ -41,9 +41,9 @@ public class AntiCaptchaProvider : IRecaptchaProvider {
     /// <returns>Solution token received from Anti-Captcha.</returns>
     /// <exception cref="HttpRequestException">Thrown when the API returns an error or invalid result.</exception>
     public async Task<string> GetSolutionAsync(string key, string pageUrl, string proxyStr = "", CancellationToken token = default) {
-        var task = await Api.CreateTaskAsync(_client, _userKey, pageUrl, key, token);
+        var task = await Api.CreateTaskAsync(_client, _userKey, pageUrl, key, token).ConfigureAwait(false);
         await Task.Delay(_options.StartTimeoutSeconds * 1000, token);
-        var result = await Api.PendingForResult(_client, _userKey, task.TaskId, _options, token);
+        var result = await Api.PendingForResult(_client, _userKey, task.TaskId, _options, token).ConfigureAwait(false);
 
         if (result.Status != "ready" || result.Solution is null || result.ErrorId != 0) {
             throw new HttpRequestException($"AntiCaptcha request ends with error - {result.ErrorId}");
@@ -82,11 +82,11 @@ public class AntiCaptchaProvider : IRecaptchaProvider {
             message.Headers.Add("Accept", "application/json");
             message.Content = JsonContent.Create(content, JsonContext.Default.AntiCaptchaRequest);
 
-            using var response = await client.SendAsync(message, token);
+            using var response = await client.SendAsync(message, token).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadFromJsonAsync(JsonContext.Default.AntiCaptchaTaskResult, cancellationToken: token)
-                   ?? new AntiCaptchaTaskResult();
+            .ConfigureAwait(false) ?? new AntiCaptchaTaskResult();
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ public class AntiCaptchaProvider : IRecaptchaProvider {
                             return true;
                         }
 
-                        var result = await response.Content.ReadFromJsonAsync(JsonContext.Default.AntiCaptchaTaskResultModel, cancellationToken: token);
+                        var result = await response.Content.ReadFromJsonAsync(JsonContext.Default.AntiCaptchaTaskResultModel, cancellationToken: token).ConfigureAwait(false);
 
                         if (result is null) {
                             return true;

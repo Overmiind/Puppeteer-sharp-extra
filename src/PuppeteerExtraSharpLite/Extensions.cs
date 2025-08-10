@@ -30,7 +30,7 @@ public static class Extensions {
 			HttpResponseMessage? response = null;
 
 			try {
-				response = await client.SendAsync(request);
+				response = await client.SendAsync(request).ConfigureAwait(false);
 
 				var shouldRetryResult = await shouldRetry(response);
 

@@ -85,7 +85,7 @@ public class StealthPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
 
     /// <inheritdoc />
     public async Task OnPageCreated(IPage page) {
-        await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Utils);
+        await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Utils).ConfigureAwait(false);
     }
 
     internal readonly record struct PluginContract(string PluginName, Func<PuppeteerPlugin> Factory);

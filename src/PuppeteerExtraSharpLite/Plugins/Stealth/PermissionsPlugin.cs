@@ -14,7 +14,7 @@ public class PermissionsPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
 
     /// <inheritdoc />
-    public Task OnPageCreated(IPage page) {
-        return page.EvaluateExpressionOnNewDocumentAsync(Scripts.Permissions);
+    public async Task OnPageCreated(IPage page) {
+        await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Permissions).ConfigureAwait(false);
     }
 }

@@ -23,7 +23,7 @@ public class WebGlPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
 
     /// <inheritdoc />
     public async Task OnPageCreated(IPage page) {
-        await page.EvaluateFunctionOnNewDocumentAsync(Scripts.WebGL, _options.Vendor, _options.Renderer);
+        await page.EvaluateFunctionOnNewDocumentAsync(Scripts.WebGL, _options.Vendor, _options.Renderer).ConfigureAwait(false);
     }
 }
 

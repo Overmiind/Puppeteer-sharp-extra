@@ -27,7 +27,7 @@ public class LanguagesPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
 
     /// <inheritdoc />
-    public Task OnPageCreated(IPage page) {
-        return page.EvaluateFunctionOnNewDocumentAsync(Scripts.Language, [_languages]);
+    public async Task OnPageCreated(IPage page) {
+        await page.EvaluateFunctionOnNewDocumentAsync(Scripts.Language, _languages).ConfigureAwait(false);
     }
 }

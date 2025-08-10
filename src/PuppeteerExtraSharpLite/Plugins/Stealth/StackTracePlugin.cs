@@ -10,7 +10,7 @@ public class StackTracePlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     public override string Name => nameof(StackTracePlugin);
 
     /// <inheritdoc />
-    public Task OnPageCreated(IPage page) {
-        return page.EvaluateExpressionOnNewDocumentAsync(Scripts.Stacktrace);
+    public async Task OnPageCreated(IPage page) {
+        await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Stacktrace).ConfigureAwait(false);
     }
 }

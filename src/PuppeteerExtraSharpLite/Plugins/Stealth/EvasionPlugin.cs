@@ -15,6 +15,6 @@ public class EvasionPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
 
     /// <inheritdoc />
     public async Task OnPageCreated(IPage page) {
-        await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Plugin);
+        await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Plugin).ConfigureAwait(false);
     }
 }
