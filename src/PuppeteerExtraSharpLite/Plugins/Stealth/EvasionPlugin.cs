@@ -14,7 +14,7 @@ public class EvasionPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
         if (target.Type == TargetType.Page) {
             var page = await target.PageAsync().ConfigureAwait(false);
             await Stealth.RegisterUtilsAsync(page);
-            await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Plugin).ConfigureAwait(false);
+            await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Evasion).ConfigureAwait(false);
         }
     }
 }

@@ -5,6 +5,7 @@ public static partial class Scripts {
     /// Normalizes Notifications and Permissions APIs to reflect headful differences on secure
     /// and insecure origins (e.g., Notification.permission and permissions.query results).
     /// </summary>
+    /// <remarks>Depends on <see cref="Utils"/></remarks>
     public const string Permissions =
     """
     (() => {

@@ -6,6 +6,7 @@ public static partial class Scripts
     /// Intercepts HTMLMediaElement.canPlayType to report support for specific codecs/mime types
     /// that Chromium headless lacks by default (e.g., certain MP4 and AAC variations).
     /// </summary>
+    /// <remarks>Depends on <see cref="Utils"/></remarks>
     public const string Codec =
     """
     (() => {

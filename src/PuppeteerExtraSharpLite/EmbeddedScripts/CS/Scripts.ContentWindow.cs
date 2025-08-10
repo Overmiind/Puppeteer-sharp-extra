@@ -5,6 +5,7 @@ public static partial class Scripts {
     /// Ensures iframe.contentWindow exists and behaves like headful Chrome by proxying selected
     /// properties and handling srcdoc-created iframes to avoid detection quirks.
     /// </summary>
+    /// <remarks>Depends on <see cref="Utils"/></remarks>
     public const string ContentWindow =
     """
     () => {

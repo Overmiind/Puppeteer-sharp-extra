@@ -5,7 +5,8 @@ public static partial class Scripts {
     /// Mocks navigator.plugins and navigator.mimeTypes with realistic data and behavior, including
     /// item/namedItem accessors and cross-references, to mirror headful Chrome.
     /// </summary>
-    public const string Plugin =
+    /// <remarks>Depends on <see cref="Utils"/></remarks>
+    public const string Evasion =
     """
     (() => {
         function generateFunctionMocks() {

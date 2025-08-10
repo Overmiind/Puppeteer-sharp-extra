@@ -5,6 +5,7 @@ public static partial class Scripts {
     /// Implements chrome.loadTimes with protocol and navigation timing details derived from
     /// Performance APIs, matching headful Chrome behaviors and shapes.
     /// </summary>
+    /// <remarks>Depends on <see cref="Utils"/></remarks>
     public const string LoadTimes =
     """
     (() => {

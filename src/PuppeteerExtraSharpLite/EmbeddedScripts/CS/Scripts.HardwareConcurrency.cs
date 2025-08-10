@@ -4,6 +4,7 @@ public static partial class Scripts {
     /// <summary>
     /// Overrides navigator.hardwareConcurrency with a custom value via a getter proxy.
     /// </summary>
+    /// <remarks>Depends on <see cref="Utils"/></remarks>
     public const string HardwareConcurrency =
     """
     (concurrency) => {

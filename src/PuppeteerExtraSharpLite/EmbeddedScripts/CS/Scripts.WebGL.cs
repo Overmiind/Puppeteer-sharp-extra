@@ -5,6 +5,7 @@ public static partial class Scripts {
     /// Proxies WebGL getParameter to spoof UNMASKED_VENDOR_WEBGL and UNMASKED_RENDERER_WEBGL
     /// values, controlling reported GPU vendor and renderer to avoid headless fingerprints.
     /// </summary>
+    /// <remarks>Depends on <see cref="Utils"/></remarks>
     public const string WebGL =
     """
     (vendor, renderer) => {

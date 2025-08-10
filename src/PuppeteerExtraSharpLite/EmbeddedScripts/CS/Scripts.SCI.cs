@@ -5,6 +5,7 @@ public static partial class Scripts {
     /// Implements chrome.csi with timing information derived from PerformanceTiming to emulate
     /// headful Chrome's legacy CSI API.
     /// </summary>
+    /// <remarks>Depends on <see cref="Utils"/></remarks>
     public const string SCI =
     """
     (() => {

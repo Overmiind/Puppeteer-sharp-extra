@@ -5,6 +5,7 @@ public static partial class Scripts {
     /// Mocks chrome.runtime APIs (sendMessage, connect, id, enums) to align headless behavior
     /// with headful Chrome, including argument validation and realistic return values.
     /// </summary>
+    /// <remarks>Depends on <see cref="Utils"/></remarks>
     public const string Runtime =
     """
     (() => {

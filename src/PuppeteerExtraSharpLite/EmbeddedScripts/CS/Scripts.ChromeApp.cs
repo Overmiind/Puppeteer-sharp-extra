@@ -5,6 +5,7 @@ public static partial class Scripts {
     /// Mocks chrome.app with realistic structure and behavior (isInstalled, getDetails,
     /// getIsInstalled, runningState) to emulate headful Chrome on pages where it is absent.
     /// </summary>
+    /// <remarks>Depends on <see cref="Utils"/></remarks>
     public const string ChromeApp =
     """
     (() => {

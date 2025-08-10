@@ -13,7 +13,7 @@ public partial class EmbeddedScriptsTests {
 		{ $"{nameof(Scripts.LoadTimes)}.js", Scripts.LoadTimes },
 		{ $"{nameof(Scripts.Outdimensions)}.js", Scripts.Outdimensions },
 		{ $"{nameof(Scripts.Permissions)}.js", Scripts.Permissions },
-		{ $"{nameof(Scripts.Plugin)}.js", Scripts.Plugin },
+		{ $"{nameof(Scripts.Evasion)}.js", Scripts.Evasion },
 		{ $"{nameof(Scripts.Runtime)}.js", Scripts.Runtime },
 		{ $"{nameof(Scripts.SCI)}.js", Scripts.SCI },
 		{ $"{nameof(Scripts.Stacktrace)}.js", Scripts.Stacktrace },
