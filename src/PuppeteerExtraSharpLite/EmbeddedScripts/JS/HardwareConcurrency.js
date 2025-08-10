@@ -1,5 +1,4 @@
 ﻿(concurrency) => {
-
     utils.replaceGetterWithProxy(
         Object.getPrototypeOf(navigator),
         'hardwareConcurrency',
