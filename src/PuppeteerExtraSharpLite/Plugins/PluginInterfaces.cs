@@ -10,7 +10,7 @@ public interface IBeforeLaunchPlugin {
     /// Called before the browser is launched, allowing mutation of <paramref name="options"/>.
     /// </summary>
     /// <param name="options">Launch options that will be used to start the browser.</param>
-    void BeforeLaunch(LaunchOptions options);
+    Task BeforeLaunch(LaunchOptions options);
 }
 
 /// <summary>
@@ -21,7 +21,7 @@ public interface IAfterLaunchPlugin {
     /// Called after the browser has launched.
     /// </summary>
     /// <param name="browser">The launched browser instance.</param>
-    void AfterLaunch(IBrowser browser);
+    Task AfterLaunch(IBrowser browser);
 }
 
 /// <summary>
@@ -32,7 +32,7 @@ public interface IBeforeConnectPlugin {
     /// Called before connecting to a browser, allowing mutation of <paramref name="options"/>.
     /// </summary>
     /// <param name="options">Connection options to be used for establishing the connection.</param>
-    void BeforeConnect(ConnectOptions options);
+    Task BeforeConnect(ConnectOptions options);
 }
 
 /// <summary>
@@ -43,7 +43,7 @@ public interface IAfterConnectPlugin {
     /// Called after connecting to a browser instance.
     /// </summary>
     /// <param name="browser">The connected browser instance.</param>
-    void AfterConnect(IBrowser browser);
+    Task AfterConnect(IBrowser browser);
 }
 
 /// <summary>
@@ -54,7 +54,7 @@ public interface IOnBrowserPlugin {
     /// Called when a browser instance is available to the plugin.
     /// </summary>
     /// <param name="browser">The browser instance.</param>
-    void OnBrowser(IBrowser browser);
+    Task OnBrowser(IBrowser browser);
 }
 
 /// <summary>
@@ -65,18 +65,7 @@ public interface IOnTargetCreatedPlugin {
     /// Called when a new target has been created.
     /// </summary>
     /// <param name="target">The newly created target.</param>
-    void OnTargetCreated(Target target);
-}
-
-/// <summary>
-/// Implement to run code when a new page is created.
-/// </summary>
-public interface IOnPageCreatedPlugin {
-    /// <summary>
-    /// Called when a new page has been created.
-    /// </summary>
-    /// <param name="page">The newly created page.</param>
-    Task OnPageCreated(IPage page);
+    Task OnTargetCreated(Target target);
 }
 
 /// <summary>
@@ -87,7 +76,7 @@ public interface IOnTargetChangedPlugin {
     /// Called when a target has changed.
     /// </summary>
     /// <param name="target">The changed target.</param>
-    void OnTargetChanged(Target target);
+    Task OnTargetChanged(Target target);
 }
 
 /// <summary>
@@ -98,7 +87,7 @@ public interface IOnTargetDestroyedPlugin {
     /// Called when a target has been destroyed.
     /// </summary>
     /// <param name="target">The destroyed target.</param>
-    void OnTargetDestroyed(Target target);
+    Task OnTargetDestroyed(Target target);
 }
 
 /// <summary>
@@ -108,7 +97,7 @@ public interface IOnDisconnectedPlugin {
     /// <summary>
     /// Called when the browser has disconnected.
     /// </summary>
-    void OnDisconnected();
+    Task OnDisconnected();
 }
 
 /// <summary>
@@ -118,5 +107,5 @@ public interface IOnClosePlugin {
     /// <summary>
     /// Called when the browser has closed.
     /// </summary>
-    void OnClose();
+    Task OnClose();
 }

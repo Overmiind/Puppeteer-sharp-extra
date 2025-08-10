@@ -6,7 +6,7 @@ namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 /// Aggregates common stealth evasions and utilities. This plugin is typically registered first
 /// so other stealth plugins can rely on the injected helper scripts.
 /// </summary>
-public class StealthPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
+public class StealthPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
     /// <inheritdoc />
     public override string Name => nameof(StealthPlugin);
 
@@ -83,9 +83,16 @@ public class StealthPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
         return outputs;
     }
 
-    /// <inheritdoc />
-    public async Task OnPageCreated(IPage page) {
-        await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Utils).ConfigureAwait(false);
+    // /// <inheritdoc />
+    // public async Task OnPageCreated(IPage page) {
+    //     await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Utils).ConfigureAwait(false);
+    // }
+
+    public async Task OnTargetCreated(Target target) {
+        if (target.Type == TargetType.Page) {
+            var page = await target.PageAsync().ConfigureAwait(false);
+            await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Utils).ConfigureAwait(false);
+        }
     }
 
     internal readonly record struct PluginContract(string PluginName, Func<PuppeteerPlugin> Factory);

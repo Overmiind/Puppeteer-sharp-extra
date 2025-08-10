@@ -5,7 +5,7 @@ namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 /// <summary>
 /// Mocks chrome.runtime to align with expectations of real Chrome environments.
 /// </summary>
-public class ChromeRuntimePlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
+public class ChromeRuntimePlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
     /// <inheritdoc />
     public override string Name => nameof(ChromeRuntimePlugin);
 
@@ -13,8 +13,16 @@ public class ChromeRuntimePlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     /// <inheritdoc />
     protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
 
+    // /// <inheritdoc />
+    // public async Task OnPageCreated(IPage page) {
+    //     await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Runtime).ConfigureAwait(false);
+    // }
+
     /// <inheritdoc />
-    public async Task OnPageCreated(IPage page) {
-        await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Runtime).ConfigureAwait(false);
+    public async Task OnTargetCreated(Target target) {
+        if (target.Type == TargetType.Page) {
+            var page = await target.PageAsync().ConfigureAwait(false);
+            await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Runtime).ConfigureAwait(false);
+        }
     }
 }

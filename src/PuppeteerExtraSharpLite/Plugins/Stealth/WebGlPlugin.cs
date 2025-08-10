@@ -5,9 +5,13 @@ namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 /// <summary>
 /// Mocks WebGL vendor and renderer strings to align with typical hardware configurations.
 /// </summary>
-public class WebGlPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
+public class WebGlPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
     /// <inheritdoc />
     public override string Name => nameof(WebGlPlugin);
+
+    // StealthPlugin injects utils.js
+    /// <inheritdoc />
+    protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
 
     private readonly StealthWebGLOptions _options;
 
@@ -17,13 +21,16 @@ public class WebGlPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
         _options = options;
     }
 
-    // StealthPlugin injects utils.js
-    /// <inheritdoc />
-    protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
+    // /// <inheritdoc />
+    // public async Task OnPageCreated(IPage page) {
+    //     await page.EvaluateFunctionOnNewDocumentAsync(Scripts.WebGL, _options.Vendor, _options.Renderer).ConfigureAwait(false);
+    // }
 
-    /// <inheritdoc />
-    public async Task OnPageCreated(IPage page) {
-        await page.EvaluateFunctionOnNewDocumentAsync(Scripts.WebGL, _options.Vendor, _options.Renderer).ConfigureAwait(false);
+    public async Task OnTargetCreated(Target target) {
+        if (target.Type == TargetType.Page) {
+            var page = await target.PageAsync().ConfigureAwait(false);
+            await page.EvaluateFunctionOnNewDocumentAsync(Scripts.WebGL, _options.Vendor, _options.Renderer).ConfigureAwait(false);
+        }
     }
 }
 

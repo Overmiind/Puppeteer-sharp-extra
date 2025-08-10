@@ -37,14 +37,14 @@ public class PluginManager {
     public async Task<IBrowser> LaunchAsync(LaunchOptions options) {
         foreach (var plugin in _plugins) {
             if (plugin is IBeforeLaunchPlugin p) {
-                p.BeforeLaunch(options);
+                await p.BeforeLaunch(options).ConfigureAwait(false);
             }
         }
         var browser = await Puppeteer.LaunchAsync(options).ConfigureAwait(false);
 
         foreach (var plugin in _plugins) {
             if (plugin is IAfterLaunchPlugin p) {
-                p.AfterLaunch(browser);
+                await p.AfterLaunch(browser).ConfigureAwait(false);
             }
         }
 
@@ -56,7 +56,7 @@ public class PluginManager {
     public async Task<IBrowser> ConnectAsync(ConnectOptions options) {
         foreach (var plugin in _plugins) {
             if (plugin is IBeforeConnectPlugin p) {
-                p.BeforeConnect(options);
+                await p.BeforeConnect(options).ConfigureAwait(false);
             }
         }
 
@@ -64,7 +64,7 @@ public class PluginManager {
 
         foreach (var plugin in _plugins) {
             if (plugin is IAfterConnectPlugin p) {
-                p.AfterConnect(browser);
+                await p.AfterConnect(browser).ConfigureAwait(false);
             }
         }
 
@@ -75,36 +75,27 @@ public class PluginManager {
 
     internal void RegisterPluginEvents(IBrowser browser) {
         foreach (var plugin in _plugins) {
-            switch (plugin) {
-                case IOnPageCreatedPlugin p: {
-                        browser.TargetCreated += async (sender, args) => {
-                            if (args.Target.Type == TargetType.Page) {
-                                var page = await args.Target.PageAsync().ConfigureAwait(false);
-                                await p.OnPageCreated(page).ConfigureAwait(false);
-                            }
-                        };
-                        break;
-                    }
-                case IOnTargetCreatedPlugin p: {
-                        browser.TargetCreated += (sender, args) => p.OnTargetCreated(args.Target);
-                        break;
-                    }
-                case IOnTargetChangedPlugin p: {
-                        browser.TargetChanged += (sender, args) => p.OnTargetChanged(args.Target);
-                        break;
-                    }
-                case IOnTargetDestroyedPlugin p: {
-                        browser.TargetDestroyed += (sender, args) => p.OnTargetDestroyed(args.Target);
-                        break;
-                    }
-                case IOnDisconnectedPlugin p: {
-                        browser.Disconnected += (sender, args) => p.OnDisconnected();
-                        break;
-                    }
-                case IOnClosePlugin p: {
-                        browser.Closed += (sender, args) => p.OnClose();
-                        break;
-                    }
+            // if (plugin is IOnPageCreatedPlugin onPageCreated) {
+            //     browser.TargetCreated += async (sender, args) => {
+            //         if (args.Target.Type == TargetType.Page) {
+            //             var page = await args.Target.PageAsync().ConfigureAwait(false);
+            //             await onPageCreated.OnPageCreated(page).ConfigureAwait(false);
+            //         }
+            //     };
+            if (plugin is IOnTargetCreatedPlugin onTargetCreated) {
+                browser.TargetCreated += async (sender, args) => await onTargetCreated.OnTargetCreated(args.Target);
+            }
+            if (plugin is IOnTargetChangedPlugin onTargetChanged) {
+                browser.TargetChanged += async (sender, args) => await onTargetChanged.OnTargetChanged(args.Target);
+            }
+            if (plugin is IOnTargetDestroyedPlugin onTargetDestroyed) {
+                browser.TargetDestroyed += async (sender, args) => await onTargetDestroyed.OnTargetDestroyed(args.Target);
+            }
+            if (plugin is IOnDisconnectedPlugin onDisconnected) {
+                browser.Disconnected += async (sender, args) => await onDisconnected.OnDisconnected();
+            }
+            if (plugin is IOnClosePlugin onClose) {
+                browser.Closed += async (sender, args) => await onClose.OnClose();
             }
         }
     }

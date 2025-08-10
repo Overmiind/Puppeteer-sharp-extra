@@ -5,7 +5,7 @@ namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 /// <summary>
 /// Provides window.chrome.app compatibility to reduce detections relying on its presence.
 /// </summary>
-public class ChromeAppPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
+public class ChromeAppPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
     /// <inheritdoc />
     public override string Name => nameof(ChromeAppPlugin);
 
@@ -13,8 +13,15 @@ public class ChromeAppPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     /// <inheritdoc />
     protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
 
-    /// <inheritdoc />
-    public async Task OnPageCreated(IPage page) {
-        await page.EvaluateExpressionOnNewDocumentAsync(Scripts.ChromeApp).ConfigureAwait(false);
+    // /// <inheritdoc />
+    // public async Task OnPageCreated(IPage page) {
+    //     await page.EvaluateExpressionOnNewDocumentAsync(Scripts.ChromeApp).ConfigureAwait(false);
+    // }
+
+    public async Task OnTargetCreated(Target target) {
+        if (target.Type == TargetType.Page) {
+            var page = await target.PageAsync().ConfigureAwait(false);
+            await page.EvaluateExpressionOnNewDocumentAsync(Scripts.ChromeApp).ConfigureAwait(false);
+        }
     }
 }

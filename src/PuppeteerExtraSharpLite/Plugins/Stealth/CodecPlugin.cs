@@ -5,7 +5,7 @@ namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 /// <summary>
 /// Normalizes audio and video codec support to avoid revealing headless characteristics.
 /// </summary>
-public class CodecPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
+public class CodecPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
     /// <inheritdoc />
     public override string Name => nameof(CodecPlugin);
 
@@ -13,8 +13,15 @@ public class CodecPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     /// <inheritdoc />
     protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
 
-    /// <inheritdoc />
-    public async Task OnPageCreated(IPage page) {
-        await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Codec).ConfigureAwait(false);
+    // /// <inheritdoc />
+    // public async Task OnPageCreated(IPage page) {
+    //     await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Codec).ConfigureAwait(false);
+    // }
+
+    public async Task OnTargetCreated(Target target) {
+        if (target.Type == TargetType.Page) {
+            var page = await target.PageAsync().ConfigureAwait(false);
+            await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Codec).ConfigureAwait(false);
+        }
     }
 }

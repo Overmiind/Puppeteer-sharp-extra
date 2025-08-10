@@ -5,9 +5,13 @@ namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 /// <summary>
 /// Configures navigator.languages to a specified set of language codes.
 /// </summary>
-public class LanguagesPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
+public class LanguagesPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
     /// <inheritdoc />
     public override string Name => nameof(LanguagesPlugin);
+
+    // StealthPlugin injects utils.js
+    /// <inheritdoc />
+    protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
 
     private readonly string[] _languages;
 
@@ -16,18 +20,21 @@ public class LanguagesPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     /// </summary>
     public ReadOnlyCollection<string> Languages => _languages.AsReadOnly();
 
-    public LanguagesPlugin() : this("en-US", "en") {}
+    public LanguagesPlugin() : this("en-US", "en") { }
 
     public LanguagesPlugin(params string[] languages) {
         _languages = languages;
     }
 
-    // StealthPlugin injects utils.js
-    /// <inheritdoc />
-    protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
+    // /// <inheritdoc />
+    // public async Task OnPageCreated(IPage page) {
+    //     await page.EvaluateFunctionOnNewDocumentAsync(Scripts.Language, _languages).ConfigureAwait(false);
+    // }
 
-    /// <inheritdoc />
-    public async Task OnPageCreated(IPage page) {
-        await page.EvaluateFunctionOnNewDocumentAsync(Scripts.Language, _languages).ConfigureAwait(false);
+    public async Task OnTargetCreated(Target target) {
+        if (target.Type == TargetType.Page) {
+            var page = await target.PageAsync().ConfigureAwait(false);
+            await page.EvaluateFunctionOnNewDocumentAsync(Scripts.Language, _languages).ConfigureAwait(false);
+        }
     }
 }

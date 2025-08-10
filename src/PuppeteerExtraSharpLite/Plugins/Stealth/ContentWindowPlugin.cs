@@ -8,7 +8,7 @@ namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 /// <remarks>
 /// Make sure ContentWindow is the last registered stealth plugin
 /// </remarks>
-public class ContentWindowPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
+public class ContentWindowPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
     /// <inheritdoc />
     public override string Name => nameof(ContentWindowPlugin);
 
@@ -16,8 +16,15 @@ public class ContentWindowPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
     /// <inheritdoc />
     protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
 
-    /// <inheritdoc />
-    public async Task OnPageCreated(IPage page) {
-        await page.EvaluateExpressionOnNewDocumentAsync(Scripts.ContentWindow).ConfigureAwait(false);
+    // /// <inheritdoc />
+    // public async Task OnPageCreated(IPage page) {
+    //     await page.EvaluateExpressionOnNewDocumentAsync(Scripts.ContentWindow).ConfigureAwait(false);
+    // }
+
+    public async Task OnTargetCreated(Target target) {
+        if (target.Type == TargetType.Page) {
+            var page = await target.PageAsync().ConfigureAwait(false);
+            await page.EvaluateExpressionOnNewDocumentAsync(Scripts.ContentWindow).ConfigureAwait(false);
+        }
     }
 }

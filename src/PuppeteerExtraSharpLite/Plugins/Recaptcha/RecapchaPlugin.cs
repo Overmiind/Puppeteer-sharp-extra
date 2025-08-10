@@ -10,7 +10,7 @@ namespace PuppeteerExtraSharpLite.Plugins.Recaptcha;
 /// Puppeteer plugin that solves reCAPTCHA challenges by using a configured
 /// <see cref="IRecaptchaProvider"/> and injecting the received token into the page.
 /// </summary>
-public class RecaptchaPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
+public class RecaptchaPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
     /// <summary>
     /// Gets the unique plugin name.
     /// </summary>
@@ -56,13 +56,13 @@ public class RecaptchaPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
         };
     }
 
-    /// <summary>
-    /// Enables bypassing CSP on new pages to allow script injection used by this plugin.
-    /// </summary>
-    /// <param name="page">The created page.</param>
-    public async Task OnPageCreated(IPage page) {
-        await page.SetBypassCSPAsync(true).ConfigureAwait(false);
-    }
+    // /// <summary>
+    // /// Enables bypassing CSP on new pages to allow script injection used by this plugin.
+    // /// </summary>
+    // /// <param name="page">The created page.</param>
+    // public async Task OnPageCreated(IPage page) {
+    //     await page.SetBypassCSPAsync(true).ConfigureAwait(false);
+    // }
 
     /// <summary>
     /// Attempts to extract the site key (<c>k</c>) from the reCAPTCHA anchor iframe on the page.
@@ -118,6 +118,13 @@ public class RecaptchaPlugin : PuppeteerPlugin, IOnPageCreatedPlugin {
                 """, value);
         } catch {
             // ignored
+        }
+    }
+
+    public async Task OnTargetCreated(Target target) {
+        if (target.Type == TargetType.Page) {
+            var page = await target.PageAsync().ConfigureAwait(false);
+            await page.SetBypassCSPAsync(true).ConfigureAwait(false);
         }
     }
 }
