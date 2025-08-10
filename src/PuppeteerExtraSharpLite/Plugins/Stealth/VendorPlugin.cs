@@ -1,6 +1,6 @@
 ﻿using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins.Stealth;
+namespace PuppeteerExtraSharpLite.Plugins;
 
 /// <summary>
 /// Sets navigator.vendor to a desired value (defaults to "Google Inc.").
@@ -8,10 +8,6 @@ namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 public class VendorPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
     /// <inheritdoc />
     public override string Name => nameof(VendorPlugin);
-
-    // StealthPlugin injects utils.js
-    /// <inheritdoc />
-    protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
 
     /// <summary>
     /// The vendor string to use for navigator.vendor.
@@ -34,6 +30,7 @@ public class VendorPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
     public async Task OnTargetCreated(Target target) {
         if (target.Type == TargetType.Page) {
             var page = await target.PageAsync().ConfigureAwait(false);
+            await Stealth.RegisterUtilsAsync(page);
             await page.EvaluateFunctionOnNewDocumentAsync(Scripts.Vendor, Vendor).ConfigureAwait(false);
         }
     }

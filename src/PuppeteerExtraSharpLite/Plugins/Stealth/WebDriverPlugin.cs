@@ -1,6 +1,6 @@
 ﻿using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins.Stealth;
+namespace PuppeteerExtraSharpLite.Plugins;
 
 /// <summary>
 /// Disables the AutomationControlled blink feature and patches navigator.webdriver.

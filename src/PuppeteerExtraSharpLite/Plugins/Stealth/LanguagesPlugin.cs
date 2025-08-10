@@ -1,6 +1,6 @@
 ﻿using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins.Stealth;
+namespace PuppeteerExtraSharpLite.Plugins;
 
 /// <summary>
 /// Configures navigator.languages to a specified set of language codes.
@@ -8,10 +8,6 @@ namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 public class LanguagesPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
     /// <inheritdoc />
     public override string Name => nameof(LanguagesPlugin);
-
-    // StealthPlugin injects utils.js
-    /// <inheritdoc />
-    protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
 
     private readonly string[] _languages;
 
@@ -36,6 +32,7 @@ public class LanguagesPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
     public async Task OnTargetCreated(Target target) {
         if (target.Type == TargetType.Page) {
             var page = await target.PageAsync().ConfigureAwait(false);
+            await Stealth.RegisterUtilsAsync(page);
             await page.EvaluateFunctionOnNewDocumentAsync(Scripts.Language, _languages).ConfigureAwait(false);
         }
     }

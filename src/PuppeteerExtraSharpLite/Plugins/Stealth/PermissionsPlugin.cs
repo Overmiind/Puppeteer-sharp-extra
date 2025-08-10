@@ -1,6 +1,6 @@
 ﻿using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins.Stealth;
+namespace PuppeteerExtraSharpLite.Plugins;
 
 /// <summary>
 /// Adjusts Permissions API behavior to reflect realistic states for HTTP/HTTPS origins.
@@ -9,14 +9,11 @@ public class PermissionsPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
     /// <inheritdoc />
     public override string Name => nameof(PermissionsPlugin);
 
-    // StealthPlugin injects utils.js
-    /// <inheritdoc />
-    protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
-
     /// <inheritdoc />
     public async Task OnTargetCreated(Target target) {
         if (target.Type == TargetType.Page) {
             var page = await target.PageAsync().ConfigureAwait(false);
+            await Stealth.RegisterUtilsAsync(page);
             await page.EvaluateExpressionOnNewDocumentAsync(Scripts.Permissions).ConfigureAwait(false);
         }
     }

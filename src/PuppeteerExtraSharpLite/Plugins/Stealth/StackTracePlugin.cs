@@ -1,6 +1,6 @@
 ﻿using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins.Stealth;
+namespace PuppeteerExtraSharpLite.Plugins;
 
 /// <summary>
 /// Adjusts Error.stack behavior to better match native browser implementations.

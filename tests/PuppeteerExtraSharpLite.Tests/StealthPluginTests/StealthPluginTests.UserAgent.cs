@@ -1,4 +1,4 @@
-﻿using PuppeteerExtraSharpLite.Plugins.Stealth;
+﻿using PuppeteerExtraSharpLite.Plugins;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests;
 

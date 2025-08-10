@@ -1,5 +1,5 @@
-﻿using PuppeteerExtraSharpLite.Plugins.Recaptcha;
-using PuppeteerExtraSharpLite.Plugins.Stealth;
+﻿using PuppeteerExtraSharpLite.Plugins;
+using PuppeteerExtraSharpLite.Plugins.Recaptcha;
 
 using PuppeteerSharp;
 
@@ -7,13 +7,47 @@ namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests;
 
 public partial class StealthPluginTests {
     [Fact]
-    public async Task Stealth_Plugin_PlugStandardEvasions_ShouldNot_BeDetected() {
+    public async Task Stealth_Plugin_CannotInject_Utils_MoreThanOnce() {
+        await using var browser = await Puppeteer.LaunchAsync(new() {
+            Headless = true
+        });
+        var context = await browser.CreateBrowserContextAsync();
+
+        // Tests that all events were executed
+        bool eventExecuted = false;
+
+        browser.TargetCreated += async (sender, args) => {
+            // Inject utils x3 (utils should check if it exists before continuing)
+            if (args.Target.Type is TargetType.Page) {
+                var page = await args.Target.PageAsync();
+                await Stealth.RegisterUtilsAsync(page);
+                await Stealth.RegisterUtilsAsync(page);
+                await Stealth.RegisterUtilsAsync(page);
+                eventExecuted = true;
+            }
+        };
+
+        await using var page = await context.NewPageAsync();
+
+        // Wait for events to execute
+        await Task.Delay(500, TestContext.Current.CancellationToken);
+
+        var utilsIsUndefined = await page.EvaluateFunctionAsync<bool>("() => typeof globalThis.utils === 'undefined'");
+        Assert.False(utilsIsUndefined);
+
+        Assert.True(eventExecuted);
+    }
+
+    [Fact]
+    public async Task Stealth_Plugin_PlusStandardEvasions_ShouldNot_BeDetected() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new StealthPlugin()).Register(StealthPlugin.GetStandardEvasions());
+        pluginManager.Register(Stealth.GetStandardEvasions());
 
         await using var browser = await pluginManager.LaunchAsync();
         var context = await browser.CreateBrowserContextAsync();
         await using var page = await context.NewPageAsync();
+
+        await Task.Delay(500, TestContext.Current.CancellationToken);
 
         await page.GoToAsync("https://google.com");
 
@@ -35,7 +69,6 @@ public partial class StealthPluginTests {
     [Fact]
     public async Task Stealth_Plugin_LaunchTest() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new StealthPlugin());
 
         await using var browser = await pluginManager.LaunchAsync();
         var context = await browser.CreateBrowserContextAsync();
@@ -50,7 +83,7 @@ public partial class StealthPluginTests {
 
     [Fact]
     public void Stealth_Plugin_StandardEvasionContracts_Names_Should_MatchTypes() {
-        var evasions = StealthPlugin.StandardEvasionsContracts;
+        var evasions = Stealth.StandardEvasionsContracts;
 
         foreach (var evasion in evasions) {
             var instance = evasion.Factory();
@@ -60,16 +93,16 @@ public partial class StealthPluginTests {
 
     [Fact]
     public void Stealth_Plugin_GetStandardEvasions_Creates_AllStandardEvasions_NoOverrides() {
-        var evasions = StealthPlugin.StandardEvasionsContracts;
+        var evasions = Stealth.StandardEvasionsContracts;
 
-        var instances = StealthPlugin.GetStandardEvasions();
+        var instances = Stealth.GetStandardEvasions();
 
         Assert.Equal(evasions.Length, instances.Length);
     }
 
     [Fact]
     public void Stealth_Plugin_GetStandardEvasions_Creates_AllStandardEvasions_AndOverrides() {
-        var evasions = StealthPlugin.StandardEvasionsContracts;
+        var evasions = Stealth.StandardEvasionsContracts;
 
         int defaultConcurrencyLevel = new HardwareConcurrencyPlugin().ConcurrencyLevel;
         const int customConcurrencyLevel = 16;
@@ -78,7 +111,7 @@ public partial class StealthPluginTests {
 
         var p = new HardwareConcurrencyPlugin(customConcurrencyLevel);
 
-        var instances = StealthPlugin.GetStandardEvasions(p);
+        var instances = Stealth.GetStandardEvasions(p);
 
         Assert.Equal(evasions.Length, instances.Length); // override should not create extra
 
@@ -92,11 +125,11 @@ public partial class StealthPluginTests {
 
     [Fact]
     public void Stealth_Plugin_GetStandardEvasions_Creates_AllStandardEvasions_UnrelatedOverrides() {
-        var evasions = StealthPlugin.StandardEvasionsContracts;
+        var evasions = Stealth.StandardEvasionsContracts;
 
         var p = new RecaptchaPlugin(); // unrelated to stealth
 
-        var instances = StealthPlugin.GetStandardEvasions(p);
+        var instances = Stealth.GetStandardEvasions(p);
 
         // unrelated should not override, so count should be bigger than 1
         Assert.Equal(evasions.Length + 1, instances.Length);

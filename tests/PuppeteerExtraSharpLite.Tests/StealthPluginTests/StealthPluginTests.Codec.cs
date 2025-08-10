@@ -1,4 +1,4 @@
-﻿using PuppeteerExtraSharpLite.Plugins.Stealth;
+﻿using PuppeteerExtraSharpLite.Plugins;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests;
 
@@ -6,7 +6,7 @@ public partial class StealthPluginTests {
     [Fact]
     public async Task Codec_Plugin_SupportsCodec() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new StealthPlugin()).Register(new CodecPlugin());
+        pluginManager.Register(new CodecPlugin());
 
         await using var browser = await pluginManager.LaunchAsync();
         var context = await browser.CreateBrowserContextAsync();
@@ -31,7 +31,7 @@ public partial class StealthPluginTests {
     [Fact]
     public async Task Codec_Plugin_ShouldNot_LeakModifications() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new StealthPlugin()).Register(new CodecPlugin());
+        pluginManager.Register(new CodecPlugin());
 
         await using var browser = await pluginManager.LaunchAsync();
         var context = await browser.CreateBrowserContextAsync();

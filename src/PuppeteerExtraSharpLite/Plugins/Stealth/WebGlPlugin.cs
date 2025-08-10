@@ -1,6 +1,6 @@
 ﻿using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins.Stealth;
+namespace PuppeteerExtraSharpLite.Plugins;
 
 /// <summary>
 /// Mocks WebGL vendor and renderer strings to align with typical hardware configurations.
@@ -8,10 +8,6 @@ namespace PuppeteerExtraSharpLite.Plugins.Stealth;
 public class WebGlPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
     /// <inheritdoc />
     public override string Name => nameof(WebGlPlugin);
-
-    // StealthPlugin injects utils.js
-    /// <inheritdoc />
-    protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
 
     private readonly StealthWebGLOptions _options;
 
@@ -31,6 +27,7 @@ public class WebGlPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
     public async Task OnTargetCreated(Target target) {
         if (target.Type == TargetType.Page) {
             var page = await target.PageAsync().ConfigureAwait(false);
+            await Stealth.RegisterUtilsAsync(page);
             await page.EvaluateFunctionOnNewDocumentAsync(Scripts.WebGL, _options.Vendor, _options.Renderer).ConfigureAwait(false);
         }
     }

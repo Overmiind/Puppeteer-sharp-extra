@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-using PuppeteerExtraSharpLite.Plugins.Stealth;
+using PuppeteerExtraSharpLite.Plugins;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests;
 
@@ -8,7 +8,7 @@ public partial class StealthPluginTests {
     [Fact]
     public async Task ContentWindow_Plugin_IFrame_Should_BeObject() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new StealthPlugin()).Register(new ContentWindowPlugin());
+        pluginManager.Register(new ContentWindowPlugin());
 
         await using var browser = await pluginManager.LaunchAsync();
         var context = await browser.CreateBrowserContextAsync();
@@ -24,7 +24,7 @@ public partial class StealthPluginTests {
     [Fact]
     public async Task ContentWindow_Plugin_ShouldNot_BreakIFrames() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new StealthPlugin()).Register(new ContentWindowPlugin());
+        pluginManager.Register(new ContentWindowPlugin());
 
         await using var browser = await pluginManager.LaunchAsync();
         var context = await browser.CreateBrowserContextAsync();
@@ -66,7 +66,7 @@ public partial class StealthPluginTests {
     [Fact]
     public async Task ContentWindow_Plugin_Should_CoverAllFrames() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new StealthPlugin()).Register(new ContentWindowPlugin());
+        pluginManager.Register(new ContentWindowPlugin());
 
         await using var browser = await pluginManager.LaunchAsync();
         var context = await browser.CreateBrowserContextAsync();
@@ -111,7 +111,7 @@ public partial class StealthPluginTests {
     [Fact]
     public async Task ContentWindow_Plugin_Should_EmulateFeatures() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new StealthPlugin()).Register(new ContentWindowPlugin());
+        pluginManager.Register(new ContentWindowPlugin());
 
         await using var browser = await pluginManager.LaunchAsync();
         var context = await browser.CreateBrowserContextAsync();

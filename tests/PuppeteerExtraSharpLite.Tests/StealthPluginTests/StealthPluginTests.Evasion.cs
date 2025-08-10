@@ -1,4 +1,4 @@
-﻿using PuppeteerExtraSharpLite.Plugins.Stealth;
+﻿using PuppeteerExtraSharpLite.Plugins;
 
 namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests;
 
@@ -6,7 +6,7 @@ public partial class StealthPluginTests {
     [Fact]
     public async Task Evasion_Plugin_ShouldNot_HaveModifications() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new StealthPlugin()).Register(new EvasionPlugin());
+        pluginManager.Register(new EvasionPlugin());
 
         await using var browser = await pluginManager.LaunchAsync();
         var context = await browser.CreateBrowserContextAsync();
@@ -25,7 +25,7 @@ public partial class StealthPluginTests {
     [Fact]
     public async Task Evasion_Plugin_HasMimeTypes() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new StealthPlugin()).Register(new EvasionPlugin());
+        pluginManager.Register(new EvasionPlugin());
 
         await using var browser = await pluginManager.LaunchAsync();
         var context = await browser.CreateBrowserContextAsync();

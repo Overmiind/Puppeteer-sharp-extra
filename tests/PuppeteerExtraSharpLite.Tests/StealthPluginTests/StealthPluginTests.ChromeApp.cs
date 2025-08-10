@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-using PuppeteerExtraSharpLite.Plugins.Stealth;
+using PuppeteerExtraSharpLite.Plugins;
 
 using PuppeteerSharp;
 
@@ -10,7 +10,7 @@ public partial class StealthPluginTests {
     [Fact]
     public async Task ChromeApp_Plugin_Test() {
         var pluginManager = new PluginManager();
-        pluginManager.Register(new StealthPlugin()).Register(new ChromeAppPlugin());
+        pluginManager.Register(new ChromeAppPlugin());
 
         await using var browser = await pluginManager.LaunchAsync();
         var context = await browser.CreateBrowserContextAsync();
