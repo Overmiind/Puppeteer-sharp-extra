@@ -1,6 +1,6 @@
 ﻿using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins;
+namespace PuppeteerSharpToolkit.Plugins;
 
 /// <summary>
 /// Normalizes window.outer{Width,Height} values to better reflect real window metrics.

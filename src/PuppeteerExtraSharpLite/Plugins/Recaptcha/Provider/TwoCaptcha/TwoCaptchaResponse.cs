@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.TwoCaptcha;
+namespace PuppeteerSharpToolkit.Plugins.Recaptcha.Provider.TwoCaptcha;
 
 /// <summary>
 /// 2Captcha API response wrapper for both task creation and result queries.

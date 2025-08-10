@@ -1,6 +1,6 @@
 ﻿using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins;
+namespace PuppeteerSharpToolkit.Plugins;
 
 /// <summary>
 /// Implement to modify launch options prior to launching a browser instance.

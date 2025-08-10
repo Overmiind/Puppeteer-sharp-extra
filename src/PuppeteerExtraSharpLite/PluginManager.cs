@@ -1,8 +1,8 @@
-using PuppeteerExtraSharpLite.Plugins;
+using PuppeteerSharpToolkit.Plugins;
 
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite;
+namespace PuppeteerSharpToolkit;
 
 /// <summary>
 /// The class abstraction for plugin registration and management

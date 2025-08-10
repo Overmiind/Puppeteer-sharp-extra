@@ -1,4 +1,4 @@
-namespace PuppeteerExtraSharpLite.Tests.Recaptcha;
+namespace PuppeteerSharpToolkit.Tests.Recaptcha;
 
 public partial class RecaptchaPluginTests {
 	private readonly string _twoCaptchaKey;

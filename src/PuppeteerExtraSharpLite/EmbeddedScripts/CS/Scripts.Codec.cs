@@ -1,4 +1,4 @@
-namespace PuppeteerExtraSharpLite;
+namespace PuppeteerSharpToolkit;
 
 public static partial class Scripts
 {

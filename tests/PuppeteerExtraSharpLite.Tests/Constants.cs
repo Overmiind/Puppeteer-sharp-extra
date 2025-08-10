@@ -1,4 +1,4 @@
-﻿namespace PuppeteerExtraSharpLite.Tests;
+﻿namespace PuppeteerSharpToolkit.Tests;
 
 public static class Constants {
     public const string FpCollect =

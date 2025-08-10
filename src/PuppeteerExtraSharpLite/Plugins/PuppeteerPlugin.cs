@@ -1,4 +1,4 @@
-﻿namespace PuppeteerExtraSharpLite.Plugins;
+﻿namespace PuppeteerSharpToolkit.Plugins;
 
 /// <summary>
 /// Base type for all Puppeteer Extra plugins.

@@ -1,8 +1,8 @@
 using System.Reflection;
 
-using PuppeteerExtraSharpLite.Plugins;
+using PuppeteerSharpToolkit.Plugins;
 
-namespace PuppeteerExtraSharpLite.Tests;
+namespace PuppeteerSharpToolkit.Tests;
 
 public class PluginNameTests {
 	[Fact]

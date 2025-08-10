@@ -1,6 +1,6 @@
 ﻿using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins;
+namespace PuppeteerSharpToolkit.Plugins;
 
 /// <summary>
 /// Mocks WebGL vendor and renderer strings to align with typical hardware configurations.

@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace PuppeteerExtraSharpLite.Tests;
+namespace PuppeteerSharpToolkit.Tests;
 
 public class ExtraLaunchTest {
     [Fact]

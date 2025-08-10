@@ -1,7 +1,7 @@
 using System.Net.Http;
 using System.Text;
 
-namespace PuppeteerExtraSharpLite;
+namespace PuppeteerSharpToolkit;
 
 /// <summary>
 /// Extension class

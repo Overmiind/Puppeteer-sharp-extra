@@ -1,10 +1,10 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha;
-using PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.TwoCaptcha;
+using PuppeteerSharpToolkit.Plugins.Recaptcha.Provider.AntiCaptcha;
+using PuppeteerSharpToolkit.Plugins.Recaptcha.Provider.TwoCaptcha;
 
-namespace PuppeteerExtraSharpLite;
+namespace PuppeteerSharpToolkit;
 
 [JsonSerializable(typeof(AntiCaptchaRequest))]
 [JsonSerializable(typeof(AntiCaptchaTaskResult))]

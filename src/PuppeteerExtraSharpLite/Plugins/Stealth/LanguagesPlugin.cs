@@ -1,6 +1,6 @@
 ﻿using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins;
+namespace PuppeteerSharpToolkit.Plugins;
 
 /// <summary>
 /// Configures navigator.languages to a specified set of language codes.

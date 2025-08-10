@@ -1,4 +1,4 @@
-﻿namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider;
+﻿namespace PuppeteerSharpToolkit.Plugins.Recaptcha.Provider;
 
 /// <summary>
 /// Common options for captcha providers controlling polling attempts and initial wait.

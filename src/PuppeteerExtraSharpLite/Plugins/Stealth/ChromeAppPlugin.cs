@@ -1,6 +1,6 @@
 ﻿using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins;
+namespace PuppeteerSharpToolkit.Plugins;
 
 /// <summary>
 /// Provides window.chrome.app compatibility to reduce detections relying on its presence.

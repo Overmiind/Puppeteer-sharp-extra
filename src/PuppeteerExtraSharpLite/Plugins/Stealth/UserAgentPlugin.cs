@@ -2,7 +2,7 @@
 
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins;
+namespace PuppeteerSharpToolkit.Plugins;
 
 /// <summary>
 /// Overrides user agent and related UA-CH metadata to remove headless markers and better match real devices.

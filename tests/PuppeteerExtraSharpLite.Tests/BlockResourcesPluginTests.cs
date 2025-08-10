@@ -1,9 +1,9 @@
-﻿using PuppeteerExtraSharpLite.Plugins;
+﻿using PuppeteerSharpToolkit.Plugins;
 using System.Text.RegularExpressions;
 
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Tests;
+namespace PuppeteerSharpToolkit.Tests;
 
 public class BlockResourcesPluginTests {
     [Fact]

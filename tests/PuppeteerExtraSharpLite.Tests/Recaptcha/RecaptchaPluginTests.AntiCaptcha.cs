@@ -1,9 +1,9 @@
-using PuppeteerExtraSharpLite.Plugins.Recaptcha;
-using PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha;
+using PuppeteerSharpToolkit.Plugins.Recaptcha;
+using PuppeteerSharpToolkit.Plugins.Recaptcha.Provider.AntiCaptcha;
 
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Tests.Recaptcha;
+namespace PuppeteerSharpToolkit.Tests.Recaptcha;
 
 public partial class RecaptchaPluginTests {
     [Fact]

@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace PuppeteerExtraSharpLite.Tests;
+namespace PuppeteerSharpToolkit.Tests;
 
 public partial class EmbeddedScriptsTests {
 	public static readonly TheoryData<string, string> ScriptNames = new() {

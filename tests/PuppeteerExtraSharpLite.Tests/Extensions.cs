@@ -2,7 +2,7 @@
 
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Tests;
+namespace PuppeteerSharpToolkit.Tests;
 
 public static class Extensions {
     public static async Task<IBrowser> LaunchAsync(this PluginManager manager) {

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.AntiCaptcha;
+namespace PuppeteerSharpToolkit.Plugins.Recaptcha.Provider.AntiCaptcha;
 
 /// <summary>
 /// Result model returned by Anti-Captcha for task status queries.

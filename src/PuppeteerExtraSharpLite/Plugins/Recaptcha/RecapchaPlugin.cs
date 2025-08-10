@@ -1,10 +1,10 @@
 ﻿using System.Web;
 
-using PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider;
+using PuppeteerSharpToolkit.Plugins.Recaptcha.Provider;
 
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins.Recaptcha;
+namespace PuppeteerSharpToolkit.Plugins.Recaptcha;
 
 /// <summary>
 /// Puppeteer plugin that solves reCAPTCHA challenges by using a configured

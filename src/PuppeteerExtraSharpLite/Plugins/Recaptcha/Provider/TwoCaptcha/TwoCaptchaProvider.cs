@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 
-namespace PuppeteerExtraSharpLite.Plugins.Recaptcha.Provider.TwoCaptcha;
+namespace PuppeteerSharpToolkit.Plugins.Recaptcha.Provider.TwoCaptcha;
 
 /// <summary>
 /// 2Captcha (rucaptcha) provider implementation for solving Google reCAPTCHA.

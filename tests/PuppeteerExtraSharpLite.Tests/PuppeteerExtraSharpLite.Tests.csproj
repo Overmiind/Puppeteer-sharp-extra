@@ -4,7 +4,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
-    <RootNamespace>PuppeteerExtraSharpLite.Tests</RootNamespace>
+    <RootNamespace>PuppeteerSharpToolkit.Tests</RootNamespace>
+    <AssemblyName>PuppeteerSharpToolkit.Tests</AssemblyName>
     <TargetFramework>net9.0</TargetFramework>
     <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
     <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>

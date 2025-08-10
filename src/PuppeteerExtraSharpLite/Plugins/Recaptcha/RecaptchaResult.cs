@@ -1,4 +1,4 @@
-﻿namespace PuppeteerExtraSharpLite.Plugins.Recaptcha;
+﻿namespace PuppeteerSharpToolkit.Plugins.Recaptcha;
 
 /// <summary>
 /// Represents the result of a reCAPTCHA operation.

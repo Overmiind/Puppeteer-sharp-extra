@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins;
+namespace PuppeteerSharpToolkit.Plugins;
 
 /// <summary>
 /// A plugin that blocks page resources

@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
 
-using PuppeteerExtraSharpLite.Plugins;
+using PuppeteerSharpToolkit.Plugins;
 
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests;
+namespace PuppeteerSharpToolkit.Tests.StealthPluginTests;
 
 public partial class StealthPluginTests {
     [Fact]

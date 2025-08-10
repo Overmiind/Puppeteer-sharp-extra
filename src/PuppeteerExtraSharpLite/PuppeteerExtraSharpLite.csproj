@@ -16,13 +16,15 @@
     <Copyright>David Shnayder</Copyright>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
 
-    <PackageId>PuppeteerExtraSharpLite</PackageId>
-    <Title>PuppeteerExtraSharpLite</Title>
-    <Description>A lightweight AOT friendly plugin supporting abstraction for PuppeteerSharp</Description>
-    <PackageProjectUrl>https://github.com/dusrdev/PuppeteerExtraSharpLite</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/dusrdev/PuppeteerExtraSharpLite</RepositoryUrl>
+    <PackageId>PuppeteerSharpToolkit</PackageId>
+    <Title>PuppeteerSharpToolkit</Title>
+    <AssemblyName>PuppeteerSharpToolkit</AssemblyName>
+    <RootNamespace>PuppeteerSharpToolkit</RootNamespace>
+    <Description>High-performance, AOT-friendly plugin toolkit for PuppeteerSharp</Description>
+    <PackageProjectUrl>https://github.com/dusrdev/PuppeteerSharpToolkit</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/dusrdev/PuppeteerSharpToolkit</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>Puppeteer;CSharp;Plugins;Evasion;Stealth;Detect</PackageTags>
+    <PackageTags>PuppeteerSharp;Puppeteer;CSharp;Plugins;Stealth;Recaptcha;Automation;Headless</PackageTags>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
@@ -33,7 +35,7 @@
 
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-      <_Parameter1>PuppeteerExtraSharpLite.Tests</_Parameter1>
+      <_Parameter1>PuppeteerSharpToolkit.Tests</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
 

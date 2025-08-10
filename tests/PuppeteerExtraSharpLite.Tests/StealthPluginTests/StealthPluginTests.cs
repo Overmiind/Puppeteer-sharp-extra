@@ -1,9 +1,9 @@
-﻿using PuppeteerExtraSharpLite.Plugins;
-using PuppeteerExtraSharpLite.Plugins.Recaptcha;
+﻿using PuppeteerSharpToolkit.Plugins;
+using PuppeteerSharpToolkit.Plugins.Recaptcha;
 
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Tests.StealthPluginTests;
+namespace PuppeteerSharpToolkit.Tests.StealthPluginTests;
 
 public partial class StealthPluginTests {
     [Fact]

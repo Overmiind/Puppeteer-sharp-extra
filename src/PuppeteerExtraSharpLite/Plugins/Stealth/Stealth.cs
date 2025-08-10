@@ -1,6 +1,6 @@
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins;
+namespace PuppeteerSharpToolkit.Plugins;
 
 /// <summary>
 /// Stealth is a static class that provides utilities to use in stealth related plugins

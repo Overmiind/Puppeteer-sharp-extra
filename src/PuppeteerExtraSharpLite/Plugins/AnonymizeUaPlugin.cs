@@ -2,7 +2,7 @@
 
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharpLite.Plugins;
+namespace PuppeteerSharpToolkit.Plugins;
 
 /// <summary>
 /// This plugin transforms the page's user agent upon navigation
