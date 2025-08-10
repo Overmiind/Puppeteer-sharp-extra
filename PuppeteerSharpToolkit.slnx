@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/PuppeteerSharpToolkit/PuppeteerSharpToolkit.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/PuppeteerSharpToolkit.Tests/PuppeteerSharpToolkit.Tests.csproj" />
+  </Folder>
+</Solution>
