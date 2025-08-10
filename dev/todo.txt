@@ -1,3 +1,1 @@
 TODO: Update docs
-TODO: PluginManager should have invocation for page creation for immediate script hook.
-	  Current method doesn't properly (orderly) apply scripts, failure in concurrency.
