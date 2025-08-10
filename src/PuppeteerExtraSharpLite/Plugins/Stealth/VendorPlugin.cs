@@ -18,8 +18,14 @@ public class VendorPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
     /// </summary>
     public readonly string Vendor;
 
+    /// <summary>
+    /// Sets navigator.vendor to a "Google Inc.".
+    /// </summary>
     public VendorPlugin() : this("Google Inc.") { }
 
+    /// <summary>
+    /// Sets navigator.vendor to a desired <paramref name="vendor"/>
+    /// </summary>
     public VendorPlugin(string vendor) {
         Vendor = vendor;
     }

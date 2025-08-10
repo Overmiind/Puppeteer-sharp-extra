@@ -18,8 +18,14 @@ public class HardwareConcurrencyPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin
     /// </summary>
     public readonly int ConcurrencyLevel;
 
+    /// <summary>
+    /// Overrides navigator.hardwareConcurrency with 4 logical CPU count.
+    /// </summary>
     public HardwareConcurrencyPlugin() : this(4) { }
 
+    /// <summary>
+    /// Overrides navigator.hardwareConcurrency with <paramref name="concurrencyLevel"/>.
+    /// </summary>
     public HardwareConcurrencyPlugin(int concurrencyLevel) {
         ConcurrencyLevel = concurrencyLevel;
     }

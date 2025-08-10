@@ -15,8 +15,14 @@ public class WebGlPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
 
     private readonly StealthWebGLOptions _options;
 
+    /// <summary>
+    /// Mocks WebGL vendor and renderer strings to "Intel Inc.", "Intel Iris OpenGL Engine"
+    /// </summary>
     public WebGlPlugin() : this(new StealthWebGLOptions("Intel Inc.", "Intel Iris OpenGL Engine")) { }
 
+    /// <summary>
+    /// Mocks WebGL vendor and renderer strings to align with typical hardware configurations.
+    /// </summary>
     public WebGlPlugin(StealthWebGLOptions options) {
         _options = options;
     }

@@ -64,7 +64,7 @@ public partial class UserAgentPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
         return "Windows";
     }
 
-    public static string GetPlatformVersion(string ua) {
+    private static string GetPlatformVersion(string ua) {
         if (ua.Contains("Mac OS X ")) {
             return MacOsxVersionRegex().Match(ua).Groups[1].Value;
         }
@@ -80,15 +80,15 @@ public partial class UserAgentPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
         return string.Empty;
     }
 
-    public static string GetPlatformArch(bool isMobile) {
+    private static string GetPlatformArch(bool isMobile) {
         return isMobile ? string.Empty : "x86";
     }
 
-    public static string GetPlatformModel(bool isMobile, string ua) {
+    private static string GetPlatformModel(bool isMobile, string ua) {
         return isMobile ? PlatformModelRegex().Match(ua).Groups[1].Value : string.Empty;
     }
 
-    public static bool GetIsMobile(string ua) => ua.Contains("Android");
+    private static bool GetIsMobile(string ua) => ua.Contains("Android");
 
     private static readonly int[][] UserAgentOrders =
     [

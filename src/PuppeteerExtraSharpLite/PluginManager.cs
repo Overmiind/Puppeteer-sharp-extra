@@ -4,12 +4,26 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite;
 
+/// <summary>
+/// The class abstraction for plugin registration and management
+/// </summary>
 public class PluginManager {
     private readonly List<PuppeteerPlugin> _plugins = [];
     private readonly HashSet<string> _registeredPlugins = [];
 
+    /// <summary>
+    /// Registers a single plugin
+    /// </summary>
+    /// <param name="plugin"></param>
+    /// <returns></returns>
     public PluginManager Register(PuppeteerPlugin plugin) => Register([plugin]);
 
+    /// <summary>
+    /// Registers a collection of plugins
+    /// </summary>
+    /// <param name="plugins"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException"></exception>
     public PluginManager Register(PuppeteerPlugin[] plugins) {
         foreach (var plugin in plugins) {
             string name = plugin.Name;
@@ -34,6 +48,11 @@ public class PluginManager {
         return this;
     }
 
+    /// <summary>
+    /// Launch a browser instance in which the plugins are registered
+    /// </summary>
+    /// <param name="options"></param>
+    /// <returns></returns>
     public async Task<IBrowser> LaunchAsync(LaunchOptions options) {
         foreach (var plugin in _plugins) {
             if (plugin is IBeforeLaunchPlugin p) {
@@ -53,6 +72,11 @@ public class PluginManager {
         return browser;
     }
 
+    /// <summary>
+    /// Launch a browser instance in which the plugins are registered
+    /// </summary>
+    /// <param name="options"></param>
+    /// <returns></returns>
     public async Task<IBrowser> ConnectAsync(ConnectOptions options) {
         foreach (var plugin in _plugins) {
             if (plugin is IBeforeConnectPlugin p) {
@@ -75,13 +99,6 @@ public class PluginManager {
 
     internal void RegisterPluginEvents(IBrowser browser) {
         foreach (var plugin in _plugins) {
-            // if (plugin is IOnPageCreatedPlugin onPageCreated) {
-            //     browser.TargetCreated += async (sender, args) => {
-            //         if (args.Target.Type == TargetType.Page) {
-            //             var page = await args.Target.PageAsync().ConfigureAwait(false);
-            //             await onPageCreated.OnPageCreated(page).ConfigureAwait(false);
-            //         }
-            //     };
             if (plugin is IOnTargetCreatedPlugin onTargetCreated) {
                 browser.TargetCreated += async (sender, args) => await onTargetCreated.OnTargetCreated(args.Target);
             }

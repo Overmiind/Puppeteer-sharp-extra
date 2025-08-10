@@ -20,13 +20,19 @@ public class LanguagesPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
     /// </summary>
     public ReadOnlyCollection<string> Languages => _languages.AsReadOnly();
 
+    /// <summary>
+    /// Configures navigator.languages to a "eu-US", and "en"
+    /// </summary>
     public LanguagesPlugin() : this("en-US", "en") { }
 
+    /// <summary>
+    /// Configures navigator.languages to a specified set of language codes.
+    /// </summary>
     public LanguagesPlugin(params string[] languages) {
         _languages = languages;
     }
 
-   /// <inheritdoc />
+    /// <inheritdoc />
     public async Task OnTargetCreated(Target target) {
         if (target.Type == TargetType.Page) {
             var page = await target.PageAsync().ConfigureAwait(false);

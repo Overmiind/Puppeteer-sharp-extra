@@ -4,9 +4,16 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Plugins;
 
+/// <summary>
+/// This plugin transforms the page's user agent upon navigation
+/// </summary>
 public partial class AnonymizeUaPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
+    /// <inheritdoc />
     public override string Name => nameof(AnonymizeUaPlugin);
 
+    /// <summary>
+    /// A user agent transformation function
+    /// </summary>
     public Func<string, string> UserAgentTransformer { get; set; } = static s => s;
 
     [GeneratedRegex(@"/\(([^)]+)\)/")]
