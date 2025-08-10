@@ -24,11 +24,7 @@ public class HardwareConcurrencyPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin
         ConcurrencyLevel = concurrencyLevel;
     }
 
-    // /// <inheritdoc />
-    // public async Task OnPageCreated(IPage page) {
-    //     await page.EvaluateFunctionAsync(Scripts.HardwareConcurrency, ConcurrencyLevel).ConfigureAwait(false);
-    // }
-
+    /// <inheritdoc />
     public async Task OnTargetCreated(Target target) {
         if (target.Type == TargetType.Page) {
             var page = await target.PageAsync().ConfigureAwait(false);

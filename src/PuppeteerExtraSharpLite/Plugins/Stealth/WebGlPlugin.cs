@@ -21,11 +21,7 @@ public class WebGlPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
         _options = options;
     }
 
-    // /// <inheritdoc />
-    // public async Task OnPageCreated(IPage page) {
-    //     await page.EvaluateFunctionOnNewDocumentAsync(Scripts.WebGL, _options.Vendor, _options.Renderer).ConfigureAwait(false);
-    // }
-
+    /// <inheritdoc />
     public async Task OnTargetCreated(Target target) {
         if (target.Type == TargetType.Page) {
             var page = await target.PageAsync().ConfigureAwait(false);

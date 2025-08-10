@@ -11,40 +11,7 @@ public partial class UserAgentPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
     /// <inheritdoc />
     public override string Name => nameof(UserAgentPlugin);
 
-    // /// <inheritdoc />
-    // public async Task OnPageCreated(IPage page) {
-    //     var ua = await page.Browser.GetUserAgentAsync().ConfigureAwait(false);
-    //     ua = ua.Replace("HeadlessChrome/", "Chrome/");
-    //     var uaVersion = ua.Contains("Chrome/")
-    //         ? ChromeRegex().Match(ua).Groups[1].Value
-    //         : BrowserVersionRegex().Match(await page.Browser.GetVersionAsync()).Groups[1].Value;
-
-    //     var platform = GetPlatform(ua);
-    //     var brand = GetBrands(uaVersion);
-
-    //     var isMobile = GetIsMobile(ua);
-    //     var platformVersion = GetPlatformVersion(ua);
-    //     var platformArch = GetPlatformArch(isMobile);
-    //     var platformModel = GetPlatformModel(isMobile, ua);
-
-    //     var overrideObject = new OverrideUserAgent() {
-    //         UserAgent = ua,
-    //         Platform = platform,
-    //         AcceptLanguage = "en-US, en",
-    //         UserAgentMetadata = new UserAgentMetadata() {
-    //             Brands = brand,
-    //             FullVersion = uaVersion,
-    //             Platform = platform,
-    //             PlatformVersion = platformVersion,
-    //             Architecture = platformArch,
-    //             Model = platformModel,
-    //             Mobile = isMobile
-    //         }
-    //     };
-
-    //     await page.Client.SendAsync("Network.setUserAgentOverride", overrideObject).ConfigureAwait(false);
-    // }
-
+    /// <inheritdoc />
     public async Task OnTargetCreated(Target target) {
         if (target.Type == TargetType.Page) {
             var page = await target.PageAsync().ConfigureAwait(false);

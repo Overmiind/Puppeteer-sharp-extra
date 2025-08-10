@@ -5,7 +5,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharpLite.Plugins;
 
-public class BlockResourcesPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin, IBeforeLaunchPlugin {
+public class BlockResourcesPlugin : PuppeteerPlugin, IBeforeLaunchPlugin, IOnTargetCreatedPlugin {
     public override string Name => nameof(BlockResourcesPlugin);
 
     private readonly List<BlockRule> _blockResources;
@@ -39,30 +39,13 @@ public class BlockResourcesPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin, IBe
         return this;
     }
 
-    // public async Task OnPageCreated(IPage page) {
-    //     await page.SetRequestInterceptionAsync(true).ConfigureAwait(false);
-    //     page.Request += async (sender, args) => {
-    //         if (sender is not IPage p) {
-    //             await args.Request.ContinueAsync().ConfigureAwait(false);
-    //             return;
-    //         }
-
-    //         foreach (var rule in _blockResources) {
-    //             if (rule.IsRequestBlocked(p, args.Request)) {
-    //                 await args.Request.AbortAsync().ConfigureAwait(false);
-    //                 return;
-    //             }
-    //         }
-
-    //         await args.Request.ContinueAsync().ConfigureAwait(false);
-    //     };
-    // }
-
+    /// <inheritdoc />
     public Task BeforeLaunch(LaunchOptions options) {
         options.Args = [.. options.Args, "--site-per-process", "--disable-features=IsolateOrigins"];
         return Task.CompletedTask;
     }
 
+    /// <inheritdoc />
     public async Task OnTargetCreated(Target target) {
         if (target.Type == TargetType.Page) {
             var page = await target.PageAsync().ConfigureAwait(false);

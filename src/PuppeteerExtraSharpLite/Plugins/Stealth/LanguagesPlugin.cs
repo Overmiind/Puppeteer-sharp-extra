@@ -26,11 +26,7 @@ public class LanguagesPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
         _languages = languages;
     }
 
-    // /// <inheritdoc />
-    // public async Task OnPageCreated(IPage page) {
-    //     await page.EvaluateFunctionOnNewDocumentAsync(Scripts.Language, _languages).ConfigureAwait(false);
-    // }
-
+   /// <inheritdoc />
     public async Task OnTargetCreated(Target target) {
         if (target.Type == TargetType.Page) {
             var page = await target.PageAsync().ConfigureAwait(false);

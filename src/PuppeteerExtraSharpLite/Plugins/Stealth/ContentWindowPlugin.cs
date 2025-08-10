@@ -16,11 +16,7 @@ public class ContentWindowPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
     /// <inheritdoc />
     protected override string[] RequiredPlugins => [nameof(StealthPlugin)];
 
-    // /// <inheritdoc />
-    // public async Task OnPageCreated(IPage page) {
-    //     await page.EvaluateExpressionOnNewDocumentAsync(Scripts.ContentWindow).ConfigureAwait(false);
-    // }
-
+    /// <inheritdoc />
     public async Task OnTargetCreated(Target target) {
         if (target.Type == TargetType.Page) {
             var page = await target.PageAsync().ConfigureAwait(false);

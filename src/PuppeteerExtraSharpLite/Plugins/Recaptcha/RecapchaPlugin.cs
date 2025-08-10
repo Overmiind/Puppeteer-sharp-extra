@@ -56,14 +56,6 @@ public class RecaptchaPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
         };
     }
 
-    // /// <summary>
-    // /// Enables bypassing CSP on new pages to allow script injection used by this plugin.
-    // /// </summary>
-    // /// <param name="page">The created page.</param>
-    // public async Task OnPageCreated(IPage page) {
-    //     await page.SetBypassCSPAsync(true).ConfigureAwait(false);
-    // }
-
     /// <summary>
     /// Attempts to extract the site key (<c>k</c>) from the reCAPTCHA anchor iframe on the page.
     /// </summary>
@@ -121,6 +113,7 @@ public class RecaptchaPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
         }
     }
 
+    /// <inheritdoc />
     public async Task OnTargetCreated(Target target) {
         if (target.Type == TargetType.Page) {
             var page = await target.PageAsync().ConfigureAwait(false);
