@@ -47,17 +47,6 @@ public interface IAfterConnectPlugin {
 }
 
 /// <summary>
-/// Implement to receive a callback with the browser instance as soon as it is available.
-/// </summary>
-public interface IOnBrowserPlugin {
-    /// <summary>
-    /// Called when a browser instance is available to the plugin.
-    /// </summary>
-    /// <param name="browser">The browser instance.</param>
-    Task OnBrowser(IBrowser browser);
-}
-
-/// <summary>
 /// Implement to receive notifications when new targets are created.
 /// </summary>
 public interface IOnTargetCreatedPlugin {
