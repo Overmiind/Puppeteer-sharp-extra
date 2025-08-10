@@ -61,9 +61,9 @@ public partial class UserAgentPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
     }
 
     private static (string Platform, string PlatformVersion, bool IsMobile, string Model, string Arch) ParsePlatform(string ua) {
-        var isAndroid = ua.IndexOf("Android", StringComparison.Ordinal) >= 0;
-        var isMac = ua.IndexOf("Mac OS X", StringComparison.Ordinal) >= 0;
-        var isLinux = !isAndroid && ua.IndexOf("Linux", StringComparison.Ordinal) >= 0; // Android implies Linux in UA
+        var isAndroid = ua.Contains("Android");
+        var isMac = ua.Contains("Mac OS X");
+        var isLinux = !isAndroid && ua.Contains("Linux"); // Android implies Linux in UA
 
         string platform = isAndroid ? "Android"
                          : isMac ? "Mac OS X"
