@@ -7,12 +7,11 @@ public interface IRecaptchaProvider {
     /// <summary>
     /// Requests a solution token for the specified site key and page URL.
     /// </summary>
-    /// <param name="key">reCAPTCHA site key (k parameter).</param>
     /// <param name="pageUrl">URL of the page hosting the challenge.</param>
     /// <param name="proxyStr">Optional proxy description string required by some providers.</param>
     /// <param name="token">Cancellation token.</param>
     /// <returns>Solution token as a string.</returns>
-    Task<string> GetSolutionAsync(string key, string pageUrl, string proxyStr = "", CancellationToken token = default);
+    Task<string> GetSolutionAsync(string pageUrl, string proxyStr = "", CancellationToken token = default);
 }
 
 /// <summary>
@@ -20,7 +19,7 @@ public interface IRecaptchaProvider {
 /// </summary>
 internal sealed class InvalidRecaptchaProvider : IRecaptchaProvider {
     /// <inheritdoc />
-    public Task<string> GetSolutionAsync(string key, string pageUrl, string proxyStr = "", CancellationToken token = default) {
+    public Task<string> GetSolutionAsync(string pageUrl, string proxyStr = "", CancellationToken token = default) {
         throw new NotImplementedException();
     }
 }

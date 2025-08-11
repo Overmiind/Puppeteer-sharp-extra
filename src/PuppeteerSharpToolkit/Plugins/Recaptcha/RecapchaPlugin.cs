@@ -38,15 +38,15 @@ public class RecaptchaPlugin : PuppeteerPlugin, IOnTargetCreatedPlugin {
     /// <param name="token">Cancellation token.</param>
     /// <returns>Operation result. On success, <see cref="RecaptchaResult.IsSuccess"/> is true.</returns>
     public async Task<RecaptchaResult> SolveCaptchaAsync(IPage page, string proxyStr = "", CancellationToken token = default) {
-        var recaptchaKeyResult = await GetKeyAsync(page).ConfigureAwait(false);
+        // var recaptchaKeyResult = await GetKeyAsync(page).ConfigureAwait(false);
 
-        if (!recaptchaKeyResult.IsSuccess) {
-            return recaptchaKeyResult;
-        }
+        // if (!recaptchaKeyResult.IsSuccess) {
+        //     return recaptchaKeyResult;
+        // }
 
-        var key = recaptchaKeyResult.Value; // for success - value=key
+        // var key = recaptchaKeyResult.Value; // for success - value=key
         var url = page.Url;
-        var solution = await _provider.GetSolutionAsync(key, url, proxyStr, token).ConfigureAwait(false);
+        var solution = await _provider.GetSolutionAsync(url, proxyStr, token).ConfigureAwait(false);
         await WriteToInput(page, solution).ConfigureAwait(false);
 
         return new RecaptchaResult {
