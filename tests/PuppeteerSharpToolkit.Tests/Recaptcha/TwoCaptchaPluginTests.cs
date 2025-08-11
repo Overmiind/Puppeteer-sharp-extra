@@ -4,12 +4,8 @@ using PuppeteerSharpToolkit.Plugins.Recaptcha.TwoCaptcha;
 namespace PuppeteerSharpToolkit.Tests.Recaptcha;
 
 public class TwoCaptchaPluginTests {
-    private readonly string _twoCaptchaKey;
+    private readonly string _twoCaptchaKey = TestConfig.Config["TwoCaptchaKey"] ?? string.Empty;
 	private const string TwoCaptchaReason = "TwoCaptchaKey user secret is not set";
-
-    public TwoCaptchaPluginTests() {
-        _twoCaptchaKey = TestConfig.Config["TwoCaptchaKey"] ?? string.Empty;
-    }
 
     [Fact(Explicit = true)]
     public async Task TwoCaptcha_Plugin_Should_ResolveCaptchaInGooglePage() {

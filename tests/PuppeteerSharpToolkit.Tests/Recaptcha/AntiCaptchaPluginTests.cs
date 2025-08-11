@@ -6,12 +6,8 @@ using PuppeteerSharp;
 namespace PuppeteerSharpToolkit.Tests.Recaptcha;
 
 public class AntiCaptchaPluginTests {
-    private readonly string _antiCaptchaKey;
+    private readonly string _antiCaptchaKey = TestConfig.Config["AntiCaptchaKey"] ?? string.Empty;
 	private const string AntiCaptchaReason = "AntiCaptchaKey user secret is not set";
-
-    public AntiCaptchaPluginTests() {
-        _antiCaptchaKey = TestConfig.Config["AntiCaptchaKey"] ?? string.Empty;
-    }
 
     [Fact(Explicit = true)]
     public async Task AntiCaptcha_Plugin_Should_ThrowCaptchaException_When_CaptchaNotFound() {
