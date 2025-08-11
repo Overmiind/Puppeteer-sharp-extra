@@ -3,14 +3,55 @@
 namespace PuppeteerSharpToolkit.Plugins.Recaptcha.AntiCaptcha;
 
 /// <summary>
-/// Result model returned by Anti-Captcha for task status queries.
+/// Response returned after creating a task in Anti-Captcha.
 /// </summary>
-public class AntiCaptchaTaskResultModel {
+public class AntiCaptchaTaskResult {
     /// <summary>
     /// Error identifier, 0 means success.
     /// </summary>
     [JsonPropertyName("errorId")]
     public int ErrorId { get; set; }
+
+    /// <summary>
+    /// The error code
+    /// </summary>
+    [JsonPropertyName("errorCode")]
+    public string ErrorCode { get; set; } = string.Empty;
+
+    /// <summary>
+    /// The error descriptions
+    /// </summary>
+    [JsonPropertyName("errorDescription")]
+    public string ErrorDescription { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Identifier of the created task.
+    /// </summary>
+    [JsonPropertyName("taskId")]
+    public int TaskId { get; set; }
+}
+
+/// <summary>
+/// Result model returned by Anti-Captcha for task status queries.
+/// </summary>
+public class AntiCaptchaTaskResultFull {
+    /// <summary>
+    /// Error identifier, 0 means success.
+    /// </summary>
+    [JsonPropertyName("errorId")]
+    public int ErrorId { get; set; }
+
+    /// <summary>
+    /// The error code
+    /// </summary>
+    [JsonPropertyName("errorCode")]
+    public string ErrorCode { get; set; } = string.Empty;
+
+    /// <summary>
+    /// The error descriptions
+    /// </summary>
+    [JsonPropertyName("errorDescription")]
+    public string ErrorDescription { get; set; } = string.Empty;
 
     /// <summary>
     /// Task state, e.g., <c>processing</c> or <c>ready</c>.
