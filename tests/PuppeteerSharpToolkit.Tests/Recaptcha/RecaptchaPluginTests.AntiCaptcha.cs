@@ -5,7 +5,14 @@ using PuppeteerSharp;
 
 namespace PuppeteerSharpToolkit.Tests.Recaptcha;
 
-public partial class RecaptchaPluginTests {
+public class AntiCaptchaPluginTests {
+    private readonly string _antiCaptchaKey;
+	private const string AntiCaptchaReason = "AntiCaptchaKey user secret is not set";
+
+    public AntiCaptchaPluginTests() {
+        _antiCaptchaKey = TestConfig.Config["AntiCaptchaKey"] ?? string.Empty;
+    }
+
     [Fact]
     public async Task AntiCaptcha_Plugin_Should_ThrowCaptchaException_When_CaptchaNotFound() {
         Assert.SkipWhen(_antiCaptchaKey.Length == 0, AntiCaptchaReason);
