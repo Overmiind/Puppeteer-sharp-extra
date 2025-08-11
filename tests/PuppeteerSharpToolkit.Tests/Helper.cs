@@ -30,9 +30,4 @@ public static class Helper {
 		}
 		throw new DirectoryNotFoundException($"Could not find repository root starting from {startPath}.");
 	}
-
-	public static bool TryGetEnvironmentVariable(string name, out string value) {
-		value = Environment.GetEnvironmentVariable(name) ?? string.Empty;
-		return value.Length > 0;
-	}
 }
