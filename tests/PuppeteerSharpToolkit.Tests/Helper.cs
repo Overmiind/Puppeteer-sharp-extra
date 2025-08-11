@@ -9,7 +9,7 @@ public static class Helper {
 
 		// Navigate up to find the repository root (where we can find src/ folder)
 		var repoRoot = FindRepositoryRoot(testAssemblyDir);
-		var projectPath = Path.Combine(repoRoot, "src", "PuppeteerExtraSharpLite");
+		var projectPath = Path.Combine(repoRoot, "src", "PuppeteerSharpToolkit");
 		var filePath = Path.Combine(projectPath, "EmbeddedScripts", "JS", filename);
 
 		if (!File.Exists(filePath)) {
