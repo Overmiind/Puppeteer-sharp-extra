@@ -88,7 +88,7 @@ public class TwoCaptchaProvider : IRecaptchaProvider {
                 ["json"] = "1",
                 ["method"] = "userrecaptcha"
             };
-            string url = parameters.AddAsQueryTo(uri.AbsolutePath);
+            string url = parameters.AddAsQueryTo(uri.AbsoluteUri);
 
             using var message = new HttpRequestMessage(HttpMethod.Post, url);
             message.Headers.Add("Accept", "application/json");
