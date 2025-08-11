@@ -11,7 +11,7 @@ public class TwoCaptchaPluginTests {
         _twoCaptchaKey = TestConfig.Config["TwoCaptchaKey"] ?? string.Empty;
     }
 
-    [Fact]
+    [Fact(Explicit = true)]
     public async Task TwoCaptcha_Plugin_Should_ResolveCaptchaInGooglePage() {
         Assert.SkipWhen(_twoCaptchaKey.Length == 0, TwoCaptchaReason);
 
@@ -37,7 +37,7 @@ public class TwoCaptchaPluginTests {
         Assert.NotNull(successElement);
     }
 
-    [Fact]
+    [Fact(Explicit = true)]
     public async Task TwoCaptcha_Plugin_Should_SolveInvisibleCaptcha() {
         Assert.SkipWhen(_twoCaptchaKey.Length == 0, TwoCaptchaReason);
 

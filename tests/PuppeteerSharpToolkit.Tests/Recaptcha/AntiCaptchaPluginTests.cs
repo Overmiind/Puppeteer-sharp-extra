@@ -13,7 +13,7 @@ public class AntiCaptchaPluginTests {
         _antiCaptchaKey = TestConfig.Config["AntiCaptchaKey"] ?? string.Empty;
     }
 
-    [Fact]
+    [Fact(Explicit = true)]
     public async Task AntiCaptcha_Plugin_Should_ThrowCaptchaException_When_CaptchaNotFound() {
         Assert.SkipWhen(_antiCaptchaKey.Length == 0, AntiCaptchaReason);
 
@@ -34,7 +34,7 @@ public class AntiCaptchaPluginTests {
         Assert.False(result.IsSuccess);
     }
 
-    [Fact]
+    [Fact(Explicit = true)]
     public async Task AntiCaptcha_Plugin_Should_SolveCaptchaWithSubmitButton() {
         Assert.SkipWhen(_antiCaptchaKey.Length == 0, AntiCaptchaReason);
 
@@ -62,7 +62,7 @@ public class AntiCaptchaPluginTests {
         await CheckSuccessVerify(page);
     }
 
-    [Fact]
+    [Fact(Explicit = true)]
     public async Task AntiCaptcha_Plugin_ShouldSolve_CaptchaWithCallback() {
         Assert.SkipWhen(_antiCaptchaKey.Length == 0, AntiCaptchaReason);
 
