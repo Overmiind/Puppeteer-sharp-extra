@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace PuppeteerSharpToolkit.Plugins.Recaptcha.Provider.AntiCaptcha;
+namespace PuppeteerSharpToolkit.Plugins.Recaptcha.AntiCaptcha;
 
 /// <summary>
 /// Request payload for Anti-Captcha createTask API.

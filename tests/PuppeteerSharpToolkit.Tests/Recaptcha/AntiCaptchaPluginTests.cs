@@ -1,12 +1,19 @@
 using PuppeteerSharpToolkit.Plugins.Recaptcha;
-using PuppeteerSharpToolkit.Plugins.Recaptcha.Provider.AntiCaptcha;
+using PuppeteerSharpToolkit.Plugins.Recaptcha.AntiCaptcha;
 
 using PuppeteerSharp;
 
 namespace PuppeteerSharpToolkit.Tests.Recaptcha;
 
-public partial class RecaptchaPluginTests {
-    [Fact]
+public class AntiCaptchaPluginTests {
+    private readonly string _antiCaptchaKey;
+	private const string AntiCaptchaReason = "AntiCaptchaKey user secret is not set";
+
+    public AntiCaptchaPluginTests() {
+        _antiCaptchaKey = TestConfig.Config["AntiCaptchaKey"] ?? string.Empty;
+    }
+
+    [Fact(Explicit = true)]
     public async Task AntiCaptcha_Plugin_Should_ThrowCaptchaException_When_CaptchaNotFound() {
         Assert.SkipWhen(_antiCaptchaKey.Length == 0, AntiCaptchaReason);
 
@@ -27,7 +34,7 @@ public partial class RecaptchaPluginTests {
         Assert.False(result.IsSuccess);
     }
 
-    [Fact]
+    [Fact(Explicit = true)]
     public async Task AntiCaptcha_Plugin_Should_SolveCaptchaWithSubmitButton() {
         Assert.SkipWhen(_antiCaptchaKey.Length == 0, AntiCaptchaReason);
 
@@ -55,7 +62,7 @@ public partial class RecaptchaPluginTests {
         await CheckSuccessVerify(page);
     }
 
-    [Fact]
+    [Fact(Explicit = true)]
     public async Task AntiCaptcha_Plugin_ShouldSolve_CaptchaWithCallback() {
         Assert.SkipWhen(_antiCaptchaKey.Length == 0, AntiCaptchaReason);
 

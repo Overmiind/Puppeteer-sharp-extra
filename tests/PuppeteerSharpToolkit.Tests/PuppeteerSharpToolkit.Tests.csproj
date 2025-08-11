@@ -1,37 +1,41 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>PuppeteerSharpToolkit.Tests</RootNamespace>
-    <AssemblyName>PuppeteerSharpToolkit.Tests</AssemblyName>
-    <TargetFramework>net9.0</TargetFramework>
-    <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
-    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
-  </PropertyGroup>
+    <PropertyGroup>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <OutputType>Exe</OutputType>
+        <RootNamespace>PuppeteerSharpToolkit.Tests</RootNamespace>
+        <AssemblyName>PuppeteerSharpToolkit.Tests</AssemblyName>
+        <TargetFramework>net9.0</TargetFramework>
+        <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+        <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
 
-  <ItemGroup>
-    <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
+        <UserSecretsId>2b410dee-69c5-49b0-8008-88a39bf47990</UserSecretsId>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Using Include="Xunit" />
-  </ItemGroup>
+    <ItemGroup>
+        <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.7" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
-    <PackageReference Include="xunit.v3" Version="3.0.0" />
-    <PackageReference Include="PuppeteerSharp" Version="20.2.2" />
-    <PackageReference Include="Moq" Version="4.20.72" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.3">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
+    <ItemGroup>
+        <Using Include="Xunit" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\PuppeteerSharpToolkit\PuppeteerSharpToolkit.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.8" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.8" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+        <PackageReference Include="xunit.v3" Version="3.0.0" />
+        <PackageReference Include="PuppeteerSharp" Version="20.2.2" />
+        <PackageReference Include="Moq" Version="4.20.72" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="3.1.3">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\PuppeteerSharpToolkit\PuppeteerSharpToolkit.csproj" />
+    </ItemGroup>
 </Project>

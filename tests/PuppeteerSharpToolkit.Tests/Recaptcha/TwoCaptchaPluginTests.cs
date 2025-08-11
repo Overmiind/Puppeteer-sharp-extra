@@ -1,10 +1,17 @@
 using PuppeteerSharpToolkit.Plugins.Recaptcha;
-using PuppeteerSharpToolkit.Plugins.Recaptcha.Provider.TwoCaptcha;
+using PuppeteerSharpToolkit.Plugins.Recaptcha.TwoCaptcha;
 
 namespace PuppeteerSharpToolkit.Tests.Recaptcha;
 
-public partial class RecaptchaPluginTests {
-    [Fact]
+public class TwoCaptchaPluginTests {
+    private readonly string _twoCaptchaKey;
+	private const string TwoCaptchaReason = "TwoCaptchaKey user secret is not set";
+
+    public TwoCaptchaPluginTests() {
+        _twoCaptchaKey = TestConfig.Config["TwoCaptchaKey"] ?? string.Empty;
+    }
+
+    [Fact(Explicit = true)]
     public async Task TwoCaptcha_Plugin_Should_ResolveCaptchaInGooglePage() {
         Assert.SkipWhen(_twoCaptchaKey.Length == 0, TwoCaptchaReason);
 
@@ -30,7 +37,7 @@ public partial class RecaptchaPluginTests {
         Assert.NotNull(successElement);
     }
 
-    [Fact]
+    [Fact(Explicit = true)]
     public async Task TwoCaptcha_Plugin_Should_SolveInvisibleCaptcha() {
         Assert.SkipWhen(_twoCaptchaKey.Length == 0, TwoCaptchaReason);
 

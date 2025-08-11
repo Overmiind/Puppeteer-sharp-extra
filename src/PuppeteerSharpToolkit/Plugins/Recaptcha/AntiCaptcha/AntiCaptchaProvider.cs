@@ -1,7 +1,7 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Json;
 
-namespace PuppeteerSharpToolkit.Plugins.Recaptcha.Provider.AntiCaptcha;
+namespace PuppeteerSharpToolkit.Plugins.Recaptcha.AntiCaptcha;
 
 /// <summary>
 /// Anti-Captcha provider implementation that requests and polls for reCAPTCHA tokens

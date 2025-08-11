@@ -9,7 +9,7 @@ public static class Helper {
 
 		// Navigate up to find the repository root (where we can find src/ folder)
 		var repoRoot = FindRepositoryRoot(testAssemblyDir);
-		var projectPath = Path.Combine(repoRoot, "src", "PuppeteerExtraSharpLite");
+		var projectPath = Path.Combine(repoRoot, "src", "PuppeteerSharpToolkit");
 		var filePath = Path.Combine(projectPath, "EmbeddedScripts", "JS", filename);
 
 		if (!File.Exists(filePath)) {
@@ -29,10 +29,5 @@ public static class Helper {
 			directory = directory.Parent;
 		}
 		throw new DirectoryNotFoundException($"Could not find repository root starting from {startPath}.");
-	}
-
-	public static bool TryGetEnvironmentVariable(string name, out string value) {
-		value = Environment.GetEnvironmentVariable(name) ?? string.Empty;
-		return value.Length > 0;
 	}
 }
