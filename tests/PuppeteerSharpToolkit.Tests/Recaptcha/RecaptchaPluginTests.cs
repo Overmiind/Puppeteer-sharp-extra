@@ -8,7 +8,7 @@ public partial class RecaptchaPluginTests {
 	private const string AntiCaptchaReason = "AntiCaptchaKey environment variable is not set";
 
 	public RecaptchaPluginTests() {
-		Helper.TryGetEnvironmentVariable("TwoCaptchaKey", out _twoCaptchaKey);
-		Helper.TryGetEnvironmentVariable("AntiCaptchaKey", out _antiCaptchaKey);
+		_twoCaptchaKey = Environment.GetEnvironmentVariable("TwoCaptchaKey") ?? string.Empty;
+		_antiCaptchaKey = Environment.GetEnvironmentVariable("AntiCaptchaKey") ?? string.Empty;
 	}
 }
