@@ -154,7 +154,26 @@ You can also inspect rules on the plugin, as well as add or remove rules at any 
 
 ## Caveats / Testing
 
-Some plugin tests for third-party services such as TwoCaptcha and AntiCaptcha require valid API credentials. The test suite is configured to read these credentials from environment variables; if the expected variables are not set, those specific plugin tests are skipped automatically. To include them in a test run, set the appropriate environment variables before executing the test command (e.g., on macOS/Linux: `export KEY_NAME=your_api_key` or on Windows PowerShell: `$env:KEY_NAME = 'your_api_key'`). Refer to the test project source for the exact variable names required.
+[RecaptchaPlugin](src/PuppeteerSharpToolkit/Plugins/Recaptcha/RecapchaPlugin.cs) is a clean abstraction, and the tests are mainly testing the specific providers, these tests require having API keys for said providers.
+
+To set the API keys, `dotnet` user secrets is used, it must be configured when inside the test project directory:
+
+```bash
+dotnet user-secrets set [secretName] [secretValue]
+```
+
+- For [AntiCaptchaProvider](src/PuppeteerSharpToolkit/Plugins/Recaptcha/Provider/AntiCaptcha/AntiCaptchaProvider.cs): `secretName = "AntiCaptchaKey"`
+- For [TwoCaptchaProvider](src/PuppeteerSharpToolkit/Plugins/Recaptcha/Provider/TwoCaptcha/TwoCaptchaProvider.cs): `secretName = "TwoCaptchaKey"`
+
+All Recaptcha tests are marked as `Explicit` and will not execute when running the full test suite (unless specifically asked for), this is to avoid burning API usage.
+
+If you do want to run them use:
+
+```bash
+dotnet run --explicit on/only
+```
+
+Also, each provider test will be skipped automatically if the required API key wasn't found in user secrets, so if for example you only have an API key for `AntiCaptcha` - only the tests related to this provider will run.
 
 ## Contribution
 
