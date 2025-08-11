@@ -1,4 +1,8 @@
-﻿using System.Text.Json.Serialization;
+﻿/*
+
+//TODO: Disabled pending "GET RECAPTCHA KEY" review
+
+using System.Text.Json.Serialization;
 
 namespace PuppeteerSharpToolkit.Plugins.Recaptcha.AntiCaptcha;
 
@@ -123,3 +127,4 @@ public class AntiCaptchaCookies {
     [JsonPropertyName("empty")]
     public string Empty { get; set; } = string.Empty;
 }
+*/

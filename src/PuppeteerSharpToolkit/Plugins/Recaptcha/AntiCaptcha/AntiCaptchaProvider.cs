@@ -1,4 +1,8 @@
-﻿using System.Net.Http;
+﻿/*
+
+//TODO: Disabled pending "GET RECAPTCHA KEY" review
+
+using System.Net.Http;
 using System.Net.Http.Json;
 
 namespace PuppeteerSharpToolkit.Plugins.Recaptcha.AntiCaptcha;
@@ -34,19 +38,18 @@ public class AntiCaptchaProvider : IRecaptchaProvider {
     /// <summary>
     /// Creates a task for the target page and polls Anti-Captcha until a token is ready.
     /// </summary>
-    /// <param name="key">Site key of the reCAPTCHA widget.</param>
     /// <param name="pageUrl">URL containing the widget.</param>
     /// <param name="proxyStr">Optional proxy string (unused in proxyless task).</param>
     /// <param name="token">Cancellation token.</param>
     /// <returns>Solution token received from Anti-Captcha.</returns>
     /// <exception cref="HttpRequestException">Thrown when the API returns an error or invalid result.</exception>
-    public async Task<string> GetSolutionAsync(string key, string pageUrl, string proxyStr = "", CancellationToken token = default) {
-        var task = await Api.CreateTaskAsync(_client, _userKey, pageUrl, key, token).ConfigureAwait(false);
+    public async Task<string> GetSolutionAsync(string pageUrl, string proxyStr = "", CancellationToken token = default) {
+        var task = await Api.CreateTaskAsync(_client, _userKey, pageUrl, token).ConfigureAwait(false);
         await Task.Delay(_options.StartTimeoutSeconds * 1000, token);
         var result = await Api.PendingForResult(_client, _userKey, task.TaskId, _options, token).ConfigureAwait(false);
 
         if (result.Status != "ready" || result.Solution is null || result.ErrorId != 0) {
-            throw new HttpRequestException($"AntiCaptcha request ends with error - {result.ErrorId}");
+            throw new HttpRequestException($"AntiCaptcha request ends with error - {result.ErrorId} - {result.ErrorCode} - {result.ErrorDescription}");
         }
 
         return result.Solution.GRecaptchaResponse;
@@ -64,23 +67,24 @@ public class AntiCaptchaProvider : IRecaptchaProvider {
         /// <param name="client">HTTP client.</param>
         /// <param name="userKey">Client key for Anti-Captcha.</param>
         /// <param name="pageUrl">Target page URL.</param>
-        /// <param name="key">reCAPTCHA site key.</param>
         /// <param name="token">Cancellation token.</param>
         /// <returns>Task creation response.</returns>
-        public static async Task<AntiCaptchaTaskResult> CreateTaskAsync(HttpClient client, string userKey, string pageUrl, string key, CancellationToken token = default) {
-            var content = new AntiCaptchaRequest {
-                ClientKey = userKey,
-                Task = new AntiCaptchaTask {
-                    Type = "NoCaptchaTaskProxyless",
-                    WebsiteUrl = pageUrl,
-                    WebsiteKey = key
-                }
-            };
-
+        public static async Task<AntiCaptchaTaskResult> CreateTaskAsync(HttpClient client, string userKey, string pageUrl, CancellationToken token = default) {
             Uri uri = new(Host, "createTask");
             using var message = new HttpRequestMessage(HttpMethod.Post, uri);
             message.Headers.Add("Accept", "application/json");
-            message.Content = JsonContent.Create(content, JsonContext.Default.AntiCaptchaRequest);
+            message.Content = new StringContent(
+                $$"""
+                {
+                    "clientKey": "{{userKey}}",
+                    "task":
+                    {
+                        "type": "NoCaptchaTaskProxyless",
+                        "websiteURL": "{{pageUrl}}"
+                    }
+                }
+                """
+            );
 
             using var response = await client.SendAsync(message, token).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
@@ -98,29 +102,32 @@ public class AntiCaptchaProvider : IRecaptchaProvider {
         /// <param name="options">Polling options.</param>
         /// <param name="token">Cancellation token.</param>
         /// <returns>Task result model; <c>Status</c> is <c>ready</c> when solved.</returns>
-        public static async Task<AntiCaptchaTaskResultModel> PendingForResult(HttpClient client, string userKey, int taskId, ProviderOptions options, CancellationToken token = default) {
-            var content = new AntiCaptchaRequestForResultTask() {
-                ClientKey = userKey,
-                TaskId = taskId
-            };
+        public static async Task<AntiCaptchaTaskResultFull> PendingForResult(HttpClient client, string userKey, int taskId, ProviderOptions options, CancellationToken token = default) {
+            string content =
+            $$"""
+            {
+                "clientKey": "{{userKey}}",
+                "taskId": {{taskId}}
+            }
+            """;
 
             Uri uri = new(Host, "getTaskResult");
 
-            AntiCaptchaTaskResultModel outerResult = new();
+            AntiCaptchaTaskResultFull outerResult = new();
 
             await client.SendPollingAsync(
                     () => {
                         var message = new HttpRequestMessage(HttpMethod.Post, uri);
                         message.Headers.Add("Accept", "application/json");
-                        message.Content = JsonContent.Create(content, JsonContext.Default.AntiCaptchaRequestForResultTask);
+                        message.Content = new StringContent(content);
                         return message;
                     },
-                    async response => {
+                    (Func<HttpResponseMessage, Task<bool>>)(async response => {
                         if (response.StatusCode != System.Net.HttpStatusCode.OK) {
                             return true;
                         }
 
-                        var result = await response.Content.ReadFromJsonAsync(JsonContext.Default.AntiCaptchaTaskResultModel, cancellationToken: token).ConfigureAwait(false);
+                        var result = await HttpContentJsonExtensions.ReadFromJsonAsync(response.Content, JsonContext.Default.AntiCaptchaTaskResultFull, cancellationToken: token).ConfigureAwait(false);
 
                         if (result is null) {
                             return true;
@@ -132,7 +139,7 @@ public class AntiCaptchaProvider : IRecaptchaProvider {
                         }
 
                         return true;
-                    },
+                    }),
                     options.PendingCount,
                     options.StartTimeoutSeconds * 1000);
 
@@ -140,3 +147,4 @@ public class AntiCaptchaProvider : IRecaptchaProvider {
         }
     }
 }
+*/

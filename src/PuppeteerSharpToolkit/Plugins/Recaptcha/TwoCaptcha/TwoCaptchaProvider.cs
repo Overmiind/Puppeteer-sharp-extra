@@ -35,14 +35,13 @@ public class TwoCaptchaProvider : IRecaptchaProvider {
     /// <summary>
     /// Creates a task and polls 2Captcha until the token is ready.
     /// </summary>
-    /// <param name="key">reCAPTCHA site key.</param>
     /// <param name="pageUrl">URL hosting the widget.</param>
     /// <param name="proxyStr">Optional proxy string.</param>
     /// <param name="token">Cancellation token.</param>
     /// <returns>Solution token.</returns>
     /// <exception cref="HttpRequestException">Thrown when API reports an error.</exception>
-    public async Task<string> GetSolutionAsync(string key, string pageUrl, string proxyStr = "", CancellationToken token = default) {
-        var task = await Api.CreateTaskAsync(_client, _userKey, key, pageUrl, token);
+    public async Task<string> GetSolutionAsync(string pageUrl, string proxyStr = "", CancellationToken token = default) {
+        var task = await Api.CreateTaskAsync(_client, _userKey, pageUrl, token);
 
         ThrowErrorIfBadStatus(task);
 
@@ -75,15 +74,13 @@ public class TwoCaptchaProvider : IRecaptchaProvider {
         /// </summary>
         /// <param name="client">HTTP client.</param>
         /// <param name="userKey">2Captcha API key.</param>
-        /// <param name="key">reCAPTCHA site key.</param>
         /// <param name="pageUrl">Target page URL.</param>
         /// <param name="token">Cancellation token.</param>
         /// <returns>Response containing the created task identifier.</returns>
-        public static async Task<TwoCaptchaResponse> CreateTaskAsync(HttpClient client, string userKey, string key, string pageUrl, CancellationToken token = default) {
+        public static async Task<TwoCaptchaResponse> CreateTaskAsync(HttpClient client, string userKey, string pageUrl, CancellationToken token = default) {
             Uri uri = new(Host, "in.php");
             Dictionary<string, string> parameters = new() {
                 ["key"] = userKey,
-                ["googlekey"] = key,
                 ["pageurl"] = pageUrl,
                 ["json"] = "1",
                 ["method"] = "userrecaptcha"
