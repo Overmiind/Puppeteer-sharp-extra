@@ -95,6 +95,8 @@ RecaptchaPlugin is used in conjunction with Recaptcha solving providers, at this
 
 The following is an example with `AntiCaptcha`
 
+- `Anti-Captcha` provider is disabled pending better solution for their requirement to get recaptcha key.
+
 ```csharp
 // have HttpClient instance ready (it is used to send the requests)
 using var client = new HttpClient(); // initialization as example
