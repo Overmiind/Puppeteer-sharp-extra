@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace PuppeteerExtraSharp.Utils;
 
-internal static class ResourcesReader
+public static class ResourcesReader
 {
     public static string ReadFile(string path, Assembly customAssembly = null)
     {

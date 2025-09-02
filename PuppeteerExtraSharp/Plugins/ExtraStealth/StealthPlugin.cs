@@ -23,7 +23,6 @@ public class StealthPlugin : PuppeteerExtraPlugin
         return
         [
             new WebDriver(),
-            // new ChromeApp(),
             new ChromeSci(),
             new ChromeRuntime(),
             new Codec(),
