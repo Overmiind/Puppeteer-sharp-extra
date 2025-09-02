@@ -227,6 +227,7 @@ utils.patchToString = (obj, str = '') => {
         Function.prototype.toString,
         utils.stripProxyFromErrors(handler)
     )
+
     utils.replaceProperty(Function.prototype, 'toString', {
         value: toStringProxy
     })
@@ -306,7 +307,7 @@ utils.replaceWithProxy = (obj, propName, handler) => {
     const originalObj = obj[propName]
     const proxyObj = new Proxy(obj[propName], utils.stripProxyFromErrors(handler))
 
-    utils.replaceProperty(obj, propName, { value: proxyObj })
+    utils.replaceProperty(obj, propName, {value: proxyObj})
     utils.redirectToString(proxyObj, originalObj)
 
     return true
@@ -326,7 +327,7 @@ utils.replaceGetterWithProxy = (obj, propName, handler) => {
     const fnStr = fn.toString() // special getter function string
     const proxyObj = new Proxy(fn, utils.stripProxyFromErrors(handler))
 
-    utils.replaceProperty(obj, propName, { get: proxyObj })
+    utils.replaceProperty(obj, propName, {get: proxyObj})
     utils.patchToString(proxyObj, fnStr)
 
     return true
@@ -348,7 +349,7 @@ utils.replaceGetterWithProxy = (obj, propName, handler) => {
 utils.mockWithProxy = (obj, propName, pseudoTarget, handler) => {
     const proxyObj = new Proxy(pseudoTarget, utils.stripProxyFromErrors(handler))
 
-    utils.replaceProperty(obj, propName, { value: proxyObj })
+    utils.replaceProperty(obj, propName, {value: proxyObj})
     utils.patchToString(proxyObj)
 
     return true
@@ -402,7 +403,7 @@ utils.splitObjPath = objPath => ({
  * @param {object} handler - The JS Proxy handler to use
  */
 utils.replaceObjPathWithProxy = (objPath, handler) => {
-    const { objName, propName } = utils.splitObjPath(objPath)
+    const {objName, propName} = utils.splitObjPath(objPath)
     const obj = eval(objName) // eslint-disable-line no-eval
     return utils.replaceWithProxy(obj, propName, handler)
 }
@@ -429,6 +430,7 @@ utils.execRecursively = (obj = {}, typeFilter = [], fn) => {
             }
         }
     }
+
     recurse(obj)
     return obj
 }
@@ -446,7 +448,7 @@ utils.execRecursively = (obj = {}, typeFilter = [], fn) => {
  *
  * @param {object} fnObj - An object containing functions as properties
  */
-utils.stringifyFns = (fnObj = { hello: () => 'world' }) => {
+utils.stringifyFns = (fnObj = {hello: () => 'world'}) => {
     // Object.fromEntries() ponyfill (in 6 lines) - supported only in Node v12+, modern browsers are fine
     // https://github.com/feross/fromentries
     function fromEntries(iterable) {
@@ -455,6 +457,7 @@ utils.stringifyFns = (fnObj = { hello: () => 'world' }) => {
             return obj
         }, {})
     }
+
     return (Object.fromEntries || fromEntries)(
         Object.entries(fnObj)
             .filter(([key, value]) => typeof value === 'function')
@@ -468,7 +471,7 @@ utils.stringifyFns = (fnObj = { hello: () => 'world' }) => {
  *
  * @param {object} fnStrObj - An object containing stringified functions as properties
  */
-utils.materializeFns = (fnStrObj = { hello: "() => 'world'" }) => {
+utils.materializeFns = (fnStrObj = {hello: "() => 'world'"}) => {
     return Object.fromEntries(
         Object.entries(fnStrObj).map(([key, value]) => {
             if (value.startsWith('function')) {

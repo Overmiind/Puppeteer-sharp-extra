@@ -24,7 +24,7 @@
         return
     }
 
-    const { performance } = window
+    const {performance} = window
 
     // Some stuff is not available on about:blank as it requires a navigation to occur,
     // let's harden the code to not fail then:
@@ -76,7 +76,7 @@
         }
     }
 
-    const { timing } = window.performance
+    const {timing} = window.performance
 
     // Truncate number to specific number of decimals, most of the `loadTimes` stuff has 3
     function toFixed(num, fixed) {

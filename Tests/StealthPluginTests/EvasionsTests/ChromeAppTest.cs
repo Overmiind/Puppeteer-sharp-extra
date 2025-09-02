@@ -1,6 +1,7 @@
-﻿using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-using PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
+﻿using System.Text.Json;
+using System.Threading.Tasks;
+using Extra.Tests.Utils;
+using PuppeteerExtraSharp.Plugins.ExtraStealth;
 using PuppeteerSharp;
 using Xunit;
 
@@ -11,31 +12,33 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
         [Fact]
         public async Task ShouldWork()
         {
-            var plugin = new ChromeApp();
+            var plugin = new StealthPlugin();
 
-            var page = await LaunchAndGetPage(plugin);
+            var page = await LaunchAndGetPageAsync(plugin);
             await page.GoToAsync("https://google.com");
 
-            var chrome = await page.EvaluateExpressionAsync<JObject>("window.chrome");
+            var test = await page.EvaluateExpressionAsync<dynamic>("window.chrome");
+            var chrome = await page.EvaluateExpressionAsync<JsonElement>("window.chrome");
             Assert.NotNull(chrome);
 
-            var app = await page.EvaluateExpressionAsync<JObject>("chrome.app");
+            var app = await page.EvaluateExpressionAsync<JsonElement>("chrome.app");
             Assert.NotNull(app);
 
             var getIsInstalled = await page.EvaluateExpressionAsync<bool>("chrome.app.getIsInstalled()");
             Assert.False(getIsInstalled);
 
-            var installState = await page.EvaluateExpressionAsync<JObject>("chrome.app.InstallState");
+            var installState = await page.EvaluateExpressionAsync<JsonElement>("chrome.app.InstallState");
             Assert.NotNull(installState);
-            Assert.Equal("disabled", installState["DISABLED"]);
-            Assert.Equal("installed", installState["INSTALLED"]);
-            Assert.Equal("not_installed", installState["NOT_INSTALLED"]);
+            
+            Assert.Equal("disabled", installState.GetString("DISABLED"));
+            Assert.Equal("installed", installState.GetString("INSTALLED"));
+            Assert.Equal("not_installed", installState.GetString("NOT_INSTALLED"));
 
-            var runningState = await page.EvaluateExpressionAsync<JObject>("chrome.app.RunningState");
+            var runningState = await page.EvaluateExpressionAsync<JsonElement>("chrome.app.RunningState");
             Assert.NotNull(runningState);
-            Assert.Equal("cannot_run", runningState["CANNOT_RUN"]);
-            Assert.Equal("ready_to_run", runningState["READY_TO_RUN"]);
-            Assert.Equal("running", runningState["RUNNING"]);
+            Assert.Equal("cannot_run", runningState.GetString("CANNOT_RUN"));
+            Assert.Equal("ready_to_run", runningState.GetString("READY_TO_RUN"));
+            Assert.Equal("running", runningState.GetString("RUNNING"));;
 
             var details = await page.EvaluateExpressionAsync<object>("chrome.app.getDetails()");
             Assert.Null(details);

@@ -35,7 +35,7 @@
             if (!args || !args.length) {
                 return target.apply(ctx, args)
             }
-            const { mime, codecs } = parseInput(args[0])
+            const {mime, codecs} = parseInput(args[0])
             // This specific mp4 codec is missing in Chromium
             if (mime === 'video/mp4') {
                 if (codecs.includes('avc1.42E01E')) {

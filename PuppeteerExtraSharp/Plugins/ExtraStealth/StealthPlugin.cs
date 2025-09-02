@@ -1,61 +1,80 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharp.Plugins.ExtraStealth
+namespace PuppeteerExtraSharp.Plugins.ExtraStealth;
+
+public class StealthPlugin : PuppeteerExtraPlugin
 {
-    public class StealthPlugin : PuppeteerExtraPlugin
+    private readonly List<IPuppeteerExtraPluginOptions> _options;
+    private readonly List<PuppeteerExtraPlugin> _standardEvasions;
+
+    public StealthPlugin(params IPuppeteerExtraPluginOptions[] options) : base("stealth")
     {
-        private readonly IPuppeteerExtraPluginOptions[] _options;
-        private readonly List<PuppeteerExtraPlugin> _standardEvasions;
+        _options = options.ToList();
+        _standardEvasions = GetStandardEvasions();
+    }
 
-        public StealthPlugin(params IPuppeteerExtraPluginOptions[] options) : base("stealth")
-        {
-            _options = options;
-            _standardEvasions = GetStandardEvasions();
-        }
-
-        private List<PuppeteerExtraPlugin> GetStandardEvasions()
-        {
-            return new List<PuppeteerExtraPlugin>()
-        {
+    private List<PuppeteerExtraPlugin> GetStandardEvasions()
+    {
+        return
+        [
             new WebDriver(),
             // new ChromeApp(),
             new ChromeSci(),
             new ChromeRuntime(),
             new Codec(),
-            new Languages(GetOptionByType<StealthLanguagesOptions>()),
+            new Languages(GetOptionsByType<StealthLanguagesOptions>()),
             new OutDimensions(),
             new Permissions(),
             new UserAgent(),
-            new Vendor(GetOptionByType<StealthVendorSettings>()),
-            new WebGl(GetOptionByType<StealthWebGLOptions>()),
+            new Vendor(GetOptionsByType<StealthVendorSettings>()),
+            new WebGl(GetOptionsByType<StealthWebGLOptions>()),
             new PluginEvasion(),
             new StackTrace(),
-            new HardwareConcurrency(GetOptionByType<StealthHardwareConcurrencyOptions>()),
+            new HardwareConcurrency(GetOptionsByType<StealthHardwareConcurrencyOptions>()),
             new ContentWindow(),
             new SourceUrl()
-        };
-        }
+        ];
+    }
 
-        public override ICollection<PuppeteerExtraPlugin> GetDependencies() => _standardEvasions;
+    protected internal override ICollection<PuppeteerExtraPlugin> GetDependencies()
+    {
+        return _standardEvasions;
+    }
 
-        public override async Task OnPageCreated(IPage page)
+    protected internal override async Task OnPageCreatedAsync(IPage page)
+    {
+        var utilsScript = StealthUtils.GetScript("Utils.js");
+        await page.EvaluateExpressionOnNewDocumentAsync(utilsScript);
+    }
+
+    public void AddOptions<T>(T options)
+        where T: IPuppeteerExtraPluginOptions
+    {
+        if (_options.OfType<T>().Any())
         {
-            var utilsScript = Utils.GetScript("Utils.js");
-            await page.EvaluateExpressionOnNewDocumentAsync(utilsScript);
+            throw new ArgumentException("Option already exists", nameof(options));
         }
+        
+        _options.Add(options);
+    }
 
-        private T GetOptionByType<T>() where T : IPuppeteerExtraPluginOptions
-        {
-            return _options.OfType<T>().FirstOrDefault();
-        }
+    private T GetOptionsByType<T>() where T : IPuppeteerExtraPluginOptions
+    {
+        return _options.OfType<T>().SingleOrDefault();
+    }
 
-        public void RemoveEvasionByType<T>() where T : PuppeteerExtraPlugin
-        {
-            _standardEvasions.RemoveAll(ev => ev is T);
-        }
+    public void RemoveEvasion<T>() where T : PuppeteerExtraPlugin
+    {
+        _standardEvasions.RemoveAll(ev => ev is T);
+    }
+
+    public void RemoveEvasion(string name)
+    {
+        _standardEvasions.RemoveAll(ev => ev.Name == name);
     }
 }

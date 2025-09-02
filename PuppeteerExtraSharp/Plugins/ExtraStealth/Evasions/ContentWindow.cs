@@ -2,21 +2,15 @@
 using System.Threading.Tasks;
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
+namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
+
+public class ContentWindow() : PuppeteerExtraPlugin("Iframe.ContentWindow")
 {
-    public class ContentWindow : PuppeteerExtraPlugin
+    public override List<PluginRequirements> Requirements { get; } = [PluginRequirements.RunLast];
+
+    protected internal override Task OnPageCreatedAsync(IPage page)
     {
-        public ContentWindow() : base("Iframe.ContentWindow") { }
-
-        public override List<PluginRequirements> Requirements { get; set; } = new()
-        {
-            PluginRequirements.RunLast
-        };
-
-        public override Task OnPageCreated(IPage page)
-        {
-            var script = Utils.GetScript("ContentWindow.js");
-            return Utils.EvaluateOnNewPage(page, script);
-        }
+        var script = StealthUtils.GetScript("ContentWindow.js");
+        return StealthUtils.EvaluateOnNewPage(page, script);
     }
 }

@@ -1,26 +1,25 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Extra.Tests.Utils;
-using PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
+using PuppeteerExtraSharp.Plugins.ExtraStealth;
 using Xunit;
 
 namespace Extra.Tests.StealthPluginTests.EvasionsTests
 {
-    public class PluginEvasionTest: BrowserDefault
+    public class PluginEvasionTest : BrowserDefault
     {
-        [Fact]
         public async Task ShouldNotHaveModifications()
         {
-            var stealthPlugin = new PluginEvasion();
-            var page = await LaunchAndGetPage(stealthPlugin);
+            var stealthPlugin = new StealthPlugin();
+            var page = await LaunchAndGetPageAsync(stealthPlugin);
 
             await page.GoToAsync("https://google.com");
-            
-          
+
+
             var fingerPrint = await new FingerPrint().GetFingerPrint(page);
 
-            Assert.Equal(3, fingerPrint["plugins"].Count());
-            Assert.Equal(4, fingerPrint["mimeTypes"].Count());
+            Assert.Equal(3, fingerPrint.GetProperty("plugins").EnumerateArray().Count());
+            Assert.Equal(4, fingerPrint.GetProperty("mimeTypes").EnumerateArray().Count());
         }
     }
 }

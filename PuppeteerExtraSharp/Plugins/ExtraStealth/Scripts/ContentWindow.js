@@ -94,6 +94,6 @@
         // Let's go
         addIframeCreationSniffer()
     } catch (err) {
-       // console.warn(err)
+        // console.warn(err)
     }
 }

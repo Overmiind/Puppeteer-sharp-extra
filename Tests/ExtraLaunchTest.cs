@@ -1,6 +1,4 @@
-using System;
 using System.Net;
-using PuppeteerExtraSharp.Plugins.Recaptcha.Provider.AntiCaptcha;
 using Xunit;
 
 namespace Extra.Tests

@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
+using PuppeteerExtraSharp.Plugins.ExtraStealth;
 using Xunit;
 
 namespace Extra.Tests.StealthPluginTests.EvasionsTests
@@ -9,8 +9,8 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
         [Fact]
         public async Task ShouldWork()
         {
-            var plugin = new Vendor();
-            var page = await LaunchAndGetPage(plugin);
+            var plugin = new StealthPlugin();
+            var page = await LaunchAndGetPageAsync(plugin);
             await page.GoToAsync("https://google.com");
 
             var vendor = await page.EvaluateExpressionAsync<string>("navigator.vendor");

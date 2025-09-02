@@ -2,31 +2,20 @@
 using System.Threading.Tasks;
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
+namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
+
+public class Languages(StealthLanguagesOptions options = null) : PuppeteerExtraPlugin("stealth-language")
 {
-    public class Languages : PuppeteerExtraPlugin
+    public StealthLanguagesOptions Options { get; } = options ?? new StealthLanguagesOptions("en-US", "en");
+
+    protected internal override Task OnPageCreatedAsync(IPage page)
     {
-        public StealthLanguagesOptions Options { get; }
-
-        public Languages(StealthLanguagesOptions options = null) : base("stealth-language")
-        {
-            Options = options ?? new StealthLanguagesOptions("en-US", "en");
-        }
-
-        public override Task OnPageCreated(IPage page)
-        {
-            var script = Utils.GetScript("Language.js");
-            return Utils.EvaluateOnNewPage(page,script, Options.Languages);
-        }
+        var script = StealthUtils.GetScript("Language.js");
+        return StealthUtils.EvaluateOnNewPage(page, script, Options.Languages);
     }
+}
 
-    public class StealthLanguagesOptions : IPuppeteerExtraPluginOptions
-    {
-        public object[] Languages { get; }
-
-        public StealthLanguagesOptions(params string[] languages)
-        {
-            Languages = languages.Cast<object>().ToArray();
-        }
-    }
+public class StealthLanguagesOptions(params string[] languages) : IPuppeteerExtraPluginOptions
+{
+    public object[] Languages { get; } = languages.Cast<object>().ToArray();
 }

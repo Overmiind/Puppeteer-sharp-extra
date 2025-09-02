@@ -1,39 +1,40 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Extra.Tests.Utils;
-using Newtonsoft.Json.Linq;
+using PuppeteerExtraSharp.Plugins.ExtraStealth;
 using PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
 using Xunit;
 
 namespace Extra.Tests.StealthPluginTests.EvasionsTests
 {
-    public class LanguagesTest: BrowserDefault
+    public class LanguagesTest : BrowserDefault
     {
         [Fact]
         public async Task ShouldWork()
         {
             var plugin = new Languages();
-            var page = await LaunchAndGetPage(plugin);
+            var page = await LaunchAndGetPageAsync(plugin);
 
             await page.GoToAsync("https://google.com");
 
             var fingerPrint = await new FingerPrint().GetFingerPrint(page);
 
-            Assert.Contains("en-US", fingerPrint["languages"].Select(e => e.Value<string>()));
-        }  
-        
-        
+            Assert.Contains("en-US", fingerPrint.GetProperty("languages").EnumerateArray().Select(e => e.GetString()));
+        }
+
+
         [Fact]
         public async Task ShouldWorkWithCustomSettings()
         {
-            var plugin = new Languages(new StealthLanguagesOptions("fr-FR"));
-            var page = await LaunchAndGetPage(plugin);
+            var stealthPlugin = new StealthPlugin(new StealthLanguagesOptions("fr-FR", "bl-BL"));
+
+            var page = await LaunchAndGetPageAsync(stealthPlugin);
 
             await page.GoToAsync("https://google.com");
 
             var fingerPrint = await new FingerPrint().GetFingerPrint(page);
 
-            Assert.Contains("fr-FR", fingerPrint["languages"].Select(e => e.Value<string>()));
+            Assert.Contains("fr-FR", fingerPrint.GetProperty("languages").EnumerateArray().Select(e => e.GetString()));
         }
     }
 }

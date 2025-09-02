@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using PuppeteerExtraSharp;
 using PuppeteerExtraSharp.Plugins;
 using PuppeteerSharp;
@@ -14,9 +11,6 @@ namespace Extra.Tests
     public abstract class BrowserDefault : IDisposable
     {
         private readonly List<IBrowser> _launchedBrowsers = new List<IBrowser>();
-        protected BrowserDefault()
-        {
-        }
 
         protected async Task<IBrowser> LaunchAsync(LaunchOptions options = null)
         {
@@ -39,7 +33,7 @@ namespace Extra.Tests
             return browser;
         }
 
-        protected async Task<IPage> LaunchAndGetPage(PuppeteerExtraPlugin plugin = null)
+        protected async Task<IPage> LaunchAndGetPageAsync(PuppeteerExtraPlugin plugin = null)
         {
             IBrowser browser = null;
             if (plugin != null)
@@ -53,7 +47,7 @@ namespace Extra.Tests
         }
 
 
-        private async void DownloadChromeIfNotExists()
+        private async Task DownloadChromeIfNotExistsAsync()
         {
             if (File.Exists(Constants.PathToChrome))
                 return;
@@ -61,7 +55,7 @@ namespace Extra.Tests
             await new BrowserFetcher(new BrowserFetcherOptions()
             {
                 Path = Constants.PathToChrome
-            }).DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
+            }).DownloadAsync();
         }
 
         protected LaunchOptions CreateDefaultOptions()
