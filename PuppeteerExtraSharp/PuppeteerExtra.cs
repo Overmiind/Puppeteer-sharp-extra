@@ -6,125 +6,125 @@ using PuppeteerExtraSharp.Plugins;
 using PuppeteerSharp;
 
 
-namespace PuppeteerExtraSharp
+namespace PuppeteerExtraSharp;
+
+public class PuppeteerExtra
 {
-    public class PuppeteerExtra
+    private List<PuppeteerExtraPlugin> _plugins = [];
+
+    public PuppeteerExtra Use(PuppeteerExtraPlugin plugin)
     {
-        private List<PuppeteerExtraPlugin> _plugins = new List<PuppeteerExtraPlugin>();
+        _plugins.Add(plugin);
+        ResolveDependencies(plugin);
+        plugin.OnPluginRegisteredAsync();
+        return this;
+    }
 
-        public PuppeteerExtra Use(PuppeteerExtraPlugin plugin)
+    public Task<IBrowser> LaunchAsync()
+    {
+        return LaunchAsync(new LaunchOptions());
+    }
+
+    public async Task<IBrowser> LaunchAsync(LaunchOptions options)
+    {
+        _plugins.ForEach(e => e.BeforeLaunchAsync(options));
+        var browser = await Puppeteer.LaunchAsync(options);
+        _plugins.ForEach(e => e.AfterLaunchAsync(browser));
+        await OnStartAsync(new BrowserStartContext
         {
-            _plugins.Add(plugin);
-            ResolveDependencies(plugin);
-            plugin.OnPluginRegistered();
-            return this;
+            StartType = StartType.Launch,
+            IsHeadless = options.Headless
+        }, browser);
+        return browser;
+    }
+
+    public async Task<IBrowser> ConnectAsync(ConnectOptions options)
+    {
+        _plugins.ForEach(e => e.BeforeConnectAsync(options));
+        var browser = await Puppeteer.ConnectAsync(options);
+        _plugins.ForEach(e => e.AfterConnectAsync(browser));
+        await OnStartAsync(new BrowserStartContext
+        {
+            StartType = StartType.Connect
+        }, browser);
+        return browser;
+    }
+
+    public T GetPlugin<T>() where T : PuppeteerExtraPlugin
+    {
+        return (T)_plugins.FirstOrDefault(e => e.GetType() == typeof(T));
+    }
+
+    private async Task OnStartAsync(BrowserStartContext context, IBrowser browser)
+    {
+        OrderPlugins();
+        CheckPluginRequirements(context);
+        await RegisterAsync(browser);
+    }
+
+    private void ResolveDependencies(PuppeteerExtraPlugin plugin)
+    {
+        var dependencies = plugin.GetDependencies()?.ToList();
+        if (dependencies is null || !dependencies.Any())
+            return;
+
+        foreach (var puppeteerExtraPlugin in dependencies)
+        {
+            Use(puppeteerExtraPlugin);
+
+            var plugDependencies = puppeteerExtraPlugin.GetDependencies()?.ToList();
+
+            if (plugDependencies != null && plugDependencies.Any())
+                plugDependencies.ForEach(ResolveDependencies);
         }
+    }
 
-        public async Task<IBrowser> LaunchAsync(LaunchOptions options)
+    private void OrderPlugins()
+    {
+        _plugins = _plugins.OrderBy(e => e.Requirements?.Contains(PluginRequirements.RunLast)).ToList();
+    }
+
+    private void CheckPluginRequirements(BrowserStartContext context)
+    {
+        foreach (var puppeteerExtraPlugin in _plugins)
         {
-            _plugins.ForEach(e => e.BeforeLaunch(options));
-            var browser = await Puppeteer.LaunchAsync(options);
-            _plugins.ForEach(e => e.AfterLaunch(browser));
-            await OnStart(new BrowserStartContext()
-            {
-                StartType = StartType.Launch,
-                IsHeadless = options.Headless
-            }, browser);
-            return browser;
-        }
+            if (puppeteerExtraPlugin.Requirements is null)
+                continue;
 
-        public async Task<IBrowser> ConnectAsync(ConnectOptions options)
-        {
-            _plugins.ForEach(e => e.BeforeConnect(options));
-            var browser = await Puppeteer.ConnectAsync(options);
-            _plugins.ForEach(e => e.AfterConnect(browser));
-            await OnStart(new BrowserStartContext()
-            {
-                StartType = StartType.Connect
-            }, browser);
-            return browser;
-        }
-
-        public T GetPlugin<T>() where T : PuppeteerExtraPlugin
-        {
-            return (T) _plugins.FirstOrDefault(e => e.GetType() == typeof(T));
-        }
-
-        private async Task OnStart(BrowserStartContext context, IBrowser browser)
-        {
-            OrderPlugins();
-            CheckPluginRequirements(context);
-            await Register(browser);
-        }
-
-        private void ResolveDependencies(PuppeteerExtraPlugin plugin)
-        {
-            var dependencies = plugin.GetDependencies()?.ToList();
-            if (dependencies is null || !dependencies.Any())
-                return;
-
-            foreach (var puppeteerExtraPlugin in dependencies)
-            {
-                Use(puppeteerExtraPlugin);
-
-                var plugDependencies = puppeteerExtraPlugin.GetDependencies()?.ToList();
-
-                if (plugDependencies != null && plugDependencies.Any())
-                    plugDependencies.ForEach(ResolveDependencies);
-            }
-        }
-
-        private void OrderPlugins()
-        {
-            _plugins = _plugins.OrderBy(e => e.Requirements?.Contains(PluginRequirements.RunLast)).ToList();
-        }
-
-        private void CheckPluginRequirements(BrowserStartContext context)
-        {
-            foreach (var puppeteerExtraPlugin in _plugins)
-            {
-                if (puppeteerExtraPlugin.Requirements is null)
-                    continue;
-                foreach (var requirement in puppeteerExtraPlugin.Requirements)
+            foreach (var requirement in puppeteerExtraPlugin.Requirements)
+                switch (context.StartType)
                 {
-                    switch (context.StartType)
-                    {
-                        case StartType.Launch when requirement == PluginRequirements.HeadFul && context.IsHeadless:
-                            throw new NotSupportedException(
-                                $"Plugin - {puppeteerExtraPlugin.Name} is not supported in headless mode");
-                        case StartType.Connect when requirement == PluginRequirements.Launch:
-                            throw new NotSupportedException(
-                                $"Plugin - {puppeteerExtraPlugin.Name} doesn't support connect");
-                    }
+                    case StartType.Launch when requirement == PluginRequirements.HeadFul && context.IsHeadless:
+                        throw new NotSupportedException(
+                            $"Plugin - {puppeteerExtraPlugin.Name} is not supported in headless mode");
+                    case StartType.Connect when requirement == PluginRequirements.Launch:
+                        throw new NotSupportedException(
+                            $"Plugin - {puppeteerExtraPlugin.Name} doesn't support connect");
                 }
-            }
         }
+    }
 
-        private async Task Register(IBrowser browser)
+    private async Task RegisterAsync(IBrowser browser)
+    {
+        var pages = await browser.PagesAsync();
+
+        browser.TargetCreated += async (_, args) =>
         {
-            var pages = await browser.PagesAsync();
-
-            browser.TargetCreated += async (sender, args) =>
+            _plugins.ForEach(e => e.OnTargetCreatedAsync(args.Target));
+            if (args.Target.Type == TargetType.Page)
             {
-                _plugins.ForEach(e => e.OnTargetCreated(args.Target));
-                if (args.Target.Type == TargetType.Page)
-                {
-                    var page = await args.Target.PageAsync();
-                    _plugins.ForEach(async e => await e.OnPageCreated(page));
-                }
-            };
-
-            foreach (var puppeteerExtraPlugin in _plugins)
-            {
-                browser.TargetChanged += (sender, args) => puppeteerExtraPlugin.OnTargetChanged(args.Target);
-                browser.TargetDestroyed += (sender, args) => puppeteerExtraPlugin.OnTargetDestroyed(args.Target);
-                browser.Disconnected += (sender, args) => puppeteerExtraPlugin.OnDisconnected();
-                browser.Closed += (sender, args) => puppeteerExtraPlugin.OnClose();
-                foreach (var page in pages)
-                {
-                    await puppeteerExtraPlugin.OnPageCreated(page);
-                }
+                var page = await args.Target.PageAsync();
+                _plugins.ForEach(async void (e) => await e.OnPageCreatedAsync(page));
             }
+        };
+
+        foreach (var puppeteerExtraPlugin in _plugins)
+        {
+            browser.TargetChanged += (sender, args) => puppeteerExtraPlugin.OnTargetChangedAsync(args.Target);
+            browser.TargetDestroyed += (sender, args) => puppeteerExtraPlugin.OnTargetDestroyedAsync(args.Target);
+            browser.Disconnected += (sender, args) => puppeteerExtraPlugin.OnDisconnectedAsync();
+            browser.Closed += (sender, args) => puppeteerExtraPlugin.OnCloseAsync();
+            foreach (var page in pages) await puppeteerExtraPlugin.OnPageCreatedAsync(page);
         }
     }
 }

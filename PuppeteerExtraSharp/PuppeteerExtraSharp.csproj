@@ -1,60 +1,70 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <Version>1.3.1</Version>
-    <RepositoryUrl>https://github.com/Overmiind/Puppeteer-sharp-extra</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageTags>puppeteer-extra recaptcha browser-automation browser-extension browser puppeteer netcore netcore31 stealth-client browser-testing c#</PackageTags>
-    <PackageProjectUrl>https://github.com/Overmiind/Puppeteer-sharp-extra</PackageProjectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <UserSecretsId>945328fb-3e7e-4518-99f8-ec578bf688b1</UserSecretsId>
-  </PropertyGroup>
+    <PropertyGroup>
+        <LangVersion>latest</LangVersion>
+        <Version>3.0.0</Version>
+        <RepositoryUrl>https://github.com/Overmiind/Puppeteer-sharp-extra</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>puppeteer-extra recaptcha browser-automation browser-extension browser puppeteer netcore netcore80 stealth-client browser-testing c# twocaptcha anticaptcha block-resources adblock dotnet undetectable-browser</PackageTags>
+        <PackageProjectUrl>https://github.com/Overmiind/Puppeteer-sharp-extra</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <UserSecretsId>945328fb-3e7e-4518-99f8-ec578bf688b1</UserSecretsId>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <TargetFramework>net8.0</TargetFramework>
+        <Title>PuppeteerExtraSharp</Title>
+        <Authors>Overmind</Authors>
+        <PackageReleaseNotes>
+            - Upgraded to PuppeteerSharp 20.0. This may require code updates due to upstream API changes.
+            - Block Resources plugin fully rewritten with a clearer rule builder and more predictable behavior.
+            - reCAPTCHA plugin fully rewritten with improved detection and support for v2, v3, and invisible challenges, plus new configuration options.
+            - Stealth plugin stability and evasion fixes aligned with recent Chromium changes.
+            - Dropped dependency on RestSharp; HTTP calls now use built-in primitives.
+            - General code cleanup, modernization, and consistency improvements. </PackageReleaseNotes>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Plugins\ExtraStealth\Scripts\ChromeApp.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\Codec.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\Frame.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\HardwareConcurrency.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\Language.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\LoadTimes.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\Outdimensions.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\Permissions.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\Plugin.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\Runtime.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\SCI.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\Stacktrace.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\Utils.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\Vendor.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\WebDriver.js" />
-    <None Remove="Plugins\ExtraStealth\Scripts\WebGL.js" />
-    <None Remove="Plugins\Recaptcha\Scripts\EnterRecaptchaCallBackScript.js" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="Plugins\ExtraStealth\Scripts\ChromeApp.js"/>
+        <None Remove="Plugins\ExtraStealth\Scripts\Codec.js"/>
+        <None Remove="Plugins\ExtraStealth\Scripts\Frame.js"/>
+        <None Remove="Plugins\ExtraStealth\Scripts\HardwareConcurrency.js"/>
+        <None Remove="Plugins\ExtraStealth\Scripts\Language.js"/>
+        <None Remove="Plugins\ExtraStealth\Scripts\LoadTimes.js"/>
+        <None Remove="Plugins\ExtraStealth\Scripts\Outdimensions.js"/>
+        <None Remove="Plugins\ExtraStealth\Scripts\Permissions.js"/>
+        <None Remove="Plugins\ExtraStealth\Scripts\Plugin.js"/>
+        <None Remove="Plugins\ExtraStealth\Scripts\Runtime.js"/>
+        <None Remove="Plugins\ExtraStealth\Scripts\SCI.js"/>
+        <None Remove="Plugins\ExtraStealth\Scripts\Stacktrace.js"/>
+        <None Remove="Plugins\ExtraStealth\Scripts\Utils.js"/>
+        <None Remove="Plugins\ExtraStealth\Scripts\Vendor.js"/>
+        <None Remove="Plugins\ExtraStealth\Scripts\WebDriver.js"/>
+        <None Remove="Plugins\ExtraStealth\Scripts\WebGL.js"/>
+        <None Remove="Plugins\Recaptcha\Scripts\EnterRecaptchaCallBackScript.js"/>
+        <None Include="README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\ChromeApp.js" />
-    <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Codec.js" />
-    <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\HardwareConcurrency.js" />
-    <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Language.js" />
-    <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\LoadTimes.js" />
-    <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Outdimensions.js" />
-    <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Permissions.js" />
-    <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Plugin.js" />
-    <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Runtime.js" />
-    <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\SCI.js" />
-    <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Stacktrace.js" />
-    <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Utils.js" />
-    <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Vendor.js" />
-    <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\WebDriver.js" />
-    <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\WebGL.js" />
-    <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\ContentWindow.js" />
-    <EmbeddedResource Include="Plugins\Recaptcha\Scripts\EnterRecaptchaCallBackScript.js" />
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\ChromeApp.js"/>
+        <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Codec.js"/>
+        <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\HardwareConcurrency.js"/>
+        <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Language.js"/>
+        <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\LoadTimes.js"/>
+        <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Outdimensions.js"/>
+        <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Permissions.js"/>
+        <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Plugin.js"/>
+        <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Runtime.js"/>
+        <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\SCI.js"/>
+        <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Stacktrace.js"/>
+        <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Utils.js"/>
+        <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\Vendor.js"/>
+        <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\WebDriver.js"/>
+        <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\WebGL.js"/>
+        <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\ContentWindow.js"/>
+        <EmbeddedResource Include="Plugins\Recaptcha\Scripts\RecaptchaScript.js" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="PuppeteerSharp" Version="9.0.2" />
-    <PackageReference Include="RestSharp" Version="112.0.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="PuppeteerSharp" Version="20.2.2"/>
+    </ItemGroup>
 
 </Project>

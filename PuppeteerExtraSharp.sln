@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PuppeteerExtraSharp", "PuppeteerExtraSharp\PuppeteerExtraSharp.csproj", "{B2221B32-DFAE-4F87-B0EC-EE4922B81F64}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Extra.Tests", "Tests\Extra.Tests.csproj", "{FB432A25-A844-4C78-9194-E46D806B46E5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B2221B32-DFAE-4F87-B0EC-EE4922B81F64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2221B32-DFAE-4F87-B0EC-EE4922B81F64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2221B32-DFAE-4F87-B0EC-EE4922B81F64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2221B32-DFAE-4F87-B0EC-EE4922B81F64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB432A25-A844-4C78-9194-E46D806B46E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB432A25-A844-4C78-9194-E46D806B46E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB432A25-A844-4C78-9194-E46D806B46E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB432A25-A844-4C78-9194-E46D806B46E5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B538872E-C265-455D-8846-C1846F2507D7}
+	EndGlobalSection
+EndGlobal

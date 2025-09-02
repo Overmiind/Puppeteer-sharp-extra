@@ -1,6 +1,6 @@
 (vendor, renderer) => {
     const getParameterProxyHandler = {
-        apply: function(target, ctx, args) {
+        apply: function (target, ctx, args) {
             const param = (args || [])[0];
             // UNMASKED_VENDOR_WEBGL
             if (param === 37445) {

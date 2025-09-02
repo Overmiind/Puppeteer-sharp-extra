@@ -145,7 +145,7 @@
      * @see https://developer.chrome.com/apps/runtime#method-connect
      */
     const connectHandler = {
-        apply: function (target, ctx, args) {
+        apply: function(target, ctx, args) {
             const [extensionId, connectInfo] = args || []
 
             // Define custom errors

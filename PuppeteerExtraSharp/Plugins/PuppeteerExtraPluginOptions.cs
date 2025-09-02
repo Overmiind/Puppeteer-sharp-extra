@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace PuppeteerExtraSharp.Plugins;
 
-namespace PuppeteerExtraSharp.Plugins
+public interface IPuppeteerExtraPluginOptions
 {
-    public interface IPuppeteerExtraPluginOptions
-    {
-    }
 }

@@ -20,7 +20,7 @@
         return
     }
 
-    const { timing } = window.performance
+    const {timing} = window.performance
 
     window.chrome.csi = function () {
         return {

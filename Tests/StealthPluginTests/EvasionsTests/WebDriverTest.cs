@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using PuppeteerExtraSharp.Plugins.ExtraStealth;
 using PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
 using Xunit;
 
@@ -9,8 +10,8 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
         [Fact]
         public async Task ShouldWork()
         {
-            var plugin = new WebDriver();
-            var page = await LaunchAndGetPage(plugin);
+            var plugin = new StealthPlugin();
+            var page = await LaunchAndGetPageAsync(plugin);
             await page.GoToAsync("https://google.com");
 
             var driver = await page.EvaluateExpressionAsync<bool>("navigator.webdriver");
@@ -21,7 +22,7 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
         public async Task WontKillOtherMethods()
         {
             var plugin = new WebDriver();
-            var page = await LaunchAndGetPage(plugin);
+            var page = await LaunchAndGetPageAsync(plugin);
             await page.GoToAsync("https://google.com");
      
             var data = await page.EvaluateExpressionAsync<bool>("navigator.javaEnabled()");

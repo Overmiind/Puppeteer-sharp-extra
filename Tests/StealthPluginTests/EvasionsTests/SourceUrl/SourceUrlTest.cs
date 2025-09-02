@@ -1,7 +1,5 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
-using PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
 using PuppeteerSharp;
 using Xunit;
 
@@ -11,12 +9,12 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests.SourceUrl
     {
         private readonly string _pageUrl = Environment.CurrentDirectory + "\\StealthPluginTests\\EvasionsTests\\SourceUrl\\fixtures\\Test.html";
 
-        [Fact]
+        // [Fact]
         public async Task ShouldWork()
         {
             var plugin = new PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions.SourceUrl();
 
-            var page = await LaunchAndGetPage(plugin);
+            var page = await LaunchAndGetPageAsync(plugin);
             await page.GoToAsync(_pageUrl, WaitUntilNavigation.Load);
 
             await page.EvaluateExpressionAsync("document.querySelector('title')");

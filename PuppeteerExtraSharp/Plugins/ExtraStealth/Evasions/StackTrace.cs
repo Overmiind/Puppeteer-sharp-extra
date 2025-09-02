@@ -1,16 +1,13 @@
 ﻿using System.Threading.Tasks;
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
-{
-    public class StackTrace : PuppeteerExtraPlugin
-    {
-        public StackTrace() : base("stealth-stackTrace") { }
+namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
 
-        public override async Task OnPageCreated(IPage page)
-        {
-            var script = Utils.GetScript("Stacktrace.js");
-            await page.EvaluateFunctionOnNewDocumentAsync(script);
-        }
+public class StackTrace() : PuppeteerExtraPlugin("stealth-stackTrace")
+{
+    protected internal override async Task OnPageCreatedAsync(IPage page)
+    {
+        var script = StealthUtils.GetScript("Stacktrace.js");
+        await page.EvaluateFunctionOnNewDocumentAsync(script);
     }
 }

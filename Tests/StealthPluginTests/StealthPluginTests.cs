@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using PuppeteerExtraSharp.Plugins.ExtraStealth;
 using Xunit;
 
@@ -13,7 +10,7 @@ namespace Extra.Tests.StealthPluginTests
         public async Task ShouldBeNotDetected()
         {
             var plugin = new StealthPlugin();
-            var page = await LaunchAndGetPage(plugin);
+            var page = await LaunchAndGetPageAsync(plugin);
             await page.GoToAsync("https://google.com");
 
             var webdriver = await page.EvaluateExpressionAsync<bool>("navigator.webdriver");

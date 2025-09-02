@@ -3,32 +3,28 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharp.Plugins.AnonymizeUa
+namespace PuppeteerExtraSharp.Plugins.AnonymizeUa;
+
+public class AnonymizeUaPlugin() : PuppeteerExtraPlugin("anonymize-ua")
 {
-    public class AnonymizeUaPlugin: PuppeteerExtraPlugin
+    private Func<string, string> _customAction;
+
+    public void CustomizeUa(Func<string, string> uaAction)
     {
-        public AnonymizeUaPlugin(): base("anonymize-ua")
-        {
-        }
+        _customAction = uaAction;
+    }
 
-        private Func<string, string> _customAction;
-        public void CustomizeUa(Func<string, string> uaAction)
-        {
-            _customAction = uaAction;
-        }
+    protected internal override async Task OnPageCreatedAsync(IPage page)
+    {
+        var ua = await page.Browser.GetUserAgentAsync();
+        ua = ua.Replace("HeadlessChrome", "Chrome");
 
-        public override async Task OnPageCreated(IPage page)
-        {
-            var ua = await page.Browser.GetUserAgentAsync();
-            ua = ua.Replace("HeadlessChrome", "Chrome");
+        var regex = new Regex(@"/\(([^)]+)\)/");
+        ua = regex.Replace(ua, "(Windows NT 10.0; Win64; x64)");
 
-            var regex = new Regex(@"/\(([^)]+)\)/");
-            ua = regex.Replace(ua, "(Windows NT 10.0; Win64; x64)");
+        if (_customAction != null)
+            ua = _customAction(ua);
 
-            if (_customAction != null)
-                ua = _customAction(ua);
-
-            await page.SetUserAgentAsync(ua);
-        }
+        await page.SetUserAgentAsync(ua);
     }
 }

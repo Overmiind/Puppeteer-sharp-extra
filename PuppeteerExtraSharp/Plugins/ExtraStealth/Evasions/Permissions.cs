@@ -1,16 +1,13 @@
 ﻿using System.Threading.Tasks;
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions
+namespace PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
+
+public class Permissions() : PuppeteerExtraPlugin("stealth-permissions")
 {
-    public class Permissions: PuppeteerExtraPlugin
+    protected internal override Task OnPageCreatedAsync(IPage page)
     {
-        public Permissions() : base("stealth-permissions") { }
- 
-        public override Task OnPageCreated(IPage page)
-        {
-            var script = Utils.GetScript("Permissions.js");
-            return Utils.EvaluateOnNewPage(page, script);
-        }
+        var script = StealthUtils.GetScript("Permissions.js");
+        return StealthUtils.EvaluateOnNewPage(page, script);
     }
 }

@@ -2,61 +2,64 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PuppeteerExtraSharp.Plugins.BlockResources.Rules;
 using PuppeteerSharp;
 
-namespace PuppeteerExtraSharp.Plugins.BlockResources
+namespace PuppeteerExtraSharp.Plugins.BlockResources;
+
+public class BlockResourcesPlugin(
+    RequestAbortErrorCode? abortErrorCode = null,
+    int? priority = null) : PuppeteerExtraPlugin("block-resources")
 {
-    public class BlockResourcesPlugin : PuppeteerExtraPlugin
+    private readonly List<IBlockRule> _blockRules = [];
+
+    public IBlockRule AddRule(Action<ResourcesBlockBuilder> builderAction)
     {
-        public readonly List<BlockRule> BlockResources = new List<BlockRule>();
+        var builder = new ResourcesBlockBuilder();
+        builderAction(builder);
 
-        public BlockResourcesPlugin(IEnumerable<ResourceType> blockResources = null): base("block-resources")
+        var rule = builder.Build();
+        _blockRules.Add(rule);
+        return rule;
+    }
+
+    public IBlockRule AddRule(IBlockRule rule)
+    {
+        _blockRules.Add(rule);
+        return rule;
+    }
+
+    public BlockResourcesPlugin RemoveRule(IBlockRule rule)
+    {
+        _blockRules.Remove(rule);
+        return this;
+    }
+
+
+    protected internal override async Task OnPageCreatedAsync(IPage page)
+    {
+        await page.SetRequestInterceptionAsync(true);
+        page.AddRequestInterceptor(OnPageRequestAsync);
+    }
+
+
+    private async Task OnPageRequestAsync(IRequest req)
+    {
+        if (_blockRules.Any(rule => rule.ShouldBlock(req)))
         {
-            if (blockResources != null)
-                AddRule(builder => builder.BlockedResources(blockResources.ToArray()));
+            await req.AbortAsync(abortErrorCode ?? RequestAbortErrorCode.BlockedByClient, priority);
+            return;
         }
 
-        public BlockRule AddRule(Action<ResourcesBlockBuilder> builderAction)
-        {
-            var builder = new ResourcesBlockBuilder();
-            builderAction(builder);
-
-            var rule = builder.Build();
-            this.BlockResources.Add(builder.Build());
-
-            return rule;
-        }
-
-        public BlockResourcesPlugin RemoveRule(BlockRule rule)
-        {
-            BlockResources.Remove(rule);
-            return this;
-        }
+        await req.ContinueAsync();
+    }
 
 
-        public override async Task OnPageCreated(IPage page)
-        {
-            await page.SetRequestInterceptionAsync(true);
-            page.Request += (sender, args) => OnPageRequest(page, args);
-
-        }
-
-
-        private async void OnPageRequest(IPage sender, RequestEventArgs e)
-        {
-            if (BlockResources.Any(rule => rule.IsRequestBlocked(sender, e.Request)))
-            {
-                await e.Request.AbortAsync();
-                return;
-            }
-
-            await e.Request.ContinueAsync();
-        }
-
-
-        public override void BeforeLaunch(LaunchOptions options)
-        {
-            options.Args = options.Args.Append("--site-per-process").Append("--disable-features=IsolateOrigins").ToArray();
-        }
+    protected internal override Task BeforeLaunchAsync(LaunchOptions options)
+    {
+        options.Args = options.Args.Append("--site-per-process").Append("--disable-features=IsolateOrigins")
+            .ToArray();
+        
+        return Task.CompletedTask;
     }
 }

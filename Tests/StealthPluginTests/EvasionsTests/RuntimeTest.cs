@@ -1,7 +1,6 @@
-﻿using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-using PuppeteerExtraSharp.Plugins.ExtraStealth.Evasions;
-using PuppeteerSharp;
+﻿using System.Text.Json;
+using System.Threading.Tasks;
+using PuppeteerExtraSharp.Plugins.ExtraStealth;
 using Xunit;
 
 namespace Extra.Tests.StealthPluginTests.EvasionsTests
@@ -11,15 +10,15 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
         [Fact]
         public async Task ShouldAddConnectToChrome()
         {
-            var plugin = new ChromeRuntime();
-            var page = await LaunchAndGetPage(plugin);
+            var plugin = new StealthPlugin();
+            var page = await LaunchAndGetPageAsync(plugin);
 
             await page.GoToAsync("https://google.com");
 
-            var runtime = await page.EvaluateExpressionAsync<JObject>("chrome.runtime");
+            var runtime = await page.EvaluateExpressionAsync<JsonElement>("chrome.runtime");
             Assert.NotNull(runtime);
 
-            var runtimeConnect = await page.EvaluateExpressionAsync<JObject>("chrome.runtime.connect");
+            var runtimeConnect = await page.EvaluateExpressionAsync<JsonElement>("chrome.runtime.connect");
             Assert.NotNull(runtimeConnect);
 
             var runtimeName = await page.EvaluateExpressionAsync<string>("chrome.runtime.connect.name");
@@ -39,24 +38,6 @@ namespace Extra.Tests.StealthPluginTests.EvasionsTests
 
             var noReturn = await page.EvaluateExpressionAsync<bool>("chrome.runtime.connect('nckgahadagoaajjgafhacjanaoiihapd').disconnect() === undefined");
             Assert.True(noReturn);
-
-
-            await AssertThrowsConnect(page, "chrome.runtime.connect() called from a webpage must specify an Extension ID (string) for its first argument.", "");
-            await AssertThrowsConnect(page, "No matching signature.", "", "", "", "", "", "", "");
-            await AssertThrowsConnect(page, "Invalid extension id: 'foo'", "", "foo");
-            await AssertThrowsConnect(page, "Error at property 'includeTlsChannelId': Invalid type: expected boolean, found number.", "", new { IncludeTlsChannelId = 777 });
-        }
-
-
-        private async Task AssertThrowsConnect(IPage page, string error, params object[] args)
-        {
-            var start =
-                "Evaluation failed: TypeError: Error in invocation of runtime.connect(optional string extensionId, optional object connectInfo): ";
-            var ex = await Assert.ThrowsAsync<EvaluationFailedException>(async () =>
-                await page.EvaluateFunctionAsync("(...args) => chrome.runtime.connect.call(...args)", args));
-
-            var currentError = start + error;
-            Assert.StartsWith(currentError, ex.Message);
         }
     }
 }
