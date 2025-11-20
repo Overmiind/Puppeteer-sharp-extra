@@ -14,7 +14,7 @@ namespace Extra.Tests
 
         protected async Task<IBrowser> LaunchAsync(LaunchOptions options = null)
         {
-            //DownloadChromeIfNotExists();
+            // await DownloadChromeIfNotExistsAsync();
             options ??= CreateDefaultOptions();
 
             var browser = await Puppeteer.LaunchAsync(options);
@@ -25,7 +25,7 @@ namespace Extra.Tests
         protected async Task<IBrowser> LaunchWithPluginAsync(PuppeteerExtraPlugin plugin, LaunchOptions options = null)
         {
             var extra = new PuppeteerExtra().Use(plugin);
-            //DownloadChromeIfNotExists();
+            // await DownloadChromeIfNotExistsAsync();
             options ??= CreateDefaultOptions();
 
             var browser = await extra.LaunchAsync(options);
