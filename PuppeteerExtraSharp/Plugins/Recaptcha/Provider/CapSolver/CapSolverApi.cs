@@ -16,7 +16,7 @@ internal class CapSolverApi(string userKey, CaptchaProviderOptions options)
         var json = new Dictionary<string, object>
         {
             ["clientKey"] = userKey,
-            ["task"] = new Dictionary<string, string>
+            ["task"] = new Dictionary<string, object>
             {
                 ["websiteKey"] = request.SiteKey,
                 ["websiteURL"] = request.PageUrl,
@@ -26,7 +26,9 @@ internal class CapSolverApi(string userKey, CaptchaProviderOptions options)
                     CaptchaVersion.V3 => "ReCaptchaV3TaskProxyless",
                     CaptchaVersion.HCaptcha => throw new NotSupportedException("HCaptcha is not supported"),
                     _ => throw new ArgumentOutOfRangeException()
-                }
+                },
+                ["isInvisible"] = request.IsInvisible,
+                ["recaptchaDataSValue"] = request.DataS,
             }
         };
 
