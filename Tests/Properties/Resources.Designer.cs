@@ -71,6 +71,15 @@ namespace Extra.Tests.Properties {
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
+        internal static string CapSolverKey {
+            get {
+                return ResourceManager.GetString("CapSolverKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
         internal static string ProxyIp {
             get {
                 return ResourceManager.GetString("ProxyIp", resourceCulture);

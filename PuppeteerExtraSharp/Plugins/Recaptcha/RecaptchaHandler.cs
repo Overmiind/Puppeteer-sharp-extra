@@ -29,7 +29,8 @@ public class RecaptchaHandler(IRecaptchaProvider provider, RecaptchaSolveOptions
                 options: new WaitForFunctionOptions
                 {
                     PollingInterval = 500,
-                    Timeout = timeout.Milliseconds,
+                    // Use TotalMilliseconds to avoid truncating to 0-999 ms component
+                    Timeout = (int)timeout.TotalMilliseconds,
                 });
             return true;
         }
@@ -42,7 +43,12 @@ public class RecaptchaHandler(IRecaptchaProvider provider, RecaptchaSolveOptions
     public async Task<CaptchaResponse> FindCaptchasAsync(IPage page)
     {
         await LoadScriptAsync(page, _options);
-
+        // Double-check presence of helper and attempt one more load if missing (e.g., after navigation)
+        var hasScript = await page.EvaluateExpressionAsync<bool>("typeof window.reScript !== 'undefined'");
+        if (!hasScript)
+        {
+            await LoadScriptAsync(page, _options);
+        }
         var captchaResponse = await page.EvaluateExpressionAsync<CaptchaResponse>("window.reScript.findRecaptchas()");
         return captchaResponse;
     }
@@ -79,6 +85,8 @@ public class RecaptchaHandler(IRecaptchaProvider provider, RecaptchaSolveOptions
     public async Task<EnterCaptchaSolutionsResult> EnterCaptchaSolutionsAsync(IPage page,
         ICollection<CaptchaSolution> solutions)
     {
+        // Ensure helper is available before invoking it
+        await LoadScriptAsync(page, _options);
         var solutionArgs = solutions.Select(s => new
         {
             id = s.Id,
@@ -97,10 +105,26 @@ public class RecaptchaHandler(IRecaptchaProvider provider, RecaptchaSolveOptions
         return result;
     }
 
-    private Task LoadScriptAsync(IPage page, params object[] args)
+    private async Task LoadScriptAsync(IPage page, params object[] args)
     {
         var recaptchaScriptName = GetType().Namespace + ".Scripts.RecaptchaScript.js";
         var script = ResourcesReader.ReadFile(recaptchaScriptName);
-        return page.EnsureEvaluateFunctionAsync(recaptchaScriptName, script, args);
+        await page.EnsureEvaluateFunctionAsync(recaptchaScriptName, script, args);
+
+        // Wait until the global helper is available to avoid race conditions
+        try
+        {
+            await page.WaitForFunctionAsync(
+                "() => typeof window.reScript !== 'undefined'",
+                new WaitForFunctionOptions
+                {
+                    PollingInterval = 100,
+                    Timeout = 5000,
+                });
+        }
+        catch
+        {
+            // If this fails, caller will attempt to reload. No throw here to stay resilient.
+        }
     }
 }

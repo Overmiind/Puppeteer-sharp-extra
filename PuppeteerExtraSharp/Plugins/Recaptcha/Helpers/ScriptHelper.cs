@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using PuppeteerSharp;
 
@@ -13,7 +14,31 @@ public static class ScriptHelper
         string script,
         params object[] args)
     {
-        if (Scripts.ContainsKey(page) && Scripts[page].Contains(scriptName)) return;
+        // If we think we've already injected this script for the page, double‑check
+        // that the expected globals still exist (the JS context is reset on navigation).
+        if (Scripts.ContainsKey(page) && Scripts[page].Contains(scriptName))
+        {
+            // Heuristic: our Recaptcha script defines window.reScript
+            if (scriptName.EndsWith("RecaptchaScript.js", StringComparison.OrdinalIgnoreCase))
+            {
+                try
+                {
+                    var hasGlobal = await page.EvaluateExpressionAsync<bool>("typeof window.reScript !== 'undefined'");
+                    if (!hasGlobal)
+                    {
+                        // Context was lost; re-inject the function
+                        await page.EvaluateFunctionAsync(script, args);
+                    }
+                }
+                catch
+                {
+                    // If evaluation fails (e.g., context not ready), fall back to injecting
+                    await page.EvaluateFunctionAsync(script, args);
+                }
+            }
+
+            return;
+        }
 
         if (!Scripts.ContainsKey(page))
         {
