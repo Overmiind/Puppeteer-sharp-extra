@@ -9,7 +9,7 @@ Solve reCAPTCHA challenges programmatically with a single call. Supports reCAPTC
     - reCAPTCHA v2 Invisible (button/callback-triggered)
     - reCAPTCHA v3 (score-based)
 - Options for viewport-only solving, inactive/lazy widgets, debugging, timeouts, and v3 score threshold.
-- Pluggable provider design. Currently supported: [2Captcha](https://2captcha.com/?from=1937404).
+- Pluggable provider design. Currently supported: [2Captcha](https://2captcha.com/?from=1937404), [CapSolver](https://www.capsolver.com/).
 
 ## Quick start
 
