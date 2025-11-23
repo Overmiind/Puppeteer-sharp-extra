@@ -18,6 +18,18 @@ public class CaptchaSolverOptions
         {
             CaptchaVendor.Google, new GoogleOptions()
         },
+        // hCaptcha support temporarily disabled.
+        //
+        // Reason:
+        // hCaptcha has adopted an extremely aggressive anti–captcha-solver policy,
+        // sending cease-and-desist letters to major solving services and breaking most
+        // automated solving methods. As a result, the majority of public solvers have
+        // shut down or become unreliable.
+        //
+        // Detection still works, but solving is intentionally not attempted.
+        //
+        // We will reconsider hCaptcha support only if a reliable and compliant solution
+        // becomes available in the future.
         {
             CaptchaVendor.HCaptcha, null
         },

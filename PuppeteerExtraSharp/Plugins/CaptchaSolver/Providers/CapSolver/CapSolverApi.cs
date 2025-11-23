@@ -20,6 +20,9 @@ internal class CapSolverApi(string userKey, CaptchaProviderOptions options)
             case CaptchaVendor.Google:
                 json = GetGoogleJson(request);
                 break;
+            case CaptchaVendor.HCaptcha:
+                json = GetHCaptchaJson(request);
+                break;
         }
 
         if (json == null) throw new NotSupportedException($"Vendor [{request.Vendor}] is not supported");
@@ -74,6 +77,20 @@ internal class CapSolverApi(string userKey, CaptchaProviderOptions options)
         };
     }
 
+    private Dictionary<string, object> GetHCaptchaJson(GetCaptchaSolutionRequest request)
+    {
+        return new Dictionary<string, object>
+        {
+            ["clientKey"] = userKey,
+            ["task"] = new Dictionary<string, object>
+            {
+                ["websiteKey"] = request.SiteKey,
+                ["websiteURL"] = request.PageUrl,
+                ["type"] = "HCaptchaTaskProxyless",
+                ["isInvisible"] = request.IsInvisible
+            }
+        };
+    }
 
     private void ThrowErrorIfBadStatus(int errorId, string? errorDescription = null)
     {
