@@ -60,6 +60,7 @@
         <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\WebGL.js"/>
         <EmbeddedResource Include="Plugins\ExtraStealth\Scripts\ContentWindow.js"/>
         <EmbeddedResource Include="Plugins\Recaptcha\Scripts\RecaptchaScript.js" />
+        <EmbeddedResource Include="Plugins\CaptchaSolver\Vendors\**\*.js" />
     </ItemGroup>
 
     <ItemGroup>
