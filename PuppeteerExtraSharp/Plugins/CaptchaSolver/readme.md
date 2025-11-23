@@ -8,26 +8,30 @@ Solve CAPTCHA challenges programmatically with a single call. Supports reCAPTCHA
     - reCAPTCHA v2 (checkbox)
     - reCAPTCHA v2 Invisible (button/callback-triggered)
     - reCAPTCHA v3 (score-based)
+    - Cloudflare Turnstile
+    - GeeTest
 - Options for viewport-only solving, inactive/lazy widgets, debugging, timeouts, and v3 score threshold.
-- Pluggable provider design. Currently supported: [2Captcha](https://2captcha.com/?from=1937404).
+- Pluggable provider design. Currently supported: 
+    - [2Captcha](https://2captcha.com/).
+    - [CapSolver](https://www.capsolver.com/).
 
 ## Quick start
 
 ```csharp
-// Initialize the 2Captcha provider with your API key
+// Initialize the provider with your API key
 var twoCaptchaProvider = new TwoCaptcha("<YOUR_2CAPTCHA_API_KEY>");
-var recaptchaPlugin = new RecaptchaPlugin(twoCaptchaProvider);
+var captchaPlugin = new CaptchaSolverPlugin(twoCaptchaProvider);
 
 var puppeteerExtra = new PuppeteerExtra();
 
-// Launch browser with the reCAPTCHA plugin enabled
-var browser = await puppeteerExtra.Use(recaptchaPlugin).LaunchAsync();
+// Launch browser with the CAPTCHA plugin enabled
+var browser = await puppeteerExtra.Use(captchaPlugin).LaunchAsync();
 
 var page = await browser.NewPageAsync();
 await page.GoToAsync("https://www.google.com/recaptcha/api2/demo");
 
 // Single call to detect the widget, request a solution via the API, and inject the token
-await recaptchaPlugin.SolveCaptchaAsync(page);
+await captchaPlugin.SolveCaptchaAsync(page);
 
 // Submit the form on the page
 var submitButton = await page.QuerySelectorAsync("#recaptcha-demo-submit");
@@ -48,19 +52,19 @@ var twoCaptchaProviderOptions = new CaptchaProviderOptions
 var twoCaptchaProvider = new TwoCaptcha("<YOUR_2CAPTCHA_API_KEY>", twoCaptchaProviderOptions);
 
 // Configure how the plugin detects and solves challenges
-var pluginOptions = new RecaptchaSolveOptions
+var pluginOptions = new CaptchaSolverOptions
 {
-    ThrowOnError = true,                        // Throw exceptions on failure (otherwise return a soft failure)
-    SolveInViewportOnly = true,                 // Only solve widgets visible in the viewport
-    SolveScoreBased = true,                    // Enable handling of reCAPTCHA v3 (score-based)
-    SolveInactiveChallenges = true,            // Attempt to solve lazy/inactive widgets
-    CaptchaWaitTimeout = TimeSpan.FromSeconds(10), // Wait time for a widget/challenge to appear
-    Debug = false,                             // Verbose debug logging
-    MinV3RecaptchaScore = 0.3,                 // Minimum acceptable v3 score
-    SolveInvisibleChallenges = true,           // Handle invisible/triggered reCAPTCHA
+    ThrowOnError = true,                            // Throw exceptions on failure (otherwise return a soft failure)
+    SolveInViewportOnly = true,                     // Only solve widgets visible in the viewport
+    SolveScoreBased = true,                         // Enable handling of reCAPTCHA v3 (score-based)
+    SolveInactiveChallenges = true,                 // Attempt to solve lazy/inactive widgets
+    SolveInvisibleChallenges = true,                // Handle invisible/triggered reCAPTCHA
+    CaptchaWaitTimeout = TimeSpan.FromSeconds(10),  // Wait time for a widget/challenge to appear
+    Debug = false,                                  // Verbose debug logging
+    MinScore = 0.3,                                 // Minimum acceptable v3 score
 };
 
-var recaptchaPlugin = new RecaptchaPlugin(twoCaptchaProvider, pluginOptions);
+var captchaPlugin = new CaptchaSolverPlugin(twoCaptchaProvider, pluginOptions);
 ```
 
 #### Notes
