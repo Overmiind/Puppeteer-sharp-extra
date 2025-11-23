@@ -16,7 +16,7 @@ public class CaptchaSolverOptions
     private static readonly Dictionary<CaptchaVendor, ICaptchaSolveOptions?> DefaultEnabledVendors = new Dictionary<CaptchaVendor, ICaptchaSolveOptions?>
     {
         {
-            CaptchaVendor.Google, new RecaptchaSolveOptions()
+            CaptchaVendor.Google, new GoogleOptions()
         },
         {
             CaptchaVendor.HCaptcha, null

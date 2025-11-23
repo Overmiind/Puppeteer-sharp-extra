@@ -59,6 +59,7 @@ public class GoogleHandler(ICaptchaSolverProvider provider, CaptchaSolverOptions
                 SiteKey = captcha.Sitekey,
                 Version = captcha.CaptchaType == CaptchaType.score ? CaptchaVersion.RecaptchaV3 : CaptchaVersion.RecaptchaV2,
                 MinScore = options.MinScore,
+                Vendor = CaptchaVendor.Google
             });
 
             solutions.Add(new CaptchaSolution
