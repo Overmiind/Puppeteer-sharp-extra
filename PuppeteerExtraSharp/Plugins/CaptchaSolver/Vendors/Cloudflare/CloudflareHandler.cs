@@ -42,7 +42,7 @@ public class CloudflareHandler(ICaptchaSolverProvider provider, CaptchaSolverOpt
 
     public async Task<CaptchaResponse> FindCaptchasAsync(IPage page)
     {
-        return await page.EvaluateExpressionAsync<CaptchaResponse>("window.cfScript.findTurnstiles()");
+        return await page.EvaluateExpressionAsync<CaptchaResponse>("window.cfScript.findCaptchas()");
     }
 
     public async Task<ICollection<CaptchaSolution>> SolveCaptchasAsync(IPage page, ICollection<Captcha> captchas)
@@ -82,7 +82,7 @@ public class CloudflareHandler(ICaptchaSolverProvider provider, CaptchaSolverOpt
         });
 
         var result = await page.EvaluateFunctionAsync<EnterCaptchaSolutionsResult>(
-            @"(solutions) => {return window.cfScript.enterTurnstileSolutions(solutions)}",
+            @"(solutions) => {return window.cfScript.enterCaptchaSolutions(solutions)}",
             solutionArgs);
 
         if (result is null)

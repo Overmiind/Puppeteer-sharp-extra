@@ -128,7 +128,7 @@
         }
 
         /** Public: find captchas */
-        async findTurnstiles()
+        async findCaptchas()
         {
             const result = {captchas: [], error: null};
 
@@ -156,7 +156,7 @@
         }
 
         /** Public: enter captcha solutions */
-        async enterTurnstileSolutions(solutions)
+        async enterCaptchaSolutions(solutions)
         {
             const result = {solved: [], error: null};
 
