@@ -9,11 +9,11 @@ using PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers;
 using PuppeteerSharp;
 namespace PuppeteerExtraSharp.Plugins.CaptchaSolver.Vendors.Cloudflare;
 
-public class CloudflareHandler(ICaptchaSolverProvider provider, CaptchaSolverOptions options) : ICaptchaVendorHandler
+public class CloudflareHandler(ICaptchaSolverProvider provider, CaptchaSolverOptions options, IPage page) : ICaptchaVendorHandler
 {
     public CaptchaVendor Vendor => CaptchaVendor.Cloudflare;
 
-    public async Task<bool> WaitForCaptchasAsync(IPage page, TimeSpan timeout)
+    public async Task<bool> WaitForCaptchasAsync(TimeSpan timeout)
     {
         var handle = await page.QuerySelectorAsync("script[src*=\"challenges.cloudflare.com/turnstile\"], script[src*=\"/turnstile/v0/api.js\"]");
 
@@ -40,12 +40,12 @@ public class CloudflareHandler(ICaptchaSolverProvider provider, CaptchaSolverOpt
         }
     }
 
-    public async Task<CaptchaResponse> FindCaptchasAsync(IPage page)
+    public async Task<CaptchaResponse> FindCaptchasAsync()
     {
         return await page.EvaluateExpressionAsync<CaptchaResponse>("window.cfScript.findCaptchas()");
     }
 
-    public async Task<ICollection<CaptchaSolution>> SolveCaptchasAsync(IPage page, ICollection<Captcha> captchas)
+    public async Task<ICollection<CaptchaSolution>> SolveCaptchasAsync(ICollection<Captcha> captchas)
     {
         var solutions = new List<CaptchaSolution>();
         foreach (var captcha in captchas)
@@ -73,7 +73,7 @@ public class CloudflareHandler(ICaptchaSolverProvider provider, CaptchaSolverOpt
         return solutions;
     }
 
-    public async Task<EnterCaptchaSolutionsResult> EnterCaptchaSolutionsAsync(IPage page, ICollection<CaptchaSolution> solutions)
+    public async Task<EnterCaptchaSolutionsResult> EnterCaptchaSolutionsAsync(ICollection<CaptchaSolution> solutions)
     {
         var solutionArgs = solutions.Select(s => new
         {
@@ -91,5 +91,10 @@ public class CloudflareHandler(ICaptchaSolverProvider provider, CaptchaSolverOpt
         }
 
         return result;
+    }
+    
+    public void ProcessResponseAsync(object send, ResponseCreatedEventArgs e)
+    {
+
     }
 }

@@ -9,8 +9,9 @@ namespace PuppeteerExtraSharp.Plugins.CaptchaSolver.Interfaces;
 public interface ICaptchaVendorHandler
 {
     CaptchaVendor Vendor { get; }
-    public Task<bool> WaitForCaptchasAsync(IPage page, TimeSpan timeout);
-    public Task<CaptchaResponse> FindCaptchasAsync(IPage page);
-    public Task<ICollection<CaptchaSolution>> SolveCaptchasAsync(IPage page, ICollection<Captcha> captchas);
-    public Task<EnterCaptchaSolutionsResult> EnterCaptchaSolutionsAsync(IPage page, ICollection<CaptchaSolution> solutions);
+    public Task<bool> WaitForCaptchasAsync(TimeSpan timeout);
+    public Task<CaptchaResponse> FindCaptchasAsync();
+    public Task<ICollection<CaptchaSolution>> SolveCaptchasAsync(ICollection<Captcha> captchas);
+    public Task<EnterCaptchaSolutionsResult> EnterCaptchaSolutionsAsync(ICollection<CaptchaSolution> solutions);
+    void ProcessResponseAsync(object? send, ResponseCreatedEventArgs e);
 }

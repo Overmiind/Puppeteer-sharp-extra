@@ -9,11 +9,11 @@ using PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers;
 using PuppeteerSharp;
 namespace PuppeteerExtraSharp.Plugins.CaptchaSolver.Vendors.HCaptcha;
 
-public class HCaptchaHandler(ICaptchaSolverProvider provider, CaptchaSolverOptions options) : ICaptchaVendorHandler
+public class HCaptchaHandler(ICaptchaSolverProvider provider, CaptchaSolverOptions options, IPage page) : ICaptchaVendorHandler
 {
     public CaptchaVendor Vendor => CaptchaVendor.HCaptcha;
 
-    public async Task<bool> WaitForCaptchasAsync(IPage page, TimeSpan timeout)
+    public async Task<bool> WaitForCaptchasAsync(TimeSpan timeout)
     {
         var handle = await page.QuerySelectorAsync("script[src*=\"js.hcaptcha.com/1/api.js\"], script[src*=\"hcaptcha.com/1/api.js\"]");
         var hasRecaptchaScriptTag = handle != null;
@@ -40,12 +40,12 @@ public class HCaptchaHandler(ICaptchaSolverProvider provider, CaptchaSolverOptio
         }
     }
 
-    public async Task<CaptchaResponse> FindCaptchasAsync(IPage page)
+    public async Task<CaptchaResponse> FindCaptchasAsync()
     {
         return await page.EvaluateExpressionAsync<CaptchaResponse>("window.hcaptchaScript.findRecaptchas()");
     }
 
-    public async Task<ICollection<CaptchaSolution>> SolveCaptchasAsync(IPage page, ICollection<Captcha> captchas)
+    public async Task<ICollection<CaptchaSolution>> SolveCaptchasAsync(ICollection<Captcha> captchas)
     {
         throw new NotSupportedException(
             $"hCaptcha solving support temporarily disabled.");
@@ -75,7 +75,7 @@ public class HCaptchaHandler(ICaptchaSolverProvider provider, CaptchaSolverOptio
         return solutions;
     }
 
-    public async Task<EnterCaptchaSolutionsResult> EnterCaptchaSolutionsAsync(IPage page, ICollection<CaptchaSolution> solutions)
+    public async Task<EnterCaptchaSolutionsResult> EnterCaptchaSolutionsAsync(ICollection<CaptchaSolution> solutions)
     {
         var solutionArgs = solutions.Select(s => new
         {
@@ -93,5 +93,10 @@ public class HCaptchaHandler(ICaptchaSolverProvider provider, CaptchaSolverOptio
         }
 
         return result;
+    }
+    
+    public void ProcessResponseAsync(object send, ResponseCreatedEventArgs e)
+    {
+
     }
 }

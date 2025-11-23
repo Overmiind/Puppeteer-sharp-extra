@@ -21,11 +21,11 @@ public class CaptchaSolverHandler(ICaptchaSolverProvider provider, CaptchaSolver
     {
         foreach (var (vendor, options) in _options.EnabledVendors)
         {
-            var handler = Helpers.Helpers.CreateHandler(vendor, provider, _options);
+            var handler = Helpers.Helpers.CreateHandler(vendor, provider, _options, page);
             if (handler is null)
                 continue;
 
-            var handled = await handler.WaitForCaptchasAsync(page, timeout);
+            var handled = await handler.WaitForCaptchasAsync(timeout);
             if (handled)
             {
                 // Support only one active handler at a time
@@ -48,19 +48,18 @@ public class CaptchaSolverHandler(ICaptchaSolverProvider provider, CaptchaSolver
         }
 
         await LoadScriptAsync(page, _options);
-        return await _activeHandler.FindCaptchasAsync(page);
+        return await _activeHandler.FindCaptchasAsync();
     }
 
     public async Task<ICollection<CaptchaSolution>> SolveCaptchasAsync(IPage page, ICollection<Captcha> captchas)
     {
         await LoadScriptAsync(page, _options);
-        return await _activeHandler.SolveCaptchasAsync(page, captchas);
+        return await _activeHandler.SolveCaptchasAsync(captchas);
     }
 
-    public async Task<EnterCaptchaSolutionsResult> EnterCaptchaSolutionsAsync(IPage page,
-        ICollection<CaptchaSolution> solutions)
+    public async Task<EnterCaptchaSolutionsResult> EnterCaptchaSolutionsAsync(IPage page, ICollection<CaptchaSolution> solutions)
     {
-        return await _activeHandler.EnterCaptchaSolutionsAsync(page, solutions);
+        return await _activeHandler.EnterCaptchaSolutionsAsync(solutions);
     }
 
     private Task LoadScriptAsync(IPage page, params object[] args)

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
+using PuppeteerExtraSharp.Plugins.CaptchaSolver.Enums;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Interfaces;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Models;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers;
@@ -9,6 +11,7 @@ namespace PuppeteerExtraSharp.Plugins.CaptchaSolver;
 
 public class CaptchaSolverPlugin : PuppeteerExtraPlugin
 {
+    private readonly ICaptchaSolverProvider _provider;
     private readonly ICaptchaSolverHandler _handler;
     private readonly CaptchaSolverOptions _defaultOptions;
 
@@ -19,6 +22,7 @@ public class CaptchaSolverPlugin : PuppeteerExtraPlugin
     {
         _defaultOptions = options ?? new CaptchaSolverOptions();
         _handler = handler ?? new CaptchaSolverHandler(provider, _defaultOptions);
+        _provider = provider;
     }
 
     public async Task<EnterCaptchaSolutionsResult> SolveCaptchaAsync(IPage page,
@@ -70,6 +74,14 @@ public class CaptchaSolverPlugin : PuppeteerExtraPlugin
     protected internal override async Task OnPageCreatedAsync(IPage page)
     {
         await page.SetBypassCSPAsync(true);
+        foreach (var vendor in _defaultOptions.EnabledVendors.Keys)
+        {
+            var handler = Helpers.Helpers.CreateHandler(vendor, _provider, _defaultOptions, page);
+            if (handler is null)
+                continue;
+
+            page.Response += handler.ProcessResponseAsync;
+        }
     }
 
     private (ICollection<Captcha> unfiltered, ICollection<FilteredCaptcha> filtered) FilterCaptchas(ICollection<Captcha> captchas, CaptchaSolverOptions options)

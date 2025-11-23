@@ -27,7 +27,7 @@ public static class Helpers
         Scripts[page].Add(scriptName);
     }
 
-    public static ICaptchaVendorHandler? CreateHandler(CaptchaVendor vendor, ICaptchaSolverProvider provider, CaptchaSolverOptions options)
+    public static ICaptchaVendorHandler? CreateHandler(CaptchaVendor vendor, ICaptchaSolverProvider provider, CaptchaSolverOptions options, IPage page)
     {
         var assemmbly = typeof(CaptchaSolverPlugin).Assembly;
         var typeName = $"PuppeteerExtraSharp.Plugins.CaptchaSolver.Vendors.{vendor}.{vendor}Handler";
@@ -40,7 +40,7 @@ public static class Helpers
 
         return (ICaptchaVendorHandler?)Activator.CreateInstance(handlerType, new object[]
         {
-            provider, options
+            provider, options, page
         });
     }
 }
