@@ -14,24 +14,15 @@ internal class CapSolverApi(string userKey, CaptchaProviderOptions options)
 
     public async Task<CapSolverCreateTaskResponse> CreateTaskAsync(GetCaptchaSolutionRequest request)
     {
-        var json = new Dictionary<string, object>
+        Dictionary<string, object>? json = null;
+        switch (request.Vendor)
         {
-            ["clientKey"] = userKey,
-            ["task"] = new Dictionary<string, object>
-            {
-                ["websiteKey"] = request.SiteKey,
-                ["websiteURL"] = request.PageUrl,
-                ["type"] = request.Version switch
-                {
-                    CaptchaVersion.RecaptchaV2 => "ReCaptchaV2TaskProxyless",
-                    CaptchaVersion.RecaptchaV3 => "ReCaptchaV3TaskProxyless",
-                    CaptchaVersion.HCaptcha => throw new NotSupportedException("HCaptcha is not yet supported"),
-                    _ => throw new ArgumentOutOfRangeException()
-                },
-                ["isInvisible"] = request.IsInvisible,
-                ["recaptchaDataSValue"] = request.DataS,
-            }
-        };
+            case CaptchaVendor.Google:
+                json = GetGoogleJson(request);
+                break;
+        }
+
+        if (json == null) throw new NotSupportedException($"Vendor [{request.Vendor}] is not supported");
 
         var cancellationToken = GetCancellationToken();
         var result = await _client.PostAsync<CapSolverCreateTaskResponse>("createTask", json, cancellationToken);
@@ -60,6 +51,29 @@ internal class CapSolverApi(string userKey, CaptchaProviderOptions options)
         ThrowErrorIfBadStatus(result.Data.ErrorId, result.Data.ErrorDescription);
         return result.Data;
     }
+
+    private Dictionary<string, object> GetGoogleJson(GetCaptchaSolutionRequest request)
+    {
+        return new Dictionary<string, object>
+        {
+            ["clientKey"] = userKey,
+            ["task"] = new Dictionary<string, object>
+            {
+                ["websiteKey"] = request.SiteKey,
+                ["websiteURL"] = request.PageUrl,
+                ["type"] = request.Version switch
+                {
+                    CaptchaVersion.RecaptchaV2 => "ReCaptchaV2TaskProxyless",
+                    CaptchaVersion.RecaptchaV3 => "ReCaptchaV3TaskProxyless",
+                    CaptchaVersion.HCaptcha => throw new NotSupportedException("HCaptcha is not yet supported"),
+                    _ => throw new ArgumentOutOfRangeException()
+                },
+                ["isInvisible"] = request.IsInvisible,
+                ["recaptchaDataSValue"] = request.DataS,
+            }
+        };
+    }
+
 
     private void ThrowErrorIfBadStatus(int errorId, string? errorDescription = null)
     {
