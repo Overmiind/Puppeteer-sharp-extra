@@ -27,6 +27,6 @@ public class CapSolver : ICaptchaSolverProvider
             throw new ArgumentNullException(nameof(result.Solution), "Captcha solution can't be null");
         }
 
-        return result.Solution.GRecaptchaResponse;
+        return result.Solution.GRecaptchaResponse ?? result.Solution.Token;
     }
 }

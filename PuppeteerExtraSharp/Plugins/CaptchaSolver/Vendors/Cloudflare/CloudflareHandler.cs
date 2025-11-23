@@ -7,22 +7,22 @@ using PuppeteerExtraSharp.Plugins.CaptchaSolver.Interfaces;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Models;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers;
 using PuppeteerSharp;
-namespace PuppeteerExtraSharp.Plugins.CaptchaSolver.Vendors.HCaptcha;
+namespace PuppeteerExtraSharp.Plugins.CaptchaSolver.Vendors.Cloudflare;
 
-public class HCaptchaHandler(ICaptchaSolverProvider provider, CaptchaSolverOptions options) : ICaptchaVendorHandler
+public class CloudflareHandler(ICaptchaSolverProvider provider, CaptchaSolverOptions options) : ICaptchaVendorHandler
 {
-    public CaptchaVendor Vendor => CaptchaVendor.HCaptcha;
+    public CaptchaVendor Vendor => CaptchaVendor.Cloudflare;
 
     public async Task<bool> WaitForCaptchasAsync(IPage page, TimeSpan timeout)
     {
-        var handle = await page.QuerySelectorAsync("script[src*=\"js.hcaptcha.com/1/api.js\"], script[src*=\"hcaptcha.com/1/api.js\"]");
+        var handle = await page.QuerySelectorAsync("script[src*=\"challenges.cloudflare.com/turnstile\"], script[src*=\"/turnstile/v0/api.js\"]");
+
         var hasRecaptchaScriptTag = handle != null;
 
         if (!hasRecaptchaScriptTag) return false;
 
-        const string selector =
-            "iframe[src*='assets.hcaptcha.com/captcha/v1/'], " +
-            "iframe[src*='newassets.hcaptcha.com/captcha/v1/']";
+        const string selector = "div.cf-turnstile[data-sitekey], input[name='cf-turnstile-response']";
+
         try
         {
             var exist = await page.WaitForSelectorAsync(
@@ -42,13 +42,11 @@ public class HCaptchaHandler(ICaptchaSolverProvider provider, CaptchaSolverOptio
 
     public async Task<CaptchaResponse> FindCaptchasAsync(IPage page)
     {
-        return await page.EvaluateExpressionAsync<CaptchaResponse>("window.hcaptchaScript.findRecaptchas()");
+        return await page.EvaluateExpressionAsync<CaptchaResponse>("window.cfScript.findTurnstiles()");
     }
 
     public async Task<ICollection<CaptchaSolution>> SolveCaptchasAsync(IPage page, ICollection<Captcha> captchas)
     {
-        throw new NotSupportedException(
-            $"hCaptcha solving support temporarily disabled.");
         var solutions = new List<CaptchaSolution>();
         foreach (var captcha in captchas)
         {
@@ -62,7 +60,7 @@ public class HCaptchaHandler(ICaptchaSolverProvider provider, CaptchaSolverOptio
                 SiteKey = captcha.Sitekey,
                 Version = captcha.CaptchaType == CaptchaType.score ? CaptchaVersion.RecaptchaV3 : CaptchaVersion.RecaptchaV2,
                 MinScore = options.MinScore,
-                Vendor = CaptchaVendor.HCaptcha
+                Vendor = CaptchaVendor.Cloudflare
             });
 
             solutions.Add(new CaptchaSolution
@@ -84,7 +82,7 @@ public class HCaptchaHandler(ICaptchaSolverProvider provider, CaptchaSolverOptio
         });
 
         var result = await page.EvaluateFunctionAsync<EnterCaptchaSolutionsResult>(
-            @"(solutions) => {return window.hcaptchaScript.enterRecaptchaSolutions(solutions)}",
+            @"(solutions) => {return window.cfScript.enterTurnstileSolutions(solutions)}",
             solutionArgs);
 
         if (result is null)
