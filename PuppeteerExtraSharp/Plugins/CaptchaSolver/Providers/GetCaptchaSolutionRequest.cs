@@ -12,4 +12,7 @@ public class GetCaptchaSolutionRequest
     public bool? IsEnterprise { get; set; }
     public bool IsInvisible { get; set; }
     public double MinScore { get; set; }
+    public string? Gt { get; set; }
+    public string? Challenge { get; set; }
+    public string? CaptchaId { get; set; }
 }

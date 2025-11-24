@@ -19,6 +19,10 @@ public class Captcha
     public bool HasActiveChallengePopup { get; set; }
     public bool HasChallengeFrame { get; set; }
 
+    public string? Gt { get; set; }
+    public string? Challenge { get; set; }
+    public string? CaptchaId { get; set; }
+
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public CaptchaType CaptchaType { get; set; }
 

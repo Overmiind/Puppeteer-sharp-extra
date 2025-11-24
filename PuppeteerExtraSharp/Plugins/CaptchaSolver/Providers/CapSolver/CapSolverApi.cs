@@ -26,6 +26,9 @@ internal class CapSolverApi(string userKey, CaptchaProviderOptions options)
             case CaptchaVendor.Cloudflare:
                 json = GetCloudflareTurnstileJson(request);
                 break;
+            case CaptchaVendor.GeeTest:
+                json = GetGeeTestJson(request);
+                break;
         }
 
         if (json == null) throw new NotSupportedException($"Vendor [{request.Vendor}] is not supported");
@@ -91,6 +94,21 @@ internal class CapSolverApi(string userKey, CaptchaProviderOptions options)
                 ["websiteURL"] = request.PageUrl,
                 ["type"] = "HCaptchaTaskProxyless",
                 ["isInvisible"] = request.IsInvisible
+            }
+        };
+    }
+
+    private Dictionary<string, object> GetGeeTestJson(GetCaptchaSolutionRequest request)
+    {
+        return new Dictionary<string, object>
+        {
+            ["clientKey"] = userKey,
+            ["task"] = new Dictionary<string, object>
+            {
+                ["websiteURL"] = request.PageUrl,
+                ["type"] = "GeeTestTaskProxyLess",
+                ["gt"] = request.Gt,
+                ["challenge"] = request.Challenge
             }
         };
     }
