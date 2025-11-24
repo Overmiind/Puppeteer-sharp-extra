@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Interfaces;
 namespace PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers.CapSolver;
@@ -11,7 +12,7 @@ public class CapSolver : ICaptchaSolverProvider
     public CapSolver(string key, CaptchaProviderOptions options = null)
     {
         _options = options ?? new CaptchaProviderOptions();
-        _api = new CapSolverApi(key, _options); 
+        _api = new CapSolverApi(key, _options);
     }
 
     public async Task<string> GetSolutionAsync(GetCaptchaSolutionRequest request)
@@ -22,11 +23,11 @@ public class CapSolver : ICaptchaSolverProvider
 
         var result = await _api.GetSolution(task.TaskId);
 
-        if (result.Solution == null)
+        if (result.Solution.ValueKind is JsonValueKind.Undefined)
         {
             throw new ArgumentNullException(nameof(result.Solution), "Captcha solution can't be null");
         }
 
-        return result.Solution.GRecaptchaResponse ?? result.Solution.Token;
+        return result.Solution.ToString();
     }
 }

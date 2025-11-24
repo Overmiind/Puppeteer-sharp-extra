@@ -9,7 +9,7 @@ namespace PuppeteerExtraSharp.Plugins.CaptchaSolver.Models;
 
 public class CaptchaSolverOptions
 {
-    private static readonly TimeSpan DefaultWaitTimeout = TimeSpan.FromSeconds(10);
+    private static readonly TimeSpan DefaultWaitTimeout = TimeSpan.FromSeconds(5);
     private const double DefaultMinScore = 0.5;
     private double _minScore = DefaultMinScore;
 
@@ -38,6 +38,9 @@ public class CaptchaSolverOptions
         },
         {
             CaptchaVendor.Cloudflare, null
+        },
+        {
+            CaptchaVendor.GeeTest, null
         }
     };
 

@@ -52,7 +52,7 @@ public class HCaptchaHandler(ICaptchaSolverProvider provider, CaptchaSolverOptio
         var solutions = new List<CaptchaSolution>();
         foreach (var captcha in captchas)
         {
-            var solution = await provider.GetSolutionAsync(new GetCaptchaSolutionRequest
+            var payload = await provider.GetSolutionAsync(new GetCaptchaSolutionRequest
             {
                 Action = captcha.Action,
                 DataS = captcha.S,
@@ -68,7 +68,8 @@ public class HCaptchaHandler(ICaptchaSolverProvider provider, CaptchaSolverOptio
             solutions.Add(new CaptchaSolution
             {
                 Id = captcha.Id,
-                Text = solution,
+                Vendor = "hcaptcha",
+                Payload = payload,
             });
         }
 
@@ -77,15 +78,9 @@ public class HCaptchaHandler(ICaptchaSolverProvider provider, CaptchaSolverOptio
 
     public async Task<EnterCaptchaSolutionsResult> EnterCaptchaSolutionsAsync(ICollection<CaptchaSolution> solutions)
     {
-        var solutionArgs = solutions.Select(s => new
-        {
-            id = s.Id,
-            text = s.Text,
-        });
-
         var result = await page.EvaluateFunctionAsync<EnterCaptchaSolutionsResult>(
             @"(solutions) => {return window.hcaptchaScript.enterRecaptchaSolutions(solutions)}",
-            solutionArgs);
+            solutions);
 
         if (result is null)
         {
@@ -94,7 +89,7 @@ public class HCaptchaHandler(ICaptchaSolverProvider provider, CaptchaSolverOptio
 
         return result;
     }
-    
+
     public void ProcessResponseAsync(object send, ResponseCreatedEventArgs e)
     {
 

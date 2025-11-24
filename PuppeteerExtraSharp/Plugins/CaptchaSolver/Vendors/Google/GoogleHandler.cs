@@ -49,7 +49,7 @@ public class GoogleHandler(ICaptchaSolverProvider provider, CaptchaSolverOptions
         var solutions = new List<CaptchaSolution>();
         foreach (var captcha in captchas)
         {
-            var solution = await provider.GetSolutionAsync(new GetCaptchaSolutionRequest
+            var payload = await provider.GetSolutionAsync(new GetCaptchaSolutionRequest
             {
                 Action = captcha.Action,
                 DataS = captcha.S,
@@ -65,7 +65,8 @@ public class GoogleHandler(ICaptchaSolverProvider provider, CaptchaSolverOptions
             solutions.Add(new CaptchaSolution
             {
                 Id = captcha.Id,
-                Text = solution,
+                Vendor = "google",
+                Payload = payload,
             });
         }
 
@@ -74,15 +75,9 @@ public class GoogleHandler(ICaptchaSolverProvider provider, CaptchaSolverOptions
 
     public async Task<EnterCaptchaSolutionsResult> EnterCaptchaSolutionsAsync(ICollection<CaptchaSolution> solutions)
     {
-        var solutionArgs = solutions.Select(s => new
-        {
-            id = s.Id,
-            text = s.Text,
-        });
-
         var result = await page.EvaluateFunctionAsync<EnterCaptchaSolutionsResult>(
             @"(solutions) => {return window.reScript.enterRecaptchaSolutions(solutions)}",
-            solutionArgs);
+            solutions);
 
         if (result is null)
         {

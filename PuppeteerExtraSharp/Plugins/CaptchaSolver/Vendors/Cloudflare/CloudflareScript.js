@@ -163,22 +163,54 @@
             try {
                 await this._waitUntilDocumentReady();
 
-                if (!Array.isArray(solutions) || !solutions.length) {
-                    result.error = "No solutions provided";
+                const effectiveSolutions = Array.isArray(solutions) ? solutions : [];
+                this.log('enterCaptchaSolutions (cloudlfare)', {
+                    solutionNum: effectiveSolutions.length
+                });
+
+                if (!effectiveSolutions.length) {
+                    result.error = 'No solutions provided';
                     return result;
                 }
 
-                result.solved = solutions
-                    .filter((s) => !!s.text)
-                    .map((solution) => {
-                        const widget = document.querySelector(
-                            `[data-sitekey="${solution.id}"]`
-                        );
+                result.solved = effectiveSolutions.map((solution) => {
+                    try {
+                        const payload = typeof solution.payload === 'string' ? JSON.parse(solution.payload) : null;
+                        const vendor = solution.vendor;
+
+                        if (vendor !== 'cloudflare') {
+                            return {
+                                vendor: 'cloudflare',
+                                id: solution && solution.id ? solution.id : undefined,
+                                responseElement: false,
+                                responseCallback: false,
+                                isSolved: false,
+                                solvedAt: new Date().toISOString(),
+                                error: 'Not a cloudflare solution'
+                            };
+                        }
+
+                        if (!solution || !solution.id) {
+                            return {
+                                vendor: 'cloudflare',
+                                id: undefined,
+                                responseElement: false,
+                                responseCallback: false,
+                                isSolved: false,
+                                solvedAt: new Date().toISOString(),
+                                error: 'Invalid solution payload (missing id)'
+                            };
+                        }
+                        
+                        const widget = document.querySelector(`[data-sitekey="${solution.id}"]`);
                         if (!widget) {
                             return {
                                 vendor: "cloudflare",
-                                id: solution.id,
+                                id: solution && solution.id ? solution.id : undefined,
+                                responseElement: false,
+                                responseCallback: false,
                                 isSolved: false,
+                                solvedAt: new Date().toISOString(),
                                 error: "Widget not found"
                             };
                         }
@@ -189,7 +221,7 @@
                             document.querySelector("input[name='cf-turnstile-response']");
 
                         if (input) {
-                            input.value = solution.text;
+                            input.value = payload.token;
                             input.dispatchEvent(
                                 new Event("input", {bubbles: true})
                             );
@@ -219,12 +251,23 @@
                             isSolved: true,
                             solvedAt: new Date().toISOString(),
                         };
-                    });
+                    } catch (e) {
+                        return {
+                            vendor: 'cloudflare',
+                            id: solution && solution.id ? solution.id : undefined,
+                            responseElement: false,
+                            responseCallback: false,
+                            isSolved: false,
+                            solvedAt: new Date().toISOString(),
+                            error: String(e)
+                        };
+                    }
+                });
             } catch (e) {
-                result.error = e;
+                result.error = String(e);
+                this.log('enterCaptchaSolutions (cloudflare) - ERROR', String(e));
             }
 
-            this.log("enterTurnstileSolutions result", result);
             return result;
         }
     }

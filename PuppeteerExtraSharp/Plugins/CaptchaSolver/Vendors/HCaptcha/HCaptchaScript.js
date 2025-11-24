@@ -147,7 +147,7 @@
         }
 
         /** Detects both checkbox and invisible hcaptcha */
-        async findRecaptchas()
+        async findCaptchas()
         {
             const result = {captchas: [], error: null};
 
@@ -157,7 +157,7 @@
                 const checkboxIframes = this._findRegularCheckboxes();
                 const invisibleIframes = this._findInvisibleChallenges();
 
-                this.log('findRecaptchas', {
+                this.log('findCaptchas', {
                     checkbox: checkboxIframes.length,
                     invisible: invisibleIframes.length
                 });
@@ -182,14 +182,14 @@
                 );
             } catch (err) {
                 result.error = String(err);
-                this.log('findRecaptchas ERROR', result.error);
+                this.log('findCaptchas ERROR', result.error);
             }
 
             return result;
         }
 
         /** Solve hcaptcha via postMessage protocol */
-        async enterRecaptchaSolutions(solutions)
+        async enterCaptchaSolutions(solutions)
         {
             const result = {
                 solved: [],
@@ -199,10 +199,10 @@
             try {
                 await this._waitUntilDocumentReady();
 
-                const effectiveSolutions =
-                    Array.isArray(solutions) && solutions.length
-                        ? solutions
-                        : (this.data && this.data.solutions) || [];
+                const effectiveSolutions = Array.isArray(solutions) ? solutions : [];
+                this.log('enterCaptchaSolutions (hcaptcha)', {
+                    solutionNum: effectiveSolutions.length
+                });
 
                 if (!effectiveSolutions.length) {
                     result.error = 'No solutions provided';
@@ -211,30 +211,37 @@
 
                 result.solved = effectiveSolutions.map(solution => {
                     try {
-                        if (
-                            !solution ||
-                            !solution.id ||
-                            !solution.text ||
-                            solution.vendor !== 'hcaptcha' ||
-                            solution.hasSolution !== true
-                        ) {
+                        const payload = typeof solution.payload === 'string' ? JSON.parse(solution.payload) : null;
+                        const vendor = solution.vendor;
+
+                        if (vendor !== 'hcaptcha') {
                             return {
                                 vendor: 'hcaptcha',
-                                id: solution?.id,
+                                id: solution && solution.id ? solution.id : undefined,
+                                responseElement: false,
+                                responseCallback: false,
                                 isSolved: false,
                                 solvedAt: new Date().toISOString(),
-                                error: 'Invalid hcaptcha solution'
+                                error: 'Not a hcaptcha solution'
+                            };
+                        }
+
+                        if (!solution || !solution.id) {
+                            return {
+                                vendor: 'hcaptcha',
+                                id: undefined,
+                                responseElement: false,
+                                responseCallback: false,
+                                isSolved: false,
+                                solvedAt: new Date().toISOString(),
+                                error: 'Invalid solution payload (missing id)'
                             };
                         }
 
                         // Try to find a visible iframe to mark as solved
                         const solvedIframe =
-                            document.querySelector(
-                                `iframe[data-hcaptcha-widget-id="${solution.id}"]`
-                            ) ||
-                            document.querySelector(
-                                `iframe[src*="${solution.id}"]`
-                            ) ||
+                            document.querySelector(`iframe[data-hcaptcha-widget-id="${solution.id}"]`) ||
+                            document.querySelector(`iframe[src*="${solution.id}"]`) ||
                             null;
 
                         // Send the solution to hcaptcha
@@ -247,7 +254,7 @@
                                     contents: {
                                         event: 'challenge-passed',
                                         expiration: 120,
-                                        response: solution.text
+                                        response: payload.text
                                     }
                                 }),
                                 '*'
@@ -276,7 +283,7 @@
                     } catch (err) {
                         return {
                             vendor: 'hcaptcha',
-                            id: solution?.id,
+                            id: solution && solution.id ? solution.id : undefined,
                             isSolved: false,
                             solvedAt: new Date().toISOString(),
                             error: String(err)
@@ -285,6 +292,7 @@
                 });
             } catch (err) {
                 result.error = String(err);
+                this.log('enterCaptchaSolutions (hcaptcha) - ERROR', String(e));
             }
 
             return result;

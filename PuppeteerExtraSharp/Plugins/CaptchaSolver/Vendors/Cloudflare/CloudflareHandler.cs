@@ -50,7 +50,7 @@ public class CloudflareHandler(ICaptchaSolverProvider provider, CaptchaSolverOpt
         var solutions = new List<CaptchaSolution>();
         foreach (var captcha in captchas)
         {
-            var solution = await provider.GetSolutionAsync(new GetCaptchaSolutionRequest
+            var payload = await provider.GetSolutionAsync(new GetCaptchaSolutionRequest
             {
                 Action = captcha.Action,
                 DataS = captcha.S,
@@ -66,7 +66,8 @@ public class CloudflareHandler(ICaptchaSolverProvider provider, CaptchaSolverOpt
             solutions.Add(new CaptchaSolution
             {
                 Id = captcha.Id,
-                Text = solution,
+                Vendor = "cloudflare",
+                Payload = payload,
             });
         }
 
@@ -75,15 +76,9 @@ public class CloudflareHandler(ICaptchaSolverProvider provider, CaptchaSolverOpt
 
     public async Task<EnterCaptchaSolutionsResult> EnterCaptchaSolutionsAsync(ICollection<CaptchaSolution> solutions)
     {
-        var solutionArgs = solutions.Select(s => new
-        {
-            id = s.Id,
-            text = s.Text,
-        });
-
         var result = await page.EvaluateFunctionAsync<EnterCaptchaSolutionsResult>(
             @"(solutions) => {return window.cfScript.enterCaptchaSolutions(solutions)}",
-            solutionArgs);
+            solutions);
 
         if (result is null)
         {

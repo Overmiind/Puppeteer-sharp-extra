@@ -1,6 +1,7 @@
 ﻿(opts) => {
     class RecaptchaContentScript {
-        constructor(opts) {
+        constructor(opts)
+        {
             /** Log using debug binding if available */
             this.log = (message, data) => {
                 if (opts.debug) {
@@ -29,7 +30,8 @@
         }
 
         /** Check if an element is in the current viewport */
-        _isInViewport(elem) {
+        _isInViewport(elem)
+        {
             const rect = elem.getBoundingClientRect();
             return (rect.top >= 0 &&
                 rect.left >= 0 &&
@@ -42,7 +44,8 @@
 
         // Recaptcha client is a nested, circular object with object keys that seem generated
         // We flatten that object a couple of levels deep for easy access to certain keys we're interested in.
-        _flattenObject(item, levels = 2, ignoreHTML = true) {
+        _flattenObject(item, levels = 2, ignoreHTML = true)
+        {
             const isObject = (x) => x && typeof x === 'object';
             const isHTML = (x) => x && x instanceof HTMLElement;
             let newObj = {};
@@ -69,11 +72,13 @@
         }
 
         // Helper function to return an object based on a well known value
-        _getKeyByValue(object, value) {
+        _getKeyByValue(object, value)
+        {
             return Object.keys(object).find(key => object[key] === value);
         }
 
-        async _waitUntilDocumentReady() {
+        async _waitUntilDocumentReady()
+        {
             return new Promise(function (resolve) {
                 if (!document || !window) {
                     return resolve(null);
@@ -83,7 +88,8 @@
                     return resolve(null);
                 }
 
-                function onReady() {
+                function onReady()
+                {
                     resolve(null);
                     document.removeEventListener('DOMContentLoaded', onReady);
                     window.removeEventListener('load', onReady);
@@ -94,7 +100,8 @@
             });
         }
 
-        _paintCaptchaBusy($iframe) {
+        _paintCaptchaBusy($iframe)
+        {
             try {
                 if (this.opts.VisualFeedback) {
                     $iframe.style.filter = `opacity(60%) hue-rotate(400deg)`; // violet
@@ -105,7 +112,8 @@
             return $iframe;
         }
 
-        _paintCaptchaSolved($iframe) {
+        _paintCaptchaSolved($iframe)
+        {
             try {
                 if (this.opts.VisualFeedback) {
                     $iframe.style.filter = `opacity(60%) hue-rotate(230deg)`; // green
@@ -116,16 +124,19 @@
             return $iframe;
         }
 
-        _findVisibleIframeNodes() {
+        _findVisibleIframeNodes()
+        {
             return Array.from(document.querySelectorAll(this.getFrameSelectorForId('anchor', '') // intentionally blank
             ));
         }
 
-        _findVisibleIframeNodeById(id) {
+        _findVisibleIframeNodeById(id)
+        {
             return document.querySelector(this.getFrameSelectorForId('anchor', id));
         }
 
-        _hideChallengeWindowIfPresent(id = '') {
+        _hideChallengeWindowIfPresent(id = '')
+        {
             let frame = document.querySelector(this.getFrameSelectorForId('bframe', id));
             this.log(' - _hideChallengeWindowIfPresent', {id, hasFrame: !!frame});
             if (!frame) {
@@ -142,7 +153,8 @@
         }
 
         // There's so many different possible deployments URLs that we better generate them
-        _generateFrameSources() {
+        _generateFrameSources()
+        {
             const protos = ['http', 'https'];
             const hosts = [
                 'google.com',
@@ -161,14 +173,16 @@
             };
         }
 
-        getFrameSelectorForId(type = 'anchor', id = '') {
+        getFrameSelectorForId(type = 'anchor', id = '')
+        {
             const namePrefix = type === 'anchor' ? 'a' : 'c';
             return this.frameSources[type]
                 .map(src => `iframe[src^='${src}'][name^="${namePrefix}-${id}"]`)
                 .join(',');
         }
 
-        getClients() {
+        getClients()
+        {
             // Bail out early if there's no indication of recaptchas
             if (!window || !window.__google_recaptcha_client)
                 return;
@@ -180,7 +194,8 @@
             return window.___grecaptcha_cfg.clients;
         }
 
-        getVisibleIframesIds() {
+        getVisibleIframesIds()
+        {
             // Find all regular visible recaptcha boxes through their iframes
             const result = this._findVisibleIframeNodes()
                 .filter($f => this._isVisible($f))
@@ -195,7 +210,8 @@
         }
 
         // TODO: Obsolete with recent changes
-        getInvisibleIframesIds() {
+        getInvisibleIframesIds()
+        {
             // Find all invisible recaptcha boxes through their iframes (only the ones with an active challenge window)
             const result = this._findVisibleIframeNodes()
                 .filter($f => $f && $f.getAttribute('name'))
@@ -209,7 +225,8 @@
             return result;
         }
 
-        getIframesIds() {
+        getIframesIds()
+        {
             // Find all recaptcha boxes through their iframes, check for invisible ones as fallback
             const results = [
                 ...this.getVisibleIframesIds(),
@@ -222,7 +239,8 @@
             return dedup;
         }
 
-        isEnterpriseCaptcha(id) {
+        isEnterpriseCaptcha(id)
+        {
             if (!id)
                 return false;
             // The only way to determine if a captcha is an enterprise one is by looking at their iframes
@@ -232,7 +250,8 @@
             return document.querySelectorAll(fullSelector).length > 0;
         }
 
-        isInvisible(id) {
+        isInvisible(id)
+        {
             if (!id)
                 return false;
             const selector = `iframe[src*="/recaptcha/"][src*="/anchor"][name="a-${id}"][src*="&size=invisible"]`;
@@ -240,7 +259,8 @@
         }
 
         /** Whether an active challenge popup is open */
-        hasActiveChallengePopup(id) {
+        hasActiveChallengePopup(id)
+        {
             if (!id)
                 return false;
             const selector = `iframe[src*="/recaptcha/"][src*="/bframe"][name="c-${id}"]`;
@@ -252,14 +272,16 @@
         }
 
         /** Whether an (invisible) captcha has a challenge bframe - otherwise it's a score based captcha */
-        hasChallengeFrame(id) {
+        hasChallengeFrame(id)
+        {
             if (!id)
                 return false;
             return (document.querySelectorAll(this.getFrameSelectorForId('bframe', id))
                 .length > 0);
         }
 
-        isInViewport(id) {
+        isInViewport(id)
+        {
             if (!id)
                 return;
             const prefix = 'iframe[src*="recaptcha"]';
@@ -272,7 +294,8 @@
             return this._isInViewport(elem);
         }
 
-        getResponseInputById(id) {
+        getResponseInputById(id)
+        {
             if (!id)
                 return;
             const $iframe = this._findVisibleIframeNodeById(id);
@@ -289,7 +312,8 @@
             }
         }
 
-        getClientById(id) {
+        getClientById(id)
+        {
             if (!id)
                 return;
             const clients = this.getClients();
@@ -314,7 +338,8 @@
             return client;
         }
 
-        extractInfoFromClient(client) {
+        extractInfoFromClient(client)
+        {
             if (!client)
                 return;
             const info = this._pick(['sitekey', 'callback'])(client);
@@ -344,7 +369,8 @@
             return info;
         }
 
-        async findRecaptchas() {
+        async findRecaptchas()
+        {
             const result = {
                 captchas: [],
                 error: null
@@ -397,7 +423,8 @@
             return result;
         }
 
-        async enterRecaptchaSolutions(solutions) {
+        async enterRecaptchaSolutions(solutions)
+        {
             const result = {
                 solved: [],
                 error: null
@@ -405,6 +432,16 @@
 
             try {
                 await this._waitUntilDocumentReady();
+
+                const effectiveSolutions = Array.isArray(solutions) ? solutions : [];
+                this.log('enterCaptchaSolutions (google)', {
+                    solutionNum: effectiveSolutions.length
+                });
+
+                if (!effectiveSolutions.length) {
+                    result.error = 'No solutions provided';
+                    return result;
+                }
 
                 const clients = this.getClients();
                 this.log('enterRecaptchaSolutions', {
@@ -423,18 +460,31 @@
                 }
 
                 result.solved = solutions.map(solution => {
-                    debugger;
-                    // per-solution isolation
                     try {
-                        if (!solution || !solution.id || !solution.text) {
+                        const payload = typeof solution.payload === 'string' ? JSON.parse(solution.payload) : null;
+                        const vendor = solution.vendor;
+
+                        if (vendor !== 'google') {
                             return {
-                                vendor: 'recaptcha',
+                                vendor: 'google',
                                 id: solution && solution.id ? solution.id : undefined,
                                 responseElement: false,
                                 responseCallback: false,
                                 isSolved: false,
                                 solvedAt: new Date().toISOString(),
-                                error: 'Invalid solution payload'
+                                error: 'Not a google solution'
+                            };
+                        }
+
+                        if (!solution || !solution.id) {
+                            return {
+                                vendor: 'google',
+                                id: undefined,
+                                responseElement: false,
+                                responseCallback: false,
+                                isSolved: false,
+                                solvedAt: new Date().toISOString(),
+                                error: 'Invalid solution payload (missing id)'
                             };
                         }
 
@@ -442,7 +492,7 @@
                         this.log(' - client', !!client);
                         if (!client) {
                             return {
-                                vendor: 'recaptcha',
+                                vendor: 'google',
                                 id: solution.id,
                                 responseElement: false,
                                 responseCallback: false,
@@ -453,7 +503,7 @@
                         }
 
                         const solved = {
-                            vendor: 'recaptcha',
+                            vendor: 'google',
                             id: client.id,
                             responseElement: false,
                             responseCallback: false
@@ -482,7 +532,7 @@
                         if ($input) {
                             try {
                                 // Use value, not innerHTML
-                                $input.value = solution.text;
+                                $input.value = payload.gRecaptchaResponse;
 
                                 // Fire input/change events
                                 $input.dispatchEvent(new Event('input', {bubbles: true}));
@@ -509,7 +559,7 @@
                                 }
 
                                 if (typeof fn === 'function') {
-                                    fn.call(window, solution.text);
+                                    fn.call(window, payload.gRecaptchaResponse);
                                     solved.responseCallback = true;
                                 } else {
                                     this.log(' - callback unresolved', {
@@ -544,7 +594,7 @@
                         return solved;
                     } catch (e) {
                         return {
-                            vendor: 'recaptcha',
+                            vendor: 'google',
                             id: solution && solution.id ? solution.id : undefined,
                             responseElement: false,
                             responseCallback: false,
@@ -556,7 +606,7 @@
                 });
             } catch (error) {
                 result.error = String(error);
-                return result;
+                this.log('enterCaptchaSolutions (cloudflare) - ERROR', String(e));
             }
 
             this.log('enterRecaptchaSolutions - finished', {
