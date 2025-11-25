@@ -19,14 +19,22 @@ public class GeeTestHandler(ICaptchaSolverProvider provider, CaptchaSolverOption
 
     public async Task<bool> WaitForCaptchasAsync(TimeSpan timeout)
     {
+        IElementHandle handle = null;
         var selector = "script[src*=\"static.geetest.com\"],script[src*=\"api.geetest.com\"],script[src*=\"gcaptcha4.geetest.com\"]";
 
-        var handle = await page.WaitForSelectorAsync(
-            selector,
-            new WaitForSelectorOptions
-            {
-                Timeout = (int)timeout.TotalMilliseconds
-            });
+        try
+        {
+            handle = await page.WaitForSelectorAsync(
+                selector,
+                new WaitForSelectorOptions
+                {
+                    Timeout = (int)timeout.TotalMilliseconds
+                });
+        }
+        catch
+        {
+            return false;
+        }
 
         var hasCaptchaScriptTag = handle != null;
 
