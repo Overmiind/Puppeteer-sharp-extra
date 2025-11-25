@@ -23,9 +23,16 @@ public class HCaptchaTests : BrowserDefault
 
         await page.GoToAsync("https://nopecha.com/demo/hcaptcha");
 
-        Assert.True(true);
-        return;
-        var result = await plugin.SolveCaptchaAsync(page, new CaptchaSolverOptions
+        var result = await plugin.FindCaptchaAsync(page, new CaptchaSolverOptions
+        {
+            SolveInViewportOnly = true,
+            SolveScoreBased = false,
+        });
+
+        Assert.Null(result.Error);
+        Assert.NotEmpty(result.Captchas);
+
+        /*var result = await plugin.SolveCaptchaAsync(page, new CaptchaSolverOptions
         {
             SolveInViewportOnly = true,
             SolveScoreBased = false,
@@ -39,6 +46,6 @@ public class HCaptchaTests : BrowserDefault
         await page.ClickAsync("button.form-field[type='submit']");
         await Task.Delay(2000);
         var answerElement = await page.EvaluateExpressionAsync<string>("document.querySelector(\"#token_3\").textContent");
-        Assert.Equal("success", answerElement);
+        Assert.Equal("success", answerElement);*/
     }
 }

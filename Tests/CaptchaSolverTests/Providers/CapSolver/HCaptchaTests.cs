@@ -37,7 +37,7 @@ public class HCaptchaTests : BrowserDefault
             SolveInViewportOnly = true,
             SolveScoreBased = false,
         });
-        
+
         Assert.Null(result.Error);
         Assert.NotEmpty(result.Solved);
         Assert.NotEmpty(result.Filtered);
