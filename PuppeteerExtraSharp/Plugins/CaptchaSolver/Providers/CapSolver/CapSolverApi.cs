@@ -114,7 +114,6 @@ internal class CapSolverApi(string userKey, CaptchaProviderOptions options)
             };
         }
 
-
         return new Dictionary<string, object>
         {
             ["clientKey"] = userKey,

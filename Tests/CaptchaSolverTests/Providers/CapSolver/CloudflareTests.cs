@@ -4,7 +4,7 @@ using Extra.Tests.Properties;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Models;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers;
-using PCapSolver = PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers.CapSolver;
+using Provider = PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers.CapSolver;
 using Xunit;
 namespace Extra.Tests.CaptchaSolverTests.Providers.CapSolver;
 
@@ -13,7 +13,7 @@ public class CloudflareTests : BrowserDefault
     [Fact]
     public async Task ShouldSolveCheckbox()
     {
-        var plugin = new CaptchaSolverPlugin(new PCapSolver.CapSolver(Resources.CapSolverKey, new CaptchaProviderOptions()
+        var plugin = new CaptchaSolverPlugin(new Provider.CapSolver(Resources.CapSolverKey, new CaptchaProviderOptions()
         {
             StartTimeout = TimeSpan.FromSeconds(10),
             MaxPollingAttempts = 30,

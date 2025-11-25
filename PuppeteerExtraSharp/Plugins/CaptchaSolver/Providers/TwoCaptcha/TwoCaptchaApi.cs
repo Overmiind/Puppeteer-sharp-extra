@@ -73,13 +73,14 @@ internal class TwoCaptchaApi(string userKey, CaptchaProviderOptions options)
                 ["websiteURL"] = request.PageUrl,
                 ["type"] = request.Version switch
                 {
-                    CaptchaVersion.RecaptchaV2 => "ReCaptchaV2TaskProxyless",
-                    CaptchaVersion.RecaptchaV3 => "ReCaptchaV3TaskProxyless",
+                    CaptchaVersion.RecaptchaV2 => "RecaptchaV2TaskProxyless",
+                    CaptchaVersion.RecaptchaV3 => "RecaptchaV3TaskProxyless",
                     CaptchaVersion.HCaptcha => throw new NotSupportedException("HCaptcha is not yet supported"),
                     _ => throw new ArgumentOutOfRangeException()
                 },
                 ["isInvisible"] = request.IsInvisible,
                 ["recaptchaDataSValue"] = request.DataS,
+                ["minScore"] = request.MinScore.ToString()
             }
         };
     }
@@ -101,6 +102,24 @@ internal class TwoCaptchaApi(string userKey, CaptchaProviderOptions options)
 
     private Dictionary<string, object> GetGeeTestJson(GetCaptchaSolutionRequest request)
     {
+        if (request.Version == CaptchaVersion.GeeTestV4)
+        {
+            return new Dictionary<string, object>
+            {
+                ["clientKey"] = userKey,
+                ["task"] = new Dictionary<string, object>
+                {
+                    ["websiteURL"] = request.PageUrl,
+                    ["type"] = "GeeTestTaskProxyless",
+                    ["version"] = 4,
+                    ["initParameters"] = new Dictionary<string, object>
+                    {
+                        ["captcha_id"] = request.CaptchaId
+                    }
+                }
+            };
+        }
+
         return new Dictionary<string, object>
         {
             ["clientKey"] = userKey,
@@ -123,7 +142,7 @@ internal class TwoCaptchaApi(string userKey, CaptchaProviderOptions options)
             {
                 ["websiteKey"] = request.SiteKey,
                 ["websiteURL"] = request.PageUrl,
-                ["type"] = "AntiTurnstileTaskProxyLess"
+                ["type"] = "TurnstileTaskProxyless"
             }
         };
     }

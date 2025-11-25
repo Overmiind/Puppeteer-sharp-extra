@@ -4,16 +4,16 @@ using Extra.Tests.Properties;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Models;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers;
-using Provider = PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers.CapSolver;
 using Xunit;
-namespace Extra.Tests.CaptchaSolverTests.Providers.CapSolver;
+using Provider = PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers.TwoCaptcha;
+namespace Extra.Tests.CaptchaSolverTests.Providers.TwoCaptcha;
 
 public class GoogleTests : BrowserDefault
 {
     [Fact]
     public async Task ShouldSolveCheckbox()
     {
-        var plugin = new CaptchaSolverPlugin(new Provider.CapSolver(Resources.CapSolverKey, new CaptchaProviderOptions()
+        var plugin = new CaptchaSolverPlugin(new Provider.TwoCaptcha(Resources.TwoCaptchaKey, new CaptchaProviderOptions()
         {
             StartTimeout = TimeSpan.FromSeconds(10),
             MaxPollingAttempts = 30,
@@ -44,7 +44,7 @@ public class GoogleTests : BrowserDefault
     [Fact]
     public async Task ShouldSolveInvisible()
     {
-        var plugin = new CaptchaSolverPlugin(new Provider.CapSolver(Resources.CapSolverKey, new CaptchaProviderOptions()
+        var plugin = new CaptchaSolverPlugin(new Provider.TwoCaptcha(Resources.TwoCaptchaKey, new CaptchaProviderOptions()
         {
             StartTimeout = TimeSpan.FromSeconds(30),
             MaxPollingAttempts = 20,
@@ -74,7 +74,7 @@ public class GoogleTests : BrowserDefault
     [Fact]
     public async Task ShouldtSolveInvisible()
     {
-        var plugin = new CaptchaSolverPlugin(new Provider.CapSolver(Resources.CapSolverKey, new CaptchaProviderOptions()
+        var plugin = new CaptchaSolverPlugin(new Provider.TwoCaptcha(Resources.TwoCaptchaKey, new CaptchaProviderOptions()
         {
             StartTimeout = TimeSpan.FromSeconds(30),
             MaxPollingAttempts = 20,
@@ -97,7 +97,7 @@ public class GoogleTests : BrowserDefault
     [Fact]
     public async Task ShouldSolveV3Captcha()
     {
-        var plugin = new CaptchaSolverPlugin(new Provider.CapSolver(Resources.CapSolverKey, new CaptchaProviderOptions()
+        var plugin = new CaptchaSolverPlugin(new Provider.TwoCaptcha(Resources.TwoCaptchaKey, new CaptchaProviderOptions()
         {
             StartTimeout = TimeSpan.FromSeconds(30),
             MaxPollingAttempts = 20,
@@ -116,7 +116,7 @@ public class GoogleTests : BrowserDefault
     [Fact]
     public async Task ShouldntSolveWhenNoCaptcha()
     {
-        var plugin = new CaptchaSolverPlugin(new Provider.CapSolver(Resources.CapSolverKey));
+        var plugin = new CaptchaSolverPlugin(new Provider.TwoCaptcha(Resources.TwoCaptchaKey));
         var page = await LaunchAndGetPageAsync(plugin);
 
         await page.GoToAsync("https://google.com");

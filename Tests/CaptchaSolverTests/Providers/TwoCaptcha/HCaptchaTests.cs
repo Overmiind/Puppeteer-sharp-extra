@@ -4,16 +4,16 @@ using Extra.Tests.Properties;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Models;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers;
-using Provider = PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers.CapSolver;
 using Xunit;
-namespace Extra.Tests.CaptchaSolverTests.Providers.CapSolver;
+using Provider = PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers.TwoCaptcha;
+namespace Extra.Tests.CaptchaSolverTests.Providers.TwoCaptcha;
 
 public class HCaptchaTests : BrowserDefault
 {
     [Fact]
     public async Task ShouldSolveCheckbox()
     {
-        var plugin = new CaptchaSolverPlugin(new Provider.CapSolver(Resources.CapSolverKey, new CaptchaProviderOptions()
+        var plugin = new CaptchaSolverPlugin(new Provider.TwoCaptcha(Resources.TwoCaptchaKey, new CaptchaProviderOptions()
         {
             StartTimeout = TimeSpan.FromSeconds(10),
             MaxPollingAttempts = 30,

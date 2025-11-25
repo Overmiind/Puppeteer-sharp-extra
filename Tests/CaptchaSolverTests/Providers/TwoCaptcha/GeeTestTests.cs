@@ -4,16 +4,16 @@ using Extra.Tests.Properties;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Models;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers;
-using Provider = PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers.CapSolver;
 using Xunit;
-namespace Extra.Tests.CaptchaSolverTests.Providers.CapSolver;
+using Provider = PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers.TwoCaptcha;
+namespace Extra.Tests.CaptchaSolverTests.Providers.TwoCaptcha;
 
 public class GeeTestTests : BrowserDefault
 {
     [Fact]
     public async Task ShouldSolveV3()
     {
-        var plugin = new CaptchaSolverPlugin(new Provider.CapSolver(Resources.CapSolverKey, new CaptchaProviderOptions()
+        var plugin = new CaptchaSolverPlugin(new Provider.TwoCaptcha(Resources.TwoCaptchaKey, new CaptchaProviderOptions()
         {
             StartTimeout = TimeSpan.FromSeconds(10),
             MaxPollingAttempts = 30,
@@ -43,7 +43,7 @@ public class GeeTestTests : BrowserDefault
     [Fact]
     public async Task ShouldSolveV4()
     {
-        var plugin = new CaptchaSolverPlugin(new Provider.CapSolver(Resources.CapSolverKey, new CaptchaProviderOptions()
+        var plugin = new CaptchaSolverPlugin(new Provider.TwoCaptcha(Resources.TwoCaptchaKey, new CaptchaProviderOptions()
         {
             StartTimeout = TimeSpan.FromSeconds(10),
             MaxPollingAttempts = 30,
