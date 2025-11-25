@@ -100,6 +100,21 @@ internal class CapSolverApi(string userKey, CaptchaProviderOptions options)
 
     private Dictionary<string, object> GetGeeTestJson(GetCaptchaSolutionRequest request)
     {
+        if (request.Version == CaptchaVersion.GeeTestV4)
+        {
+            return new Dictionary<string, object>
+            {
+                ["clientKey"] = userKey,
+                ["task"] = new Dictionary<string, object>
+                {
+                    ["websiteURL"] = request.PageUrl,
+                    ["type"] = "GeeTestTaskProxyLess",
+                    ["captchaId"] = request.CaptchaId
+                }
+            };
+        }
+
+
         return new Dictionary<string, object>
         {
             ["clientKey"] = userKey,

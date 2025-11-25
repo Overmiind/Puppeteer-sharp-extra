@@ -115,7 +115,7 @@
         }
 
         /**
-         * On essaie de trouver les containers GeeTest:
+         * Find containers :
          *  - div.geetest_holder
          *  - div[class*="geetest"]
          *  - inputs hidden geetest_challenge / geetest_validate
@@ -229,7 +229,10 @@
                     return result;
                 }
 
-                await this._refreshChallengeAsync();
+                if (!window['__geetest_captcha_id']) {
+                    await this._refreshChallengeAsync();
+                }
+
                 result.captchas = containers
                     .filter((c) => this._isVisible(c))
                     .map((c, index) => {
@@ -311,7 +314,7 @@
                             };
                         }
 
-                        if (!payload.challenge || !payload.validate || !payload.seccode) {
+                        if (!window.__geetest_captcha_id && (!payload.challenge || !payload.validate || !payload.seccode)) {
                             return {
                                 vendor: 'geetest',
                                 id: solution.id,
@@ -320,6 +323,33 @@
                                 isSolved: false,
                                 solvedAt: new Date().toISOString(),
                                 error: 'Missing challenge/validate/seccode'
+                            };
+                        }
+
+                        if (window.__geetest_captcha_id && !payload.pass_token) {
+                            return {
+                                vendor: 'geetest',
+                                id: solution.id,
+                                responseElement: false,
+                                responseCallback: false,
+                                isSolved: false,
+                                solvedAt: new Date().toISOString(),
+                                error: 'Missing pass_token in payload'
+                            };
+                        }
+
+                        if (window.__geetest_captcha_id && payload.pass_token) {
+                            window.__geetestInstance.getValidate = function () {
+                                console.log('getValidate appelé - retour solution Capsolver');
+                                return payload;
+                            };
+                            return {
+                                endor: 'geetest',
+                                id: solution.id,
+                                responseElement: false,
+                                responseCallback: true,
+                                isSolved: true,
+                                solvedAt: new Date().toISOString()
                             };
                         }
 
@@ -354,13 +384,13 @@
                             }
                         };
 
-                        if (challengeInput) {
+                        if (challengeInput && payload.challenge) {
                             responseElement = setValueWithEvents(challengeInput, payload.challenge) || responseElement;
                         }
-                        if (validateInput) {
+                        if (validateInput && payload.validate) {
                             responseElement = setValueWithEvents(validateInput, payload.validate) || responseElement;
                         }
-                        if (seccodeInput) {
+                        if (seccodeInput && payload.seccode) {
                             responseElement = setValueWithEvents(seccodeInput, payload.seccode) || responseElement;
                         }
 

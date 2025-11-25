@@ -90,8 +90,7 @@ public class HCaptchaHandler(ICaptchaSolverProvider provider, CaptchaSolverOptio
         return result;
     }
 
-    public void ProcessResponseAsync(object send, ResponseCreatedEventArgs e)
-    {
+    public Task HandleOnPageCreatedAsync() => Task.CompletedTask;
 
-    }
+    public void ProcessResponseAsync(object send, ResponseCreatedEventArgs e) { }
 }

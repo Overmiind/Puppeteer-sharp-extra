@@ -87,8 +87,7 @@ public class GoogleHandler(ICaptchaSolverProvider provider, CaptchaSolverOptions
         return result;
     }
 
-    public void ProcessResponseAsync(object send, ResponseCreatedEventArgs e)
-    {
+    public Task HandleOnPageCreatedAsync() => Task.CompletedTask;
 
-    }
+    public void ProcessResponseAsync(object send, ResponseCreatedEventArgs e) { }
 }

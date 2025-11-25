@@ -70,7 +70,7 @@ public class CaptchaSolverPlugin : PuppeteerExtraPlugin
 
         return result;
     }
-
+    
     protected internal override async Task OnPageCreatedAsync(IPage page)
     {
         await page.SetBypassCSPAsync(true);
@@ -80,7 +80,7 @@ public class CaptchaSolverPlugin : PuppeteerExtraPlugin
             if (handler is null)
                 continue;
 
-            page.Response += handler.ProcessResponseAsync;
+            _ = handler.HandleOnPageCreatedAsync();
         }
     }
 

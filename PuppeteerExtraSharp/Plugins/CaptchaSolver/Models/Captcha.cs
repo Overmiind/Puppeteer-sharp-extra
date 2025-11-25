@@ -22,6 +22,7 @@ public class Captcha
     public string? Gt { get; set; }
     public string? Challenge { get; set; }
     public string? CaptchaId { get; set; }
+    public string? Version { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public CaptchaType CaptchaType { get; set; }

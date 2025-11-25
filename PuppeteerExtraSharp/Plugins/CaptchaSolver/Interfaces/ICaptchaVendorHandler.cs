@@ -13,5 +13,6 @@ public interface ICaptchaVendorHandler
     public Task<CaptchaResponse> FindCaptchasAsync();
     public Task<ICollection<CaptchaSolution>> SolveCaptchasAsync(ICollection<Captcha> captchas);
     public Task<EnterCaptchaSolutionsResult> EnterCaptchaSolutionsAsync(ICollection<CaptchaSolution> solutions);
+    public Task HandleOnPageCreatedAsync();
     void ProcessResponseAsync(object? send, ResponseCreatedEventArgs e);
 }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
@@ -52,13 +51,14 @@ public class GeeTestHandler(ICaptchaSolverProvider provider, CaptchaSolverOption
             if (exist == null) return false;
 
             await page.WaitForFunctionAsync(
-                "() => { const challengeInput = document.querySelector(\"input[name='geetest_challenge']\"); const hasWindowChallenge = window.__geetest_challenge && window.__geetest_challenge.length > 0; const hasInputChallenge = challengeInput && challengeInput.value && challengeInput.value.length > 0; return hasWindowChallenge || hasInputChallenge; }",
+                "() => { return window.__geetest_challenge || window.__geetest_captcha_id; }",
                 new WaitForFunctionOptions
                 {
                     Timeout = (int)timeout.TotalMilliseconds,
                     PollingInterval = 200
                 });
 
+            await Task.Delay(2000);
             return true;
         }
         catch
@@ -85,7 +85,7 @@ public class GeeTestHandler(ICaptchaSolverProvider provider, CaptchaSolverOption
                 IsInvisible = captcha.IsInvisible,
                 PageUrl = captcha.Url,
                 SiteKey = captcha.Sitekey,
-                Version = captcha.CaptchaType == CaptchaType.score ? CaptchaVersion.RecaptchaV3 : CaptchaVersion.RecaptchaV2,
+                Version = captcha.Version == "v4" || !string.IsNullOrEmpty(captcha.CaptchaId) ? CaptchaVersion.GeeTestV4 : CaptchaVersion.GeeTestV3,
                 MinScore = options.MinScore,
                 Gt = captcha.Gt,
                 Challenge = captcha.Challenge,
@@ -117,6 +117,54 @@ public class GeeTestHandler(ICaptchaSolverProvider provider, CaptchaSolverOption
 
         return result;
     }
+
+    public async Task HandleOnPageCreatedAsync()
+    {
+        await page.EvaluateExpressionOnNewDocumentAsync(@"
+            window.__geetestCaptured = false;
+            window.__geetestInstance = null;
+            
+            // Intercepter les callbacks geetest_* qui sont ajoutés à window
+            const intervalId = setInterval(() => {
+                for (let key in window) {
+                    if (typeof key === 'string' && key.indexOf('geetest_') === 0 && typeof window[key] === 'function') {
+                        if (!window['__intercepted_' + key]) {
+                            console.log('Fonction callback GeeTest trouvée:', key);
+                            const original = window[key];
+                            window[key] = function() {
+                                console.log('Callback GeeTest exécuté:', key, arguments);
+                                window.__geetestCallbackData = arguments[0];
+                                clearInterval(intervalId);
+                                return original.apply(this, arguments);
+                            };
+                            window['__intercepted_' + key] = true;
+                        }
+                    }
+                }
+            }, 100);
+            
+            // Intercepter initGeetest4 s'il est défini plus tard
+            let _initGeetest4 = null;
+            Object.defineProperty(window, 'initGeetest4', {
+                get: function() {
+                    return _initGeetest4;
+                },
+                set: function(value) {
+                    console.log('initGeetest4 défini!');
+                    _initGeetest4 = function(config, callback) {
+                        console.log('initGeetest4 appelé avec config:', config);
+                        return value(config, function(captchaObj) {
+                            console.log('Instance GeeTest créée!');
+                            window.__geetestInstance = captchaObj;
+                            if (callback) callback(captchaObj);
+                        });
+                    };
+                }
+            });
+        ");
+        page.Response += ProcessResponseAsync;
+    }
+
     public async void ProcessResponseAsync(object send, ResponseCreatedEventArgs e)
     {
         var url = e.Response.Url;
