@@ -25,8 +25,7 @@ public class CaptchaSolverPlugin : PuppeteerExtraPlugin
         _provider = provider;
     }
 
-    public async Task<EnterCaptchaSolutionsResult> SolveCaptchaAsync(IPage page,
-        CaptchaSolverOptions optionsOverride = null)
+    public async Task<CaptchaResponse> FindCaptchaAsync(IPage page, CaptchaSolverOptions optionsOverride = null)
     {
         var options = optionsOverride ?? _defaultOptions;
 
@@ -34,15 +33,32 @@ public class CaptchaSolverPlugin : PuppeteerExtraPlugin
 
         if (!hasCaptchas)
         {
+            return new CaptchaResponse
+            {
+                Captchas = [],
+                Error = "No captchas found"
+            };
+        }
+
+        return await _handler.FindCaptchasAsync(page);
+    }
+
+    public async Task<EnterCaptchaSolutionsResult> SolveCaptchaAsync(IPage page,
+        CaptchaSolverOptions optionsOverride = null)
+    {
+        var options = optionsOverride ?? _defaultOptions;
+        
+        var captchaResponse = await FindCaptchaAsync(page, options);
+
+        if (!captchaResponse.Captchas.Any())
+        {
             return new EnterCaptchaSolutionsResult()
             {
                 Error = "No captchas found"
             };
         }
 
-        var captchaResponse = await _handler.FindCaptchasAsync(page);
-
-        if (options.ThrowOnError)
+        if (options.ThrowOnError && !string.IsNullOrWhiteSpace(captchaResponse.Error))
         {
             throw new CaptchaException(page.Url, captchaResponse.Error);
         }
@@ -63,14 +79,14 @@ public class CaptchaSolverPlugin : PuppeteerExtraPlugin
         var result = await _handler.EnterCaptchaSolutionsAsync(page, solvedCaptchas);
         result.Filtered = filteredCaptchas.filtered;
 
-        if (options.ThrowOnError && string.IsNullOrWhiteSpace(result.Error))
+        if (options.ThrowOnError && !string.IsNullOrWhiteSpace(result.Error))
         {
             throw new CaptchaException(page.Url, result.Error);
         }
 
         return result;
     }
-    
+
     protected internal override async Task OnPageCreatedAsync(IPage page)
     {
         await page.SetBypassCSPAsync(true);

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Enums;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Interfaces;
@@ -42,7 +41,7 @@ public class HCaptchaHandler(ICaptchaSolverProvider provider, CaptchaSolverOptio
 
     public async Task<CaptchaResponse> FindCaptchasAsync()
     {
-        return await page.EvaluateExpressionAsync<CaptchaResponse>("window.hcaptchaScript.findRecaptchas()");
+        return await page.EvaluateExpressionAsync<CaptchaResponse>("window.hcaptchaScript.findCaptchas()");
     }
 
     public async Task<ICollection<CaptchaSolution>> SolveCaptchasAsync(ICollection<Captcha> captchas)
@@ -79,7 +78,7 @@ public class HCaptchaHandler(ICaptchaSolverProvider provider, CaptchaSolverOptio
     public async Task<EnterCaptchaSolutionsResult> EnterCaptchaSolutionsAsync(ICollection<CaptchaSolution> solutions)
     {
         var result = await page.EvaluateFunctionAsync<EnterCaptchaSolutionsResult>(
-            @"(solutions) => {return window.hcaptchaScript.enterRecaptchaSolutions(solutions)}",
+            @"(solutions) => {return window.hcaptchaScript.enterCaptchaSolutions(solutions)}",
             solutions);
 
         if (result is null)

@@ -1,6 +1,5 @@
 ﻿using System;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Interfaces;
-using PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers;
 namespace PuppeteerExtraSharp.Plugins.CaptchaSolver.Vendors.Google;
 
 public class GoogleOptions : ICaptchaSolveOptions
