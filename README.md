@@ -7,8 +7,8 @@ PuppeteerExtraSharp is a .NET port of the [puppeteer-extra](https://github.com/b
 
 ## Plugins
 
-🪄 [Puppeteer reCAPTCHA plugin](https://github.com/Overmiind/Puppeteer-sharp-extra/tree/master/PuppeteerExtraSharp/Plugins/Recaptcha)
-- Automatically handles reCAPTCHA challenges (v2, invisible, v3).
+🪄 [Puppeteer captcha solver plugin](https://github.com/Overmiind/Puppeteer-sharp-extra/tree/master/PuppeteerExtraSharp/Plugins/CaptchaSolver)
+- Automatically handles reCAPTCHA challenges (v2, invisible, v3), GeeTest, CloudFlare.
 
 🏴 [Puppeteer stealth plugin](https://github.com/Overmiind/Puppeteer-sharp-extra/tree/master/PuppeteerExtraSharp/Plugins/ExtraStealth)
 - Applies multiple evasions to make headless automation harder to detect.
@@ -39,5 +39,5 @@ await page.ScreenshotAsync("extra.png");
 ```
 
 ## Notes
-- Use the reCAPTCHA plugin only on properties you own or where you have explicit permission to automate.
+- Use the captcha solver plugin only on properties you own or where you have explicit permission to automate.
 - Some targets may still detect automation; adjust plugin combinations and browser settings as needed.
