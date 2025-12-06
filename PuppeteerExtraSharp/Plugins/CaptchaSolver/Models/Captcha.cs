@@ -1,11 +1,12 @@
-﻿using System.Text.Json.Serialization;
+﻿using PuppeteerExtraSharp.Plugins.CaptchaSolver.Enums;
+
 namespace PuppeteerExtraSharp.Plugins.CaptchaSolver.Models;
 
 public class Captcha
 {
     public string Sitekey { get; set; }
     public string Callback { get; set; }
-    public string Vendor { get; set; }
+    public CaptchaVendor Vendor { get; set; }
     public string Id { get; set; }
     public string S { get; set; }
     public int WidgetId { get; set; }
@@ -24,7 +25,6 @@ public class Captcha
     public string? CaptchaId { get; set; }
     public string? Version { get; set; }
 
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public CaptchaType CaptchaType { get; set; }
 
     public Captcha()

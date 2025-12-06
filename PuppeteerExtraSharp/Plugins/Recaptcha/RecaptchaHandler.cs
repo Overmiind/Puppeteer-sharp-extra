@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PuppeteerExtraSharp.Plugins.CaptchaSolver;
 using PuppeteerExtraSharp.Plugins.Recaptcha.Helpers;
 using PuppeteerExtraSharp.Plugins.Recaptcha.Models;
 using PuppeteerExtraSharp.Plugins.Recaptcha.Provider;
@@ -10,6 +11,7 @@ using PuppeteerSharp;
 
 namespace PuppeteerExtraSharp.Plugins.Recaptcha;
 
+[Obsolete($"Use {nameof(CaptchaSolverPlugin)} instead. This plugin will be removed in a future version.", UrlFormat = "https://github.com/Overmiind/Puppeteer-sharp-extra/tree/master/PuppeteerExtraSharp/Plugins/CaptchaSolver")]
 public class RecaptchaHandler(IRecaptchaProvider provider, RecaptchaSolveOptions options) : ICaptchaHandler
 {
     private readonly RecaptchaSolveOptions _options = options ?? new RecaptchaSolveOptions();

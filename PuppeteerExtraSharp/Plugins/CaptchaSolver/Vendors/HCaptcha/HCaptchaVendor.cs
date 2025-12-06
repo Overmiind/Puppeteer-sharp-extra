@@ -2,19 +2,23 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Enums;
+using PuppeteerExtraSharp.Plugins.CaptchaSolver.Helpers;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Interfaces;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Models;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers;
 using PuppeteerSharp;
+
 namespace PuppeteerExtraSharp.Plugins.CaptchaSolver.Vendors.HCaptcha;
 
-public class HCaptchaHandler(ICaptchaSolverProvider provider, CaptchaSolverOptions options, IPage page) : ICaptchaVendorHandler
+public class HCaptchaVendor(ICaptchaSolverProvider provider, CaptchaOptions options) : ICaptchaVendor
 {
     public CaptchaVendor Vendor => CaptchaVendor.HCaptcha;
 
-    public async Task<bool> WaitForCaptchasAsync(TimeSpan timeout)
+    public async Task<bool> WaitForCaptchasAsync(IPage page, TimeSpan timeout)
     {
-        var handle = await page.QuerySelectorAsync("script[src*=\"js.hcaptcha.com/1/api.js\"], script[src*=\"hcaptcha.com/1/api.js\"]");
+        var handle =
+            await page.QuerySelectorAsync(
+                "script[src*=\"js.hcaptcha.com/1/api.js\"], script[src*=\"hcaptcha.com/1/api.js\"]");
         var hasRecaptchaScriptTag = handle != null;
 
         if (!hasRecaptchaScriptTag) return false;
@@ -39,12 +43,13 @@ public class HCaptchaHandler(ICaptchaSolverProvider provider, CaptchaSolverOptio
         }
     }
 
-    public async Task<CaptchaResponse> FindCaptchasAsync()
+    public async Task<CaptchaResponse> FindCaptchasAsync(IPage page)
     {
+        await LoadScriptAsync(page);
         return await page.EvaluateExpressionAsync<CaptchaResponse>("window.hcaptchaScript.findCaptchas()");
     }
 
-    public async Task<ICollection<CaptchaSolution>> SolveCaptchasAsync(ICollection<Captcha> captchas)
+    public async Task<ICollection<CaptchaSolution>> SolveCaptchasAsync(IPage page, ICollection<Captcha> captchas)
     {
         throw new NotSupportedException(
             $"hCaptcha solving support temporarily disabled.");
@@ -59,7 +64,9 @@ public class HCaptchaHandler(ICaptchaSolverProvider provider, CaptchaSolverOptio
                 IsInvisible = captcha.IsInvisible,
                 PageUrl = captcha.Url,
                 SiteKey = captcha.Sitekey,
-                Version = captcha.CaptchaType == CaptchaType.score ? CaptchaVersion.RecaptchaV3 : CaptchaVersion.RecaptchaV2,
+                Version = captcha.CaptchaType == CaptchaType.score
+                    ? CaptchaVersion.RecaptchaV3
+                    : CaptchaVersion.RecaptchaV2,
                 MinScore = options.MinScore,
                 Vendor = CaptchaVendor.HCaptcha
             });
@@ -67,7 +74,7 @@ public class HCaptchaHandler(ICaptchaSolverProvider provider, CaptchaSolverOptio
             solutions.Add(new CaptchaSolution
             {
                 Id = captcha.Id,
-                Vendor = "hcaptcha",
+                Vendor = CaptchaVendor.HCaptcha,
                 Payload = payload,
             });
         }
@@ -75,8 +82,10 @@ public class HCaptchaHandler(ICaptchaSolverProvider provider, CaptchaSolverOptio
         return solutions;
     }
 
-    public async Task<EnterCaptchaSolutionsResult> EnterCaptchaSolutionsAsync(ICollection<CaptchaSolution> solutions)
+    public async Task<EnterCaptchaSolutionsResult> EnterCaptchaSolutionsAsync(IPage page,
+        ICollection<CaptchaSolution> solutions)
     {
+        await LoadScriptAsync(page);
         var result = await page.EvaluateFunctionAsync<EnterCaptchaSolutionsResult>(
             @"(solutions) => {return window.hcaptchaScript.enterCaptchaSolutions(solutions)}",
             solutions);
@@ -89,7 +98,15 @@ public class HCaptchaHandler(ICaptchaSolverProvider provider, CaptchaSolverOptio
         return result;
     }
 
-    public Task HandleOnPageCreatedAsync() => Task.CompletedTask;
+    public Task HandleOnPageCreatedAsync(IPage page) => Task.CompletedTask;
 
-    public void ProcessResponseAsync(object send, ResponseCreatedEventArgs e) { }
+    public void ProcessResponseAsync(IPage page, object send, ResponseCreatedEventArgs e)
+    {
+    }
+    
+    private Task LoadScriptAsync(IPage page)
+    {
+        return page.EnsureEvaluateFunctionAsync(
+            $"{GetType().Namespace}.{nameof(CaptchaVendor.HCaptcha)}Script.js", options);
+    }
 }

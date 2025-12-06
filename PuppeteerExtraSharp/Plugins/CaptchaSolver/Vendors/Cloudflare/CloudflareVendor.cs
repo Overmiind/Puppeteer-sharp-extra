@@ -1,21 +1,24 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Enums;
+using PuppeteerExtraSharp.Plugins.CaptchaSolver.Helpers;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Interfaces;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Models;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers;
 using PuppeteerSharp;
+
 namespace PuppeteerExtraSharp.Plugins.CaptchaSolver.Vendors.Cloudflare;
 
-public class CloudflareHandler(ICaptchaSolverProvider provider, CaptchaSolverOptions options, IPage page) : ICaptchaVendorHandler
+public class CloudflareVendor(ICaptchaSolverProvider provider, CaptchaOptions options) : ICaptchaVendor
 {
     public CaptchaVendor Vendor => CaptchaVendor.Cloudflare;
 
-    public async Task<bool> WaitForCaptchasAsync(TimeSpan timeout)
+    public async Task<bool> WaitForCaptchasAsync(IPage page, TimeSpan timeout)
     {
-        var handle = await page.QuerySelectorAsync("script[src*=\"challenges.cloudflare.com/turnstile\"], script[src*=\"/turnstile/v0/api.js\"]");
+        var handle =
+            await page.QuerySelectorAsync(
+                "script[src*=\"challenges.cloudflare.com/turnstile\"], script[src*=\"/turnstile/v0/api.js\"]");
 
         var hasRecaptchaScriptTag = handle != null;
 
@@ -40,12 +43,13 @@ public class CloudflareHandler(ICaptchaSolverProvider provider, CaptchaSolverOpt
         }
     }
 
-    public async Task<CaptchaResponse> FindCaptchasAsync()
+    public async Task<CaptchaResponse> FindCaptchasAsync(IPage page)
     {
+        await LoadScriptAsync(page);
         return await page.EvaluateExpressionAsync<CaptchaResponse>("window.cfScript.findCaptchas()");
     }
 
-    public async Task<ICollection<CaptchaSolution>> SolveCaptchasAsync(ICollection<Captcha> captchas)
+    public async Task<ICollection<CaptchaSolution>> SolveCaptchasAsync(IPage page, ICollection<Captcha> captchas)
     {
         var solutions = new List<CaptchaSolution>();
         foreach (var captcha in captchas)
@@ -58,7 +62,9 @@ public class CloudflareHandler(ICaptchaSolverProvider provider, CaptchaSolverOpt
                 IsInvisible = captcha.IsInvisible,
                 PageUrl = captcha.Url,
                 SiteKey = captcha.Sitekey,
-                Version = captcha.CaptchaType == CaptchaType.score ? CaptchaVersion.RecaptchaV3 : CaptchaVersion.RecaptchaV2,
+                Version = captcha.CaptchaType == CaptchaType.score
+                    ? CaptchaVersion.RecaptchaV3
+                    : CaptchaVersion.RecaptchaV2,
                 MinScore = options.MinScore,
                 Vendor = CaptchaVendor.Cloudflare
             });
@@ -66,7 +72,7 @@ public class CloudflareHandler(ICaptchaSolverProvider provider, CaptchaSolverOpt
             solutions.Add(new CaptchaSolution
             {
                 Id = captcha.Id,
-                Vendor = "cloudflare",
+                Vendor = CaptchaVendor.Cloudflare,
                 Payload = payload,
             });
         }
@@ -74,8 +80,10 @@ public class CloudflareHandler(ICaptchaSolverProvider provider, CaptchaSolverOpt
         return solutions;
     }
 
-    public async Task<EnterCaptchaSolutionsResult> EnterCaptchaSolutionsAsync(ICollection<CaptchaSolution> solutions)
+    public async Task<EnterCaptchaSolutionsResult> EnterCaptchaSolutionsAsync(IPage page,
+        ICollection<CaptchaSolution> solutions)
     {
+        await LoadScriptAsync(page);
         var result = await page.EvaluateFunctionAsync<EnterCaptchaSolutionsResult>(
             @"(solutions) => {return window.cfScript.enterCaptchaSolutions(solutions)}",
             solutions);
@@ -88,7 +96,15 @@ public class CloudflareHandler(ICaptchaSolverProvider provider, CaptchaSolverOpt
         return result;
     }
 
-    public Task HandleOnPageCreatedAsync() => Task.CompletedTask;
+    public Task HandleOnPageCreatedAsync(IPage page) => Task.CompletedTask;
 
-    public void ProcessResponseAsync(object send, ResponseCreatedEventArgs e) { }
+    public void ProcessResponseAsync(IPage page, object send, ResponseCreatedEventArgs e)
+    {
+    }
+
+    private Task LoadScriptAsync(IPage page)
+    {
+        return page.EnsureEvaluateFunctionAsync(
+            $"{GetType().Namespace}.{nameof(CaptchaVendor.Cloudflare)}Script.js", options);
+    }
 }

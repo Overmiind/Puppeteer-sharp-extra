@@ -1,9 +1,11 @@
 ﻿using System;
+using PuppeteerExtraSharp.Plugins.CaptchaSolver.Enums;
+
 namespace PuppeteerExtraSharp.Plugins.CaptchaSolver.Models;
 
 public class CaptchaSolved
 {
-    public string Vendor { get; set; }
+    public CaptchaVendor Vendor { get; set; }
     public string Id { get; set; }
     public bool? ResponseElement { get; set; }
     public bool? ResponseCallback { get; set; }

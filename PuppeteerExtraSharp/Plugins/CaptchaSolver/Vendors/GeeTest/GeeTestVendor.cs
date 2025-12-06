@@ -4,23 +4,23 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Enums;
+using PuppeteerExtraSharp.Plugins.CaptchaSolver.Helpers;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Interfaces;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Models;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers;
 using PuppeteerSharp;
+
 namespace PuppeteerExtraSharp.Plugins.CaptchaSolver.Vendors.GeeTest;
 
-public class GeeTestHandler(ICaptchaSolverProvider provider, CaptchaSolverOptions options, IPage page) : ICaptchaVendorHandler
+public class GeeTestVendor(ICaptchaSolverProvider provider, CaptchaOptionsScope options) : ICaptchaVendor
 {
-    private string? _initEndpoint;
-    private string? _gt;
-
     public CaptchaVendor Vendor => CaptchaVendor.GeeTest;
 
-    public async Task<bool> WaitForCaptchasAsync(TimeSpan timeout)
+    public async Task<bool> WaitForCaptchasAsync(IPage page, TimeSpan timeout)
     {
         IElementHandle handle = null;
-        var selector = "script[src*=\"static.geetest.com\"],script[src*=\"api.geetest.com\"],script[src*=\"gcaptcha4.geetest.com\"]";
+        var selector =
+            "script[src*=\"static.geetest.com\"],script[src*=\"api.geetest.com\"],script[src*=\"gcaptcha4.geetest.com\"]";
 
         try
         {
@@ -75,12 +75,13 @@ public class GeeTestHandler(ICaptchaSolverProvider provider, CaptchaSolverOption
         }
     }
 
-    public async Task<CaptchaResponse> FindCaptchasAsync()
+    public async Task<CaptchaResponse> FindCaptchasAsync(IPage page)
     {
+        await LoadScriptAsync(page);
         return await page.EvaluateExpressionAsync<CaptchaResponse>("window.geeTestScript.findCaptchas()");
     }
 
-    public async Task<ICollection<CaptchaSolution>> SolveCaptchasAsync(ICollection<Captcha> captchas)
+    public async Task<ICollection<CaptchaSolution>> SolveCaptchasAsync(IPage page, ICollection<Captcha> captchas)
     {
         var solutions = new List<CaptchaSolution>();
         foreach (var captcha in captchas)
@@ -93,8 +94,10 @@ public class GeeTestHandler(ICaptchaSolverProvider provider, CaptchaSolverOption
                 IsInvisible = captcha.IsInvisible,
                 PageUrl = captcha.Url,
                 SiteKey = captcha.Sitekey,
-                Version = captcha.Version == "v4" || !string.IsNullOrEmpty(captcha.CaptchaId) ? CaptchaVersion.GeeTestV4 : CaptchaVersion.GeeTestV3,
-                MinScore = options.MinScore,
+                Version = captcha.Version == "v4" || !string.IsNullOrEmpty(captcha.CaptchaId)
+                    ? CaptchaVersion.GeeTestV4
+                    : CaptchaVersion.GeeTestV3,
+                MinScore = options.Current.MinScore,
                 Gt = captcha.Gt,
                 Challenge = captcha.Challenge,
                 CaptchaId = captcha.CaptchaId,
@@ -104,7 +107,7 @@ public class GeeTestHandler(ICaptchaSolverProvider provider, CaptchaSolverOption
             solutions.Add(new CaptchaSolution
             {
                 Id = captcha.Id,
-                Vendor = "geetest",
+                Vendor = CaptchaVendor.GeeTest,
                 Payload = payload,
             });
         }
@@ -112,8 +115,10 @@ public class GeeTestHandler(ICaptchaSolverProvider provider, CaptchaSolverOption
         return solutions;
     }
 
-    public async Task<EnterCaptchaSolutionsResult> EnterCaptchaSolutionsAsync(ICollection<CaptchaSolution> solutions)
+    public async Task<EnterCaptchaSolutionsResult> EnterCaptchaSolutionsAsync(IPage page,
+        ICollection<CaptchaSolution> solutions)
     {
+        await LoadScriptAsync(page);
         var result = await page.EvaluateFunctionAsync<EnterCaptchaSolutionsResult>(
             @"(solutions) => {return window.geeTestScript.enterCaptchaSolutions(solutions)}",
             solutions);
@@ -126,54 +131,13 @@ public class GeeTestHandler(ICaptchaSolverProvider provider, CaptchaSolverOption
         return result;
     }
 
-    public async Task HandleOnPageCreatedAsync()
+    public async Task HandleOnPageCreatedAsync(IPage page)
     {
-        await page.EvaluateExpressionOnNewDocumentAsync(@"
-            window.__geetestCaptured = false;
-            window.__geetestInstance = null;
-            
-            // Intercepter les callbacks geetest_* qui sont ajoutés à window
-            const intervalId = setInterval(() => {
-                for (let key in window) {
-                    if (typeof key === 'string' && key.indexOf('geetest_') === 0 && typeof window[key] === 'function') {
-                        if (!window['__intercepted_' + key]) {
-                            console.log('Fonction callback GeeTest trouvée:', key);
-                            const original = window[key];
-                            window[key] = function() {
-                                console.log('Callback GeeTest exécuté:', key, arguments);
-                                window.__geetestCallbackData = arguments[0];
-                                clearInterval(intervalId);
-                                return original.apply(this, arguments);
-                            };
-                            window['__intercepted_' + key] = true;
-                        }
-                    }
-                }
-            }, 100);
-            
-            // Intercepter initGeetest4 s'il est défini plus tard
-            let _initGeetest4 = null;
-            Object.defineProperty(window, 'initGeetest4', {
-                get: function() {
-                    return _initGeetest4;
-                },
-                set: function(value) {
-                    console.log('initGeetest4 défini!');
-                    _initGeetest4 = function(config, callback) {
-                        console.log('initGeetest4 appelé avec config:', config);
-                        return value(config, function(captchaObj) {
-                            console.log('Instance GeeTest créée!');
-                            window.__geetestInstance = captchaObj;
-                            if (callback) callback(captchaObj);
-                        });
-                    };
-                }
-            });
-        ");
-        page.Response += ProcessResponseAsync;
+        await page.EnsureEvaluateExpressionOnNewDocumentAsync($"{GetType().Namespace}.{nameof(CaptchaVendor.GeeTest)}InterceptorScript.js");
+        page.Response += (sender, args) => ProcessResponseAsync(page, sender, args);
     }
 
-    public async void ProcessResponseAsync(object send, ResponseCreatedEventArgs e)
+    public async void ProcessResponseAsync(IPage page, object send, ResponseCreatedEventArgs e)
     {
         var url = e.Response.Url;
 
@@ -199,7 +163,7 @@ public class GeeTestHandler(ICaptchaSolverProvider provider, CaptchaSolverOption
 
                     if (gt.ValueKind == JsonValueKind.String && challenge.ValueKind == JsonValueKind.String)
                     {
-                        _initEndpoint = $"{uri.Scheme}://{uri.Host}{uri.AbsolutePath}";
+                        // _initEndpoint = $"{uri.Scheme}://{uri.Host}{uri.AbsolutePath}";
 
                         await page.EvaluateExpressionAsync($"window.__geetest_gt = '{gt.GetString()}'");
                         await page.EvaluateExpressionAsync($"window.__geetest_challenge = '{challenge.GetString()}'");
@@ -213,16 +177,21 @@ public class GeeTestHandler(ICaptchaSolverProvider provider, CaptchaSolverOption
                     var captchaId = queryParams["captcha_id"];
                     await page.EvaluateExpressionAsync($"window.__geetest_captcha_id = '{captchaId}'");
                 }
-
             }
             catch (Exception ex)
             {
-                // Log error if debug is enabled
-                if (options.Debug)
+                if (options.Current.Debug)
                 {
-                    await page.EvaluateExpressionAsync($"console.error('[GeeTest] ProcessResponse error: {ex.Message}')");
+                    await page.EvaluateExpressionAsync(
+                        $"console.error('[GeeTest] ProcessResponse error: {ex.Message}')");
                 }
             }
         }
+    }
+
+    private Task LoadScriptAsync(IPage page)
+    {
+        return page.EnsureEvaluateFunctionAsync(
+            $"{GetType().Namespace}.{nameof(CaptchaVendor.GeeTest)}Script.js", options.Current);
     }
 }

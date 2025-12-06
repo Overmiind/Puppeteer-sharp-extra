@@ -103,7 +103,7 @@
             const isInvisible = size === 'invisible';
 
             return {
-                vendor: "cloudflare",
+                vendor: "Cloudflare",
                 url: document.location.href,
                 id: widgetElement.getAttribute("data-sitekey"), // unique enough
                 sitekey,
@@ -178,21 +178,21 @@
                         const payload = typeof solution.payload === 'string' ? JSON.parse(solution.payload) : null;
                         const vendor = solution.vendor;
 
-                        if (vendor !== 'cloudflare') {
+                        if (vendor !== 'Cloudflare') {
                             return {
-                                vendor: 'cloudflare',
+                                vendor: 'Cloudflare',
                                 id: solution && solution.id ? solution.id : undefined,
                                 responseElement: false,
                                 responseCallback: false,
                                 isSolved: false,
                                 solvedAt: new Date().toISOString(),
-                                error: 'Not a cloudflare solution'
+                                error: 'Not a cloudflare solution' + vendor
                             };
                         }
 
                         if (!solution || !solution.id) {
                             return {
-                                vendor: 'cloudflare',
+                                vendor: 'Cloudflare',
                                 id: undefined,
                                 responseElement: false,
                                 responseCallback: false,
@@ -205,7 +205,7 @@
                         const widget = document.querySelector(`[data-sitekey="${solution.id}"]`);
                         if (!widget) {
                             return {
-                                vendor: "cloudflare",
+                                vendor: "Cloudflare",
                                 id: solution && solution.id ? solution.id : undefined,
                                 responseElement: false,
                                 responseCallback: false,
@@ -246,14 +246,14 @@
                         );
 
                         return {
-                            vendor: "cloudflare",
+                            vendor: "Cloudflare",
                             id: solution.id,
                             isSolved: true,
                             solvedAt: new Date().toISOString(),
                         };
                     } catch (e) {
                         return {
-                            vendor: 'cloudflare',
+                            vendor: 'Cloudflare',
                             id: solution && solution.id ? solution.id : undefined,
                             responseElement: false,
                             responseCallback: false,

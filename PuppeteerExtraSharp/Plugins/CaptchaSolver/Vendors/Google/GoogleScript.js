@@ -345,7 +345,7 @@
             const info = this._pick(['sitekey', 'callback'])(client);
             if (!info.sitekey)
                 return;
-            info.vendor = 'recaptcha';
+            info.vendor = 'Google';
             info.id = client.id;
             info.s = client.s; // google site specific
             info.widgetId = client.widgetId;
@@ -464,9 +464,9 @@
                         const payload = typeof solution.payload === 'string' ? JSON.parse(solution.payload) : null;
                         const vendor = solution.vendor;
 
-                        if (vendor !== 'google') {
+                        if (vendor !== 'Google') {
                             return {
-                                vendor: 'google',
+                                vendor: 'Google',
                                 id: solution && solution.id ? solution.id : undefined,
                                 responseElement: false,
                                 responseCallback: false,
@@ -478,7 +478,7 @@
 
                         if (!solution || !solution.id) {
                             return {
-                                vendor: 'google',
+                                vendor: 'Google',
                                 id: undefined,
                                 responseElement: false,
                                 responseCallback: false,
@@ -492,7 +492,7 @@
                         this.log(' - client', !!client);
                         if (!client) {
                             return {
-                                vendor: 'google',
+                                vendor: 'Google',
                                 id: solution.id,
                                 responseElement: false,
                                 responseCallback: false,
@@ -503,7 +503,7 @@
                         }
 
                         const solved = {
-                            vendor: 'google',
+                            vendor: 'Google',
                             id: client.id,
                             responseElement: false,
                             responseCallback: false
@@ -594,7 +594,7 @@
                         return solved;
                     } catch (e) {
                         return {
-                            vendor: 'google',
+                            vendor: 'Google',
                             id: solution && solution.id ? solution.id : undefined,
                             responseElement: false,
                             responseCallback: false,

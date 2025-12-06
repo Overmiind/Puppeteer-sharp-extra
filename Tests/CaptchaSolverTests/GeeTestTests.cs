@@ -1,32 +1,30 @@
 using System;
 using System.Threading.Tasks;
-using Extra.Tests.Properties;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver;
+using PuppeteerExtraSharp.Plugins.CaptchaSolver.Enums;
+using PuppeteerExtraSharp.Plugins.CaptchaSolver.Interfaces;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Models;
-using PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers;
 using Xunit;
-using Provider = PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers.TwoCaptcha;
-namespace Extra.Tests.CaptchaSolverTests.Providers.TwoCaptcha;
 
-public class GeeTestTests : BrowserDefault
+namespace Extra.Tests.CaptchaSolverTests;
+
+public class GeeTestTests : CaptchaSolverTestsBase
 {
-    [Fact]
-    public async Task ShouldSolveV3()
+    [Theory]
+    [MemberData(nameof(Providers))]
+    public async Task ShouldSolveV3(ICaptchaSolverProvider provider)
     {
-        var plugin = new CaptchaSolverPlugin(new Provider.TwoCaptcha(Resources.TwoCaptchaKey, new CaptchaProviderOptions()
-        {
-            StartTimeout = TimeSpan.FromSeconds(10),
-            MaxPollingAttempts = 30,
-            ApiTimeout = TimeSpan.FromMinutes(3),
-        }));
+        var plugin = new CaptchaSolverPlugin(provider);
         var page = await LaunchAndGetPageAsync(plugin);
 
         await page.GoToAsync("https://2captcha.com/fr/demo/geetest");
 
-        var result = await plugin.SolveCaptchaAsync(page, new CaptchaSolverOptions
+        var result = await plugin.SolveCaptchaAsync(page, new CaptchaOptions
         {
             SolveInViewportOnly = true,
             SolveScoreBased = false,
+            EnabledVendors = [CaptchaVendor.GeeTest],
+            CaptchaWaitTimeout = TimeSpan.FromSeconds(20)
         });
 
         Assert.Null(result.Error);
@@ -40,23 +38,20 @@ public class GeeTestTests : BrowserDefault
         Assert.Contains("\"success\": true", answerElement);
     }
 
-    [Fact]
-    public async Task ShouldSolveV4()
+    [Theory]
+    [MemberData(nameof(Providers))]
+    public async Task ShouldSolveV4(ICaptchaSolverProvider provider)
     {
-        var plugin = new CaptchaSolverPlugin(new Provider.TwoCaptcha(Resources.TwoCaptchaKey, new CaptchaProviderOptions()
-        {
-            StartTimeout = TimeSpan.FromSeconds(10),
-            MaxPollingAttempts = 30,
-            ApiTimeout = TimeSpan.FromMinutes(3),
-        }));
+        var plugin = new CaptchaSolverPlugin(provider);
         var page = await LaunchAndGetPageAsync(plugin);
 
         await page.GoToAsync("https://2captcha.com/demo/geetest-v4");
 
-        var result = await plugin.SolveCaptchaAsync(page, new CaptchaSolverOptions
+        var result = await plugin.SolveCaptchaAsync(page, new CaptchaOptions
         {
             SolveInViewportOnly = true,
             SolveScoreBased = false,
+            CaptchaWaitTimeout = TimeSpan.FromSeconds(20)
         });
 
         Assert.Null(result.Error);

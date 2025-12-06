@@ -1,54 +1,41 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
-using PuppeteerExtraSharp.Plugins.CaptchaSolver.Enums;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Interfaces;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Models;
-using PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers;
 using PuppeteerSharp;
+
 namespace PuppeteerExtraSharp.Plugins.CaptchaSolver;
 
 public class CaptchaSolverPlugin : PuppeteerExtraPlugin
 {
-    private readonly ICaptchaSolverProvider _provider;
-    private readonly ICaptchaSolverHandler _handler;
-    private readonly CaptchaSolverOptions _defaultOptions;
+    private readonly ICaptchaSolver _solver;
+    private readonly CaptchaOptionsScope _optionsScope;
 
     public CaptchaSolverPlugin(
         ICaptchaSolverProvider provider, // Capsolver, TwoCaptcha
-        CaptchaSolverOptions options = null,
-        ICaptchaSolverHandler handler = null) : base("captcha-solver")
+        CaptchaOptions options = null) : base("captcha-solver")
     {
-        _defaultOptions = options ?? new CaptchaSolverOptions();
-        _handler = handler ?? new CaptchaSolverHandler(provider, _defaultOptions);
-        _provider = provider;
+        _optionsScope = new CaptchaOptionsScope(options);
+        _solver = new CaptchaSolver(provider, _optionsScope);
     }
 
-    public async Task<CaptchaResponse> FindCaptchaAsync(IPage page, CaptchaSolverOptions optionsOverride = null)
+    public async Task<CaptchaResponse> FindCaptchaAsync(
+        IPage page, 
+        CaptchaOptions optionsOverride = null)
     {
-        var options = optionsOverride ?? _defaultOptions;
+        using var scope = _optionsScope.CreateScope(optionsOverride ?? _optionsScope.Current);
 
-        var hasCaptchas = await _handler.WaitForCaptchasAsync(page, options.CaptchaWaitTimeout);
-
-        if (!hasCaptchas)
-        {
-            return new CaptchaResponse
-            {
-                Captchas = [],
-                Error = "No captchas found"
-            };
-        }
-
-        return await _handler.FindCaptchasAsync(page);
+        return await FindCaptchaInternalAsync(page);
     }
 
-    public async Task<EnterCaptchaSolutionsResult> SolveCaptchaAsync(IPage page,
-        CaptchaSolverOptions optionsOverride = null)
+    public async Task<EnterCaptchaSolutionsResult> SolveCaptchaAsync(
+        IPage page,
+        CaptchaOptions optionsOverride = null)
     {
-        var options = optionsOverride ?? _defaultOptions;
-        
-        var captchaResponse = await FindCaptchaAsync(page, options);
+        using var scope = _optionsScope.CreateScope(optionsOverride ?? _optionsScope.Current);
+
+        var captchaResponse = await FindCaptchaInternalAsync(page);
 
         if (!captchaResponse.Captchas.Any())
         {
@@ -58,12 +45,12 @@ public class CaptchaSolverPlugin : PuppeteerExtraPlugin
             };
         }
 
-        if (options.ThrowOnError && !string.IsNullOrWhiteSpace(captchaResponse.Error))
+        if (_optionsScope.Current.ThrowOnError && !string.IsNullOrWhiteSpace(captchaResponse.Error))
         {
             throw new CaptchaException(page.Url, captchaResponse.Error);
         }
 
-        var filteredCaptchas = FilterCaptchas(captchaResponse.Captchas, options);
+        var filteredCaptchas = FilterCaptchas(captchaResponse.Captchas, _optionsScope.Current);
 
         var captchas = filteredCaptchas.unfiltered.ToList();
         if (captchas.Count == 0)
@@ -75,11 +62,19 @@ public class CaptchaSolverPlugin : PuppeteerExtraPlugin
             };
         }
 
-        var solvedCaptchas = await _handler.SolveCaptchasAsync(page, captchas);
-        var result = await _handler.EnterCaptchaSolutionsAsync(page, solvedCaptchas);
-        result.Filtered = filteredCaptchas.filtered;
+        var solvedCaptchas = await _solver.SolveCaptchasAsync(page, captchas);
+        var entered = await _solver.EnterCaptchaSolutionsAsync(page, solvedCaptchas);
 
-        if (options.ThrowOnError && !string.IsNullOrWhiteSpace(result.Error))
+        // TODO
+        var first = entered.FirstOrDefault();
+        var result = new EnterCaptchaSolutionsResult()
+        {
+            Filtered = filteredCaptchas.filtered,
+            Solved = first?.Solved,
+            Error = first?.Error,
+        };
+
+        if (_optionsScope.Current.ThrowOnError && !string.IsNullOrWhiteSpace(result.Error))
         {
             throw new CaptchaException(page.Url, result.Error);
         }
@@ -90,17 +85,30 @@ public class CaptchaSolverPlugin : PuppeteerExtraPlugin
     protected internal override async Task OnPageCreatedAsync(IPage page)
     {
         await page.SetBypassCSPAsync(true);
-        foreach (var vendor in _defaultOptions.EnabledVendors.Keys)
-        {
-            var handler = Helpers.Helpers.CreateHandler(vendor, _provider, _defaultOptions, page);
-            if (handler is null)
-                continue;
-
-            _ = handler.HandleOnPageCreatedAsync();
-        }
+        await _solver.OnPageCreatedAsync(page);
     }
 
-    private (ICollection<Captcha> unfiltered, ICollection<FilteredCaptcha> filtered) FilterCaptchas(ICollection<Captcha> captchas, CaptchaSolverOptions options)
+    private async Task<CaptchaResponse> FindCaptchaInternalAsync(IPage page)
+    {
+        var captchaVendors = await _solver.WaitForCaptchasAsync(page, _optionsScope.Current.CaptchaWaitTimeout);
+
+        if (captchaVendors.Count == 0)
+        {
+            return new CaptchaResponse
+            {
+                Captchas = [],
+                Error = "No captchas found"
+            };
+        }
+
+        // TODO: Only the first vendor is handled for now (useful for almost all cases, except when a page contains more than two captcha vendors (e.g., Google + Cloudflare))
+        var found = await _solver.FindCaptchasAsync(captchaVendors.Take(1).ToHashSet(), page);
+
+        return found.FirstOrDefault();
+    }
+
+    private (ICollection<Captcha> unfiltered, ICollection<FilteredCaptcha> filtered) FilterCaptchas(
+        ICollection<Captcha> captchas, CaptchaOptions options)
     {
         var filteredCaptchas = new List<FilteredCaptcha>();
         var unfilteredCaptchas = new List<Captcha>();
@@ -111,6 +119,7 @@ public class CaptchaSolverPlugin : PuppeteerExtraPlugin
                 case CaptchaType.invisible when !options.SolveInvisibleChallenges:
                     filteredCaptchas.Add(new FilteredCaptcha()
                     {
+                        Vendor = captcha.Vendor,
                         Captcha = captcha,
                         FilteredReason = "solveInvisibleChallenges"
                     });
@@ -120,6 +129,7 @@ public class CaptchaSolverPlugin : PuppeteerExtraPlugin
                     !options.SolveInactiveChallenges:
                     filteredCaptchas.Add(new FilteredCaptcha()
                     {
+                        Vendor = captcha.Vendor,
                         Captcha = captcha,
                         FilteredReason = "solveInactiveChallenges"
                     });
@@ -127,6 +137,7 @@ public class CaptchaSolverPlugin : PuppeteerExtraPlugin
                 case CaptchaType.score when !options.SolveScoreBased:
                     filteredCaptchas.Add(new FilteredCaptcha()
                     {
+                        Vendor = captcha.Vendor,
                         Captcha = captcha,
                         FilteredReason = "solveScoreBased"
                     });
@@ -134,6 +145,7 @@ public class CaptchaSolverPlugin : PuppeteerExtraPlugin
                 case CaptchaType.checkbox when !captcha.IsInViewport && options.SolveInViewportOnly:
                     filteredCaptchas.Add(new FilteredCaptcha()
                     {
+                        Vendor = captcha.Vendor,
                         Captcha = captcha,
                         FilteredReason = "solveInViewportOnly"
                     });

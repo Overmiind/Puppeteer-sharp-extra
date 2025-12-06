@@ -191,7 +191,7 @@
             const sitekey = captchaId || gt || null;
 
             const info = {
-                vendor: 'geetest',
+                vendor: 'GeeTest',
                 captchaType: 'checkbox',
                 url: document.location && document.location.href,
                 id: id,
@@ -290,9 +290,9 @@
                         const payload = typeof solution.payload === 'string' ? JSON.parse(solution.payload) : null;
                         const vendor = solution.vendor;
 
-                        if (vendor !== 'geetest') {
+                        if (vendor !== 'GeeTest') {
                             return {
-                                vendor: 'geetest',
+                                vendor: 'GeeTest',
                                 id: solution && solution.id ? solution.id : undefined,
                                 responseElement: false,
                                 responseCallback: false,
@@ -304,7 +304,7 @@
 
                         if (!solution || !solution.id) {
                             return {
-                                vendor: 'geetest',
+                                vendor: 'GeeTest',
                                 id: undefined,
                                 responseElement: false,
                                 responseCallback: false,
@@ -316,7 +316,7 @@
 
                         if (!window.__geetest_captcha_id && (!payload.challenge || !payload.validate || !payload.seccode)) {
                             return {
-                                vendor: 'geetest',
+                                vendor: 'GeeTest',
                                 id: solution.id,
                                 responseElement: false,
                                 responseCallback: false,
@@ -328,7 +328,7 @@
 
                         if (window.__geetest_captcha_id && !payload.pass_token) {
                             return {
-                                vendor: 'geetest',
+                                vendor: 'GeeTest',
                                 id: solution.id,
                                 responseElement: false,
                                 responseCallback: false,
@@ -339,12 +339,13 @@
                         }
 
                         if (window.__geetest_captcha_id && payload.pass_token) {
-                            window.__geetestInstance.getValidate = function () {
-                                console.log('getValidate appelé - retour solution Capsolver');
-                                return payload;
-                            };
+                            if(window.__geetestInstance) {
+                                window.__geetestInstance.getValidate = function () {
+                                    return payload;
+                                };
+                            }
                             return {
-                                endor: 'geetest',
+                                vendor: 'GeeTest',
                                 id: solution.id,
                                 responseElement: false,
                                 responseCallback: true,
@@ -395,7 +396,7 @@
                         }
 
                         const solved = {
-                            vendor: 'geetest',
+                            vendor: 'GeeTest',
                             id: solution.id,
                             responseElement: responseElement,
                             responseCallback: false,
@@ -410,8 +411,9 @@
                         this.log('enterCaptchaSolutions (geetest) - solved', solved);
                         return solved;
                     } catch (e) {
+                        result.error = String(e);
                         return {
-                            vendor: 'geetest',
+                            vendor: 'GeeTest',
                             id: solution && solution.id ? solution.id : undefined,
                             responseElement: false,
                             responseCallback: false,

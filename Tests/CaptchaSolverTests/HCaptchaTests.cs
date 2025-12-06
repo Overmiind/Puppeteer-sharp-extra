@@ -1,29 +1,23 @@
-using System;
 using System.Threading.Tasks;
-using Extra.Tests.Properties;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver;
+using PuppeteerExtraSharp.Plugins.CaptchaSolver.Interfaces;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Models;
-using PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers;
-using Provider = PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers.CapSolver;
 using Xunit;
-namespace Extra.Tests.CaptchaSolverTests.Providers.CapSolver;
 
-public class HCaptchaTests : BrowserDefault
+namespace Extra.Tests.CaptchaSolverTests;
+
+public class HCaptchaTests : CaptchaSolverTestsBase
 {
-    [Fact]
-    public async Task ShouldSolveCheckbox()
+    [Theory]
+    [MemberData(nameof(Providers))]
+    public async Task ShouldSolveCheckbox(ICaptchaSolverProvider provider)
     {
-        var plugin = new CaptchaSolverPlugin(new Provider.CapSolver(Resources.CapSolverKey, new CaptchaProviderOptions()
-        {
-            StartTimeout = TimeSpan.FromSeconds(10),
-            MaxPollingAttempts = 30,
-            ApiTimeout = TimeSpan.FromMinutes(3),
-        }));
+        var plugin = new CaptchaSolverPlugin(provider);
         var page = await LaunchAndGetPageAsync(plugin);
 
         await page.GoToAsync("https://nopecha.com/demo/hcaptcha");
 
-        var result = await plugin.FindCaptchaAsync(page, new CaptchaSolverOptions
+        var result = await plugin.FindCaptchaAsync(page, new CaptchaOptions
         {
             SolveInViewportOnly = true,
             SolveScoreBased = false,

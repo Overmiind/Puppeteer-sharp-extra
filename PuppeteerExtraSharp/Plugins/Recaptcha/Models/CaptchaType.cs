@@ -1,5 +1,8 @@
-﻿namespace PuppeteerExtraSharp.Plugins.Recaptcha.Models;
+﻿using System.Text.Json.Serialization;
 
+namespace PuppeteerExtraSharp.Plugins.Recaptcha.Models;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum CaptchaType
 {
     invisible,

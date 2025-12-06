@@ -1,23 +1,23 @@
 using System;
 using System.Collections.Generic;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Enums;
-using PuppeteerExtraSharp.Plugins.CaptchaSolver.Interfaces;
-using PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers;
-using PuppeteerExtraSharp.Plugins.CaptchaSolver.Vendors.Google;
 
 namespace PuppeteerExtraSharp.Plugins.CaptchaSolver.Models;
 
-public class CaptchaSolverOptions
+public class CaptchaOptions
 {
     private static readonly TimeSpan DefaultWaitTimeout = TimeSpan.FromSeconds(5);
     private const double DefaultMinScore = 0.5;
     private double _minScore = DefaultMinScore;
 
-    private static readonly Dictionary<CaptchaVendor, ICaptchaSolveOptions?> DefaultEnabledVendors = new Dictionary<CaptchaVendor, ICaptchaSolveOptions?>
+    private static readonly HashSet<CaptchaVendor> DefaultEnabledVendors = new()
     {
-        {
-            CaptchaVendor.Google, new GoogleOptions()
-        },
+        CaptchaVendor.Google,
+        CaptchaVendor.Cloudflare,
+        CaptchaVendor.GeeTest,
+        
+        // CaptchaVendor.DataDome,
+        
         // hCaptcha support temporarily disabled.
         //
         // Reason:
@@ -30,21 +30,10 @@ public class CaptchaSolverOptions
         //
         // We will reconsider hCaptcha support only if a reliable and compliant solution
         // becomes available in the future.
-        {
-            CaptchaVendor.HCaptcha, null
-        },
-        {
-            CaptchaVendor.DataDome, null
-        },
-        {
-            CaptchaVendor.Cloudflare, null
-        },
-        {
-            CaptchaVendor.GeeTest, null
-        }
+        CaptchaVendor.HCaptcha,
     };
 
-    public Dictionary<CaptchaVendor, ICaptchaSolveOptions?> EnabledVendors { get; set; } = DefaultEnabledVendors;
+    public HashSet<CaptchaVendor> EnabledVendors { get; set; } = DefaultEnabledVendors;
 
     /// <summary>
     /// Maximum time to wait for captcha to appear/solve. Default: 10 seconds.

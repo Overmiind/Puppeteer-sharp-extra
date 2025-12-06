@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace PuppeteerExtraSharp.Plugins.Recaptcha.Models;
+﻿namespace PuppeteerExtraSharp.Plugins.Recaptcha.Models;
 
 public class Captcha
 {
@@ -19,8 +17,6 @@ public class Captcha
     public bool IsInvisible { get; set; }
     public bool HasActiveChallengePopup { get; set; }
     public bool HasChallengeFrame { get; set; }
-
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public CaptchaType CaptchaType { get; set; }
 
     public Captcha()

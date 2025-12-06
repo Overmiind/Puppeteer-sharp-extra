@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Extra.Tests.Properties;
 using PuppeteerExtraSharp.Plugins.Recaptcha;
 using PuppeteerExtraSharp.Plugins.Recaptcha.Models;
 using PuppeteerExtraSharp.Plugins.Recaptcha.Provider;
 using PuppeteerExtraSharp.Plugins.Recaptcha.Provider.CapSolver;
-using PuppeteerExtraSharp.Plugins.Recaptcha.Provider.TwoCaptcha;
 using Xunit;
 
 namespace Extra.Tests.Recaptcha;

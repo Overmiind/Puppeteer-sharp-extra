@@ -214,9 +214,9 @@
                         const payload = typeof solution.payload === 'string' ? JSON.parse(solution.payload) : null;
                         const vendor = solution.vendor;
 
-                        if (vendor !== 'hcaptcha') {
+                        if (vendor !== 'HCaptcha') {
                             return {
-                                vendor: 'hcaptcha',
+                                vendor: 'HCaptcha',
                                 id: solution && solution.id ? solution.id : undefined,
                                 responseElement: false,
                                 responseCallback: false,
@@ -228,7 +228,7 @@
 
                         if (!solution || !solution.id) {
                             return {
-                                vendor: 'hcaptcha',
+                                vendor: 'HCaptcha',
                                 id: undefined,
                                 responseElement: false,
                                 responseCallback: false,
@@ -261,7 +261,7 @@
                             );
                         } catch (pmErr) {
                             return {
-                                vendor: 'hcaptcha',
+                                vendor: 'HCaptcha',
                                 id: solution.id,
                                 isSolved: false,
                                 solvedAt: new Date().toISOString(),
@@ -275,14 +275,14 @@
                         }
 
                         return {
-                            vendor: 'hcaptcha',
+                            vendor: 'HCaptcha',
                             id: solution.id,
                             isSolved: true,
                             solvedAt: new Date().toISOString()
                         };
                     } catch (err) {
                         return {
-                            vendor: 'hcaptcha',
+                            vendor: 'HCaptcha',
                             id: solution && solution.id ? solution.id : undefined,
                             isSolved: false,
                             solvedAt: new Date().toISOString(),

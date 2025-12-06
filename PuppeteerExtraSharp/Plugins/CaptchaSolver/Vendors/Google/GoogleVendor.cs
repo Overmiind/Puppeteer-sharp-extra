@@ -1,19 +1,20 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Enums;
+using PuppeteerExtraSharp.Plugins.CaptchaSolver.Helpers;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Interfaces;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Models;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers;
 using PuppeteerSharp;
+
 namespace PuppeteerExtraSharp.Plugins.CaptchaSolver.Vendors.Google;
 
-public class GoogleHandler(ICaptchaSolverProvider provider, CaptchaSolverOptions options, IPage page) : ICaptchaVendorHandler
+public class GoogleVendor(ICaptchaSolverProvider provider, CaptchaOptions options) : ICaptchaVendor
 {
     public CaptchaVendor Vendor => CaptchaVendor.Google;
 
-    public async Task<bool> WaitForCaptchasAsync(TimeSpan timeout)
+    public async Task<bool> WaitForCaptchasAsync(IPage page, TimeSpan timeout)
     {
         var handle = await page.QuerySelectorAsync(
             "script[src*=\"/recaptcha/api.js\"], script[src*=\"/recaptcha/enterprise.js\"]");
@@ -39,12 +40,13 @@ public class GoogleHandler(ICaptchaSolverProvider provider, CaptchaSolverOptions
         }
     }
 
-    public async Task<CaptchaResponse> FindCaptchasAsync()
+    public async Task<CaptchaResponse> FindCaptchasAsync(IPage page)
     {
+        await LoadScriptAsync(page);
         return await page.EvaluateExpressionAsync<CaptchaResponse>("window.reScript.findRecaptchas()");
     }
 
-    public async Task<ICollection<CaptchaSolution>> SolveCaptchasAsync(ICollection<Captcha> captchas)
+    public async Task<ICollection<CaptchaSolution>> SolveCaptchasAsync(IPage page, ICollection<Captcha> captchas)
     {
         var solutions = new List<CaptchaSolution>();
         foreach (var captcha in captchas)
@@ -57,7 +59,9 @@ public class GoogleHandler(ICaptchaSolverProvider provider, CaptchaSolverOptions
                 IsInvisible = captcha.IsInvisible,
                 PageUrl = captcha.Url,
                 SiteKey = captcha.Sitekey,
-                Version = captcha.CaptchaType == CaptchaType.score ? CaptchaVersion.RecaptchaV3 : CaptchaVersion.RecaptchaV2,
+                Version = captcha.CaptchaType == CaptchaType.score
+                    ? CaptchaVersion.RecaptchaV3
+                    : CaptchaVersion.RecaptchaV2,
                 MinScore = options.MinScore,
                 Vendor = CaptchaVendor.Google
             });
@@ -65,7 +69,7 @@ public class GoogleHandler(ICaptchaSolverProvider provider, CaptchaSolverOptions
             solutions.Add(new CaptchaSolution
             {
                 Id = captcha.Id,
-                Vendor = "google",
+                Vendor = CaptchaVendor.Google,
                 Payload = payload,
             });
         }
@@ -73,8 +77,10 @@ public class GoogleHandler(ICaptchaSolverProvider provider, CaptchaSolverOptions
         return solutions;
     }
 
-    public async Task<EnterCaptchaSolutionsResult> EnterCaptchaSolutionsAsync(ICollection<CaptchaSolution> solutions)
+    public async Task<EnterCaptchaSolutionsResult> EnterCaptchaSolutionsAsync(IPage page,
+        ICollection<CaptchaSolution> solutions)
     {
+        await LoadScriptAsync(page);
         var result = await page.EvaluateFunctionAsync<EnterCaptchaSolutionsResult>(
             @"(solutions) => {return window.reScript.enterRecaptchaSolutions(solutions)}",
             solutions);
@@ -87,7 +93,15 @@ public class GoogleHandler(ICaptchaSolverProvider provider, CaptchaSolverOptions
         return result;
     }
 
-    public Task HandleOnPageCreatedAsync() => Task.CompletedTask;
+    public Task HandleOnPageCreatedAsync(IPage page) => Task.CompletedTask;
 
-    public void ProcessResponseAsync(object send, ResponseCreatedEventArgs e) { }
+    public void ProcessResponseAsync(IPage page, object send, ResponseCreatedEventArgs e)
+    {
+    }
+
+    private Task LoadScriptAsync(IPage page)
+    {
+        return page.EnsureEvaluateFunctionAsync(
+            $"{GetType().Namespace}.{nameof(CaptchaVendor.Google)}Script.js", options);
+    }
 }
