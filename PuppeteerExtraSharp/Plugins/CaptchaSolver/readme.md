@@ -38,10 +38,6 @@ The plugin is included in PuppeteerExtraSharp. Simply add it to your project and
 ### Basic Usage
 
 ```csharp
-using PuppeteerExtraSharp;
-using PuppeteerExtraSharp.Plugins.CaptchaSolver;
-using PuppeteerExtraSharp.Plugins.CaptchaSolver.Providers.CapSolver;
-
 // Create plugin with CapSolver provider
 var captchaSolver = new CaptchaSolverPlugin(
     new CapSolver("YOUR_CAPSOLVER_API_KEY")
@@ -85,9 +81,9 @@ var captchaSolver = new CaptchaSolverPlugin(
 
 ## Configuration
 
-### CaptchaSolverOptions
+### CaptchaOptions
 
-Configure the plugin behavior with `CaptchaSolverOptions`:
+Configure the plugin behavior with `CaptchaOptions`:
 
 ```csharp
 var options = new CaptchaSolverOptions
@@ -133,6 +129,17 @@ var captchaSolver = new CaptchaSolverPlugin(
 );
 ```
 
+## Options overriding for the specific request
+```c#
+var result = await captchaSolver.SolveCaptchaAsync(page, new CaptchaOptions()
+        {
+            EnabledVendors = [CaptchaVendor.DataDome],
+            MinScore = 0.3,
+            ThrowOnError = true,
+            CaptchaWaitTimeout = TimeSpan.FromSeconds(30)
+        });
+```
+
 ### Provider Options
 
 Configure the solving provider's behavior:
@@ -152,28 +159,6 @@ var providerOptions = new CaptchaProviderOptions
 
 var provider = new CapSolver("YOUR_API_KEY", providerOptions);
 var captchaSolver = new CaptchaSolverPlugin(provider);
-```
-
-### Vendor-Specific Options
-
-Configure options for specific CAPTCHA vendors:
-
-```csharp
-using PuppeteerExtraSharp.Plugins.CaptchaSolver.Vendors.Google;
-
-var options = new CaptchaSolverOptions
-{
-    EnabledVendors = new Dictionary<CaptchaVendor, ICaptchaSolveOptions?>
-    {
-        {
-            CaptchaVendor.Google,
-            new GoogleOptions
-            {
-                // Google-specific options
-            }
-        }
-    }
-};
 ```
 
 ## Advanced Usage
