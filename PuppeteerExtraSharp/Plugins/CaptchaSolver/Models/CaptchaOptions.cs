@@ -15,8 +15,7 @@ public class CaptchaOptions
         CaptchaVendor.Google,
         CaptchaVendor.Cloudflare,
         CaptchaVendor.GeeTest,
-        
-        // CaptchaVendor.DataDome,
+        CaptchaVendor.DataDome,
         
         // hCaptcha support temporarily disabled.
         //
@@ -83,4 +82,42 @@ public class CaptchaOptions
     /// Enable verbose debug logging.
     /// </summary>
     public bool Debug { get; set; } = false;
+
+    /// <summary>
+    /// Proxy type (http, https, socks4, socks5). Required for DataDome.
+    /// </summary>
+    public string? ProxyType { get; set; }
+
+    /// <summary>
+    /// Proxy address (IP or hostname). Required for DataDome.
+    /// </summary>
+    public string? ProxyAddress { get; set; }
+
+    /// <summary>
+    /// Proxy port. Required for DataDome.
+    /// </summary>
+    public int? ProxyPort { get; set; }
+
+    /// <summary>
+    /// Proxy authentication username.
+    /// </summary>
+    public string? ProxyLogin { get; set; }
+
+    /// <summary>
+    /// Proxy authentication password.
+    /// </summary>
+    public string? ProxyPassword { get; set; }
+
+    /// <summary>
+    /// Session ID for sticky proxy sessions.
+    /// Use this to ensure the same IP is used across requests (required for DataDome).
+    /// For DataImpulse proxies, this is appended as ";sessid.{value}" to the username.
+    /// Example: "mysession123" will result in "user;sessid.mysession123" as the proxy username.
+    /// </summary>
+    public string? ProxySessionId { get; set; }
+
+    /// <summary>
+    /// Returns true if proxy settings are configured.
+    /// </summary>
+    public bool HasProxy => !string.IsNullOrEmpty(ProxyAddress) && ProxyPort.HasValue;
 }

@@ -20,10 +20,18 @@ public class Captcha
     public bool HasActiveChallengePopup { get; set; }
     public bool HasChallengeFrame { get; set; }
 
+    // GeeTest-specific
     public string? Gt { get; set; }
     public string? Challenge { get; set; }
     public string? CaptchaId { get; set; }
     public string? Version { get; set; }
+
+    // DataDome-specific
+    public string? DataDomeCaptchaUrl { get; set; }
+    public string? DataDomeCid { get; set; }
+    public string? DataDomeHash { get; set; }
+    public string? DataDomeUserAgent { get; set; }
+    public string? DataDomeReferer { get; set; }
 
     public CaptchaType CaptchaType { get; set; }
 

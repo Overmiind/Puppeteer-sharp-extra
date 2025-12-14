@@ -6,4 +6,5 @@ public class EnterCaptchaSolutionsResult
     public ICollection<CaptchaSolved> Solved { get; set; } = new List<CaptchaSolved>();
     public ICollection<FilteredCaptcha> Filtered { get; set; } = new List<FilteredCaptcha>();
     public string Error { get; set; }
+    public bool NeedsReload { get; set; }
 }

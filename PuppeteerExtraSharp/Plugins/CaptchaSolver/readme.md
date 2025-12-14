@@ -18,11 +18,11 @@ A unified CAPTCHA solving plugin for PuppeteerExtraSharp that supports multiple 
 | **GeeTest** | ✅ Active               | v3, v4 |
 | **Cloudflare Turnstile** | ✅ Active               | Managed, Non-interactive, Invisible |
 | **hCaptcha** | 🔍 Detection only      | - |
-| **DataDome** | 🚧 Not yet implemented | Requires proxy support |
+| **DataDome** | ✅ Active               | Slider, Interstitial, Device Check |
 
 > **Notes**:
 > - **hCaptcha**: Due to hCaptcha's aggressive anti-automation measures and legal actions against solving services, solving is intentionally disabled. Detection still works, but automated solving is not attempted.
-> - **DataDome**: Not yet implemented. DataDome CAPTCHAs require proxy support for proper handling and solving.
+> - **DataDome**: Requires a proxy with sticky IP. The browser and solving service must use the same IP address for the cookie to be valid.
 
 ## Supported Solving Providers
 
@@ -226,6 +226,81 @@ The plugin automatically hooks into page creation and monitors for CAPTCHAs. To 
 var result = await captchaSolver.SolveCaptchaAsync(page);
 ```
 
+## DataDome Support
+
+DataDome requires special configuration because it validates the cookie against the client's IP address. Both the browser and the solving service must use the same proxy IP.
+
+### Requirements
+
+1. **Proxy with sticky IP**: Use `ProxySessionId` to ensure consistent IP across requests
+2. **Browser proxy**: Configure the browser to use the same proxy
+3. **User-Agent**: Automatically captured from the browser and sent to the solving service
+
+### Example
+
+```csharp
+var provider = new CapSolver("YOUR_API_KEY");
+var plugin = new CaptchaSolverPlugin(provider);
+
+// Generate unique session ID for sticky IP
+var sessionId = Guid.NewGuid().ToString("N");
+
+// Configure browser to use proxy
+var launchOptions = new LaunchOptions
+{
+    Headless = false,
+    Args = new[] { "--proxy-server=http://proxy.example.com:8080" }
+};
+
+var extra = new PuppeteerExtra().Use(plugin);
+var browser = await extra.LaunchAsync(launchOptions);
+var page = await browser.NewPageAsync();
+
+// Authenticate with proxy using session ID
+// Format for DataImpulse: "user;sessid.{sessionId}"
+await page.AuthenticateAsync(new Credentials
+{
+    Username = $"myuser;sessid.{sessionId}",
+    Password = "mypassword"
+});
+
+await page.GoToAsync("https://site-with-datadome.com");
+
+// Solve with matching proxy configuration
+var result = await plugin.SolveCaptchaAsync(page, new CaptchaOptions
+{
+    EnabledVendors = new HashSet<CaptchaVendor> { CaptchaVendor.DataDome },
+    ProxyAddress = "proxy.example.com",
+    ProxyPort = 8080,
+    ProxyLogin = "myuser",
+    ProxyPassword = "mypassword",
+    ProxySessionId = sessionId  // Same session ID for sticky IP
+});
+```
+
+### Proxy Options
+
+```csharp
+var options = new CaptchaOptions
+{
+    // Proxy type: http, https, socks4, socks5 (default: http)
+    ProxyType = "http",
+
+    // Proxy server address
+    ProxyAddress = "proxy.example.com",
+
+    // Proxy server port
+    ProxyPort = 8080,
+
+    // Proxy authentication
+    ProxyLogin = "username",
+    ProxyPassword = "password",
+
+    // Session ID for sticky IP (appended as ";sessid.{id}" to login)
+    ProxySessionId = "unique-session-id"
+};
+```
+
 ## Architecture
 
 ### Components
@@ -323,6 +398,7 @@ See the `Tests/` directory for comprehensive examples:
 - **GoogleTests.cs**: Google reCAPTCHA (v2, v3, Enterprise) solving examples
 - **GeeTestTests.cs**: GeeTest v3 and v4 solving examples
 - **CloudflareTests.cs**: Cloudflare Turnstile solving examples
+- **DataDomeTests.cs**: DataDome solving examples with proxy configuration
 
 ## Legal and Ethical Use
 

@@ -72,6 +72,7 @@ public class CaptchaSolverPlugin : PuppeteerExtraPlugin
             Filtered = filteredCaptchas.filtered,
             Solved = first?.Solved,
             Error = first?.Error,
+            NeedsReload = first?.NeedsReload ?? false,
         };
 
         if (_optionsScope.Current.ThrowOnError && !string.IsNullOrWhiteSpace(result.Error))

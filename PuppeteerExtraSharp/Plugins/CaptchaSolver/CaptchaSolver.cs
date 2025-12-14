@@ -6,6 +6,7 @@ using PuppeteerExtraSharp.Plugins.CaptchaSolver.Enums;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Interfaces;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Models;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Vendors.Cloudflare;
+using PuppeteerExtraSharp.Plugins.CaptchaSolver.Vendors.DataDome;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Vendors.GeeTest;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Vendors.Google;
 using PuppeteerExtraSharp.Plugins.CaptchaSolver.Vendors.HCaptcha;
@@ -30,10 +31,20 @@ internal class CaptchaSolver : ICaptchaSolver
 
         foreach (var vendor in FilterCaptchaVendors(_optionsScope.Current.EnabledVendors))
         {
-            var handled = await vendor.WaitForCaptchasAsync(page, timeout);
-            if (handled)
+            try
             {
-                result.Add(vendor.Vendor);
+                var handled = await vendor.WaitForCaptchasAsync(page, timeout);
+                if (handled)
+                {
+                    result.Add(vendor.Vendor);
+                }
+            }
+            catch (PuppeteerSharp.EvaluationFailedException)
+            {
+                // Execution context was destroyed, likely due to navigation
+                // This can happen if a captcha solution triggered a page reload
+                // Stop scanning for more vendors and return what we have
+                break;
             }
         }
 
@@ -46,9 +57,16 @@ internal class CaptchaSolver : ICaptchaSolver
 
         foreach (var captchaVendor in FilterCaptchaVendors(vendors))
         {
-            var captcha = await captchaVendor.FindCaptchasAsync(page);
-
-            result.Add(captcha);
+            try
+            {
+                var captcha = await captchaVendor.FindCaptchasAsync(page);
+                result.Add(captcha);
+            }
+            catch (PuppeteerSharp.EvaluationFailedException)
+            {
+                // Execution context was destroyed, likely due to navigation
+                break;
+            }
         }
 
         return result;
@@ -120,7 +138,8 @@ internal class CaptchaSolver : ICaptchaSolver
             new CloudflareVendor(provider, options),
             new HCaptchaVendor(provider, options),
             new GoogleVendor(provider, options),
-            new GeeTestVendor(provider, _optionsScope)
+            new GeeTestVendor(provider, _optionsScope),
+            new DataDomeVendor(provider, _optionsScope)
         ];
     }
 }

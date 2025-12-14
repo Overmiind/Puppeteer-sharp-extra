@@ -29,6 +29,9 @@ internal class TwoCaptchaApi(string userKey, CaptchaProviderOptions options)
             case CaptchaVendor.GeeTest:
                 json = GetGeeTestJson(request);
                 break;
+            case CaptchaVendor.DataDome:
+                json = GetDataDomeJson(request);
+                break;
         }
 
         if (json == null) throw new NotSupportedException($"Vendor [{request.Vendor}] is not supported");
@@ -144,6 +147,44 @@ internal class TwoCaptchaApi(string userKey, CaptchaProviderOptions options)
                 ["websiteURL"] = request.PageUrl,
                 ["type"] = "TurnstileTaskProxyless"
             }
+        };
+    }
+
+    private Dictionary<string, object> GetDataDomeJson(GetCaptchaSolutionRequest request)
+    {
+        // Build proxy login with session ID if provided
+        // Format for DataImpulse: "user;sessid.{sessionId}" or just "user"
+        var proxyLogin = request.ProxyLogin ?? string.Empty;
+        if (!string.IsNullOrEmpty(request.ProxySessionId) && !string.IsNullOrEmpty(proxyLogin))
+        {
+            proxyLogin = $"{proxyLogin};sessid.{request.ProxySessionId}";
+        }
+
+        var task = new Dictionary<string, object>
+        {
+            ["type"] = "DataDomeSliderTask",
+            ["websiteURL"] = request.PageUrl,
+            ["captchaUrl"] = request.DataDomeCaptchaUrl ?? string.Empty,
+            ["userAgent"] = request.DataDomeUserAgent ?? string.Empty,
+            ["proxyType"] = request.ProxyType ?? "http",
+            ["proxyAddress"] = request.ProxyAddress ?? string.Empty,
+            ["proxyPort"] = request.ProxyPort ?? 0
+        };
+
+        // Add proxy authentication if provided
+        if (!string.IsNullOrEmpty(proxyLogin))
+        {
+            task["proxyLogin"] = proxyLogin;
+        }
+        if (!string.IsNullOrEmpty(request.ProxyPassword))
+        {
+            task["proxyPassword"] = request.ProxyPassword;
+        }
+
+        return new Dictionary<string, object>
+        {
+            ["clientKey"] = userKey,
+            ["task"] = task
         };
     }
 

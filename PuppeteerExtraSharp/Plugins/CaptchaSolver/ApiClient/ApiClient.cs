@@ -37,7 +37,14 @@ public class ApiClient
     {
         var data = JsonContent.Create(content);
         var response = await _client.PostAsync(url, data, token);
-        response.EnsureSuccessStatusCode();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorBody = await response.Content.ReadAsStringAsync(token);
+            throw new HttpRequestException(
+                $"Response status code does not indicate success: {(int)response.StatusCode} ({response.ReasonPhrase}). Response: {errorBody}");
+        }
+
         return await response.Content.ReadFromJsonAsync<T>(cancellationToken: token);
     }
 
