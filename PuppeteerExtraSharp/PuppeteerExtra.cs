@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using PuppeteerExtraSharp.Plugins;
 using PuppeteerSharp;
+using ErrorEventArgs = System.IO.ErrorEventArgs;
 
 
 namespace PuppeteerExtraSharp;
@@ -11,6 +14,28 @@ namespace PuppeteerExtraSharp;
 public class PuppeteerExtra
 {
     private List<PuppeteerExtraPlugin> _plugins = [];
+    private readonly ConditionalWeakTable<IPage, Lazy<Task>> _pageInitializations = new();
+
+    /// <summary>Reports failures in automatic target and page initialization.</summary>
+    public event EventHandler<ErrorEventArgs> PluginError;
+
+    /// <summary>
+    /// Waits for this page's plugins before navigation. Repeated calls share the same initialization.
+    /// Cancellation stops waiting; close the page or its context to interrupt browser work.
+    /// </summary>
+    public Task PreparePageAsync(IPage page, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(page);
+        cancellationToken.ThrowIfCancellationRequested();
+        return _pageInitializations.GetValue(page, value => new Lazy<Task>(() => InitializePageAsync(value)))
+            .Value.WaitAsync(cancellationToken);
+    }
+
+    private async Task InitializePageAsync(IPage page)
+    {
+        foreach (var plugin in _plugins)
+            await plugin.OnPageCreatedAsync(page);
+    }
 
     public PuppeteerExtra Use(PuppeteerExtraPlugin plugin)
     {
@@ -108,15 +133,7 @@ public class PuppeteerExtra
     {
         var pages = await browser.PagesAsync();
 
-        browser.TargetCreated += async (_, args) =>
-        {
-            _plugins.ForEach(e => e.OnTargetCreatedAsync(args.Target));
-            if (args.Target.Type == TargetType.Page)
-            {
-                var page = await args.Target.PageAsync();
-                _plugins.ForEach(async void (e) => await e.OnPageCreatedAsync(page));
-            }
-        };
+        browser.TargetCreated += (_, args) => _ = HandleTargetCreatedAsync(args.Target);
 
         foreach (var puppeteerExtraPlugin in _plugins)
         {
@@ -124,7 +141,29 @@ public class PuppeteerExtra
             browser.TargetDestroyed += (sender, args) => puppeteerExtraPlugin.OnTargetDestroyedAsync(args.Target);
             browser.Disconnected += (sender, args) => puppeteerExtraPlugin.OnDisconnectedAsync();
             browser.Closed += (sender, args) => puppeteerExtraPlugin.OnCloseAsync();
-            foreach (var page in pages) await puppeteerExtraPlugin.OnPageCreatedAsync(page);
+        }
+
+        foreach (var page in pages) await PreparePageAsync(page);
+    }
+
+    private async Task HandleTargetCreatedAsync(Target target)
+    {
+        try
+        {
+            foreach (var plugin in _plugins) await plugin.OnTargetCreatedAsync(target);
+            if (target.Type == TargetType.Page)
+            {
+                var page = await target.PageAsync();
+                if (page != null) await PreparePageAsync(page);
+            }
+        }
+        catch (TargetClosedException)
+        {
+            // A page can close while its plugins are still initializing.
+        }
+        catch (Exception exception)
+        {
+            PluginError?.Invoke(this, new ErrorEventArgs(exception));
         }
     }
 }
